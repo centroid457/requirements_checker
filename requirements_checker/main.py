@@ -17,7 +17,7 @@ class Exx_Requirement(Exception):
 
 
 # =====================================================================================================================
-class ReqCheckStrBase:
+class ReqCheckStr_Base:
     """Base class for check exact requirement
 
     VARIANTS for check
@@ -34,7 +34,6 @@ class ReqCheckStrBase:
         True - if need fullmatch (but always case-insensitive)
         False - if partial match by finding mentioned values in value actual
 
-
     :ivar _GETTER: function which will get the exact value to check
     :ivar VALUE_ACTUAL:
     """
@@ -44,11 +43,16 @@ class ReqCheckStrBase:
     VALUE_ACTUAL: Optional[str] = None
 
     def __init__(self):
-        self.check_requirement()
+        self.check()
 
-    def check_requirement(self) -> Union[bool, NoReturn]:
+    def check(self) -> Union[bool, NoReturn]:
+        if not self._GETTER:
+            msg = f"[ERROR] incomplete settings [{self._GETTER=}]"
+            raise Exx_RequirementCantGetActualValue(msg)
+
         try:
-            self.VALUE_ACTUAL: str = self._GETTER().lower()
+            value = self.__class__._GETTER()
+            self.VALUE_ACTUAL: str = value.lower()
         except Exception as exx:
             raise Exx_RequirementCantGetActualValue(repr(exx))
 
@@ -67,10 +71,12 @@ class ReqCheckStrBase:
                         raise Exx_Requirement(msg)
                     else:
                         return acceptance
+        # final
+        return True
 
 
 # =====================================================================================================================
-class ReqChecStrkOs(ReqCheckStrBase):
+class ReqChecStr_Os(ReqCheckStr_Base):
     pass
 
 
