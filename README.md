@@ -1,10 +1,8 @@
-# clisender
-Designed to send commands into OS terminal
+# requirements_checker
+Designed to raise if no requirements met
 
 ## Features
-1. send commands into OS terminal
-2. check if cli commands are accessible (special utilities is installed)
-3. access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)
+1. check requirements (system), raise if no match 
 
 ## License
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
@@ -16,13 +14,13 @@ See the [HISTORY.md](HISTORY.md) file for release history.
 
 ## Installation
 ```commandline
-pip install clisender
+pip install requirements-checker
 ```
 
 ## Import
 
 ```python
-from clisender import *
+from requirements_checker import *
 ```
 
 
@@ -31,6 +29,6 @@ from clisender import *
 ### USAGE
 
 ```python
-from clisender import *
+from requirements_checker import *
 
 ```

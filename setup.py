@@ -9,14 +9,13 @@ with open("README.md", "r") as f:
 # EDIT ================================================================================================================
 # EDIT ================================================================================================================
 # EDIT ================================================================================================================
-NAME = "clisender"
+NAME = "requirements_checker"
 
 setup(
   version="0.0.1",
-  description="use OS terminal",
+  description="check requirements (system) and raise if no match",
   keywords=[
-    "cli", "cli user", "cli sender",
-    "os terminal", "os terminal sender", "os terminal user",
+    "check requirements", "check system requirements", "raise if no requirements",
   ],
   classifiers=[
     # "Topic :: ________________",
