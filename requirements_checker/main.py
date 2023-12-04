@@ -3,7 +3,6 @@ import platform
 
 
 # =====================================================================================================================
-# TODO: add arch
 # TODO: add Base for version checker
 
 
@@ -83,8 +82,16 @@ class ReqCheckStr_Base:
 # =====================================================================================================================
 class ReqCheckStr_Os(ReqCheckStr_Base):
     _GETTER: Callable = platform.system
-    Linux: bool = True
-    Windows: bool = True
+    Linux: bool
+    Windows: bool
+
+
+# =====================================================================================================================
+class ReqCheckStr_Arch(ReqCheckStr_Base):
+    _GETTER: Callable = platform.machine
+    AMD64: bool      # standard PC
+    x86_64: bool     # wsl standard
+    AARCH64: bool    # raspberry    ARM!
 
 
 # =====================================================================================================================

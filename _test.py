@@ -103,6 +103,9 @@ class Test_Os:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__exx_no_getter(self):
+        self.VICTIM.Linux = True
+        self.VICTIM.Windows = True
+
         victim = self.VICTIM()
         assert victim._VALUE_ACTUAL in ["windows", "linux"]
         assert victim.check() is True
