@@ -4,6 +4,7 @@ import platform
 
 # =====================================================================================================================
 # TODO: add Base for version checker (py interpreter for example!)
+# TODO: apply check_no with __getattr__
 
 
 # =====================================================================================================================
@@ -46,7 +47,10 @@ class ReqCheckStr_Base:
     def __init__(self):
         self.check()
 
-    def check(self) -> Union[bool, NoReturn]:
+    def check(self, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+        if _raise is None:
+            _raise = self._RAISE
+
         if not self._GETTER:
             msg = f"[ERROR] incomplete settings [{self._GETTER=}]"
             raise Exx_RequirementCantGetActualValue(msg)
@@ -73,10 +77,16 @@ class ReqCheckStr_Base:
                     return True
 
         # final
-        if self._RAISE:
+        if _raise:
             raise Exx_Requirement(msg)
         else:
             return False
+
+    def check_no(self, value: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+        pass
+
+    def __getattr__(self, item):    # todo: apply
+        pass
 
 
 # =====================================================================================================================
