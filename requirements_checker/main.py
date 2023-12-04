@@ -1,8 +1,8 @@
 from typing import *
+import platform
 
 
 # =====================================================================================================================
-# TODO: finish OS
 # TODO: add arch
 # TODO: add Base for version checker
 
@@ -20,7 +20,7 @@ class Exx_Requirement(Exception):
 
 # =====================================================================================================================
 class ReqCheckStr_Base:
-    """Base class for check exact requirement
+    """Base class for check exact requirement by string value
 
     VARIANTS for check
     ------------------
@@ -82,7 +82,9 @@ class ReqCheckStr_Base:
 
 # =====================================================================================================================
 class ReqCheckStr_Os(ReqCheckStr_Base):
-    pass
+    _GETTER: Callable = platform.system
+    Linux: bool = True
+    Windows: bool = True
 
 
 # =====================================================================================================================
