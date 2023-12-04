@@ -31,4 +31,9 @@ from requirements_checker import *
 ```python
 from requirements_checker import *
 
+class ReqCheckStr_Os_MY(ReqCheckStr_Os):
+    Linux: bool = True
+    Windows: bool = False
+
+ReqCheckStr_Os_MY()     # check requirement!  
 ```
