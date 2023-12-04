@@ -1,4 +1,4 @@
 echo UPDATE PIP
 
-pip install -U clisender
+pip install -U requirements-checker
 pause
