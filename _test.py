@@ -122,6 +122,19 @@ class Test_Base:
 
         assert victim.check() is True
 
+    def test__check_values(self):
+        self.VICTIM._RAISE = False
+        self.VICTIM._GETTER = lambda: "Hello"
+        self.VICTIM.HELLO = True
+        victim = self.VICTIM()
+
+        assert victim.check() is True
+        assert victim.check("hellO") is True
+        assert victim.check(["hellO", ]) is True
+
+        assert victim.check("hell") is False
+        assert victim.check(["hell", ]) is False
+
 
 # =====================================================================================================================
 class Test_Os:

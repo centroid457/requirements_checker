@@ -49,62 +49,88 @@ class ReqCheckStr_Base:
     def __init__(self):
         self.check()
 
-    def check(self, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+    def check(self, values: Union[None, str, List[str]] = None, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+        # SETTINGS -------------------------------------------------------
         if _raise is None:
             _raise = self._RAISE
 
+        # VALUE ACTUAL ---------------------------------------------------
         if not self._GETTER:
             msg = f"[ERROR] incomplete settings [{self._GETTER=}]"
             raise Exx_RequirementCantGetActualValue(msg)
 
         try:
-            value = self.__class__._GETTER()
-            self._VALUE_ACTUAL: str = value.lower()
+            self._VALUE_ACTUAL: str = self.__class__._GETTER().lower()
         except Exception as exx:
             raise Exx_RequirementCantGetActualValue(repr(exx))
 
-        for name in dir(self):
-            if name.startswith("_"):
-                continue
-            acceptance: Optional[bool] = getattr(self, name)
-            name = name.lower()
-            if acceptance is True:
-                msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._VALUE_ACTUAL=}/req={name}]"
-                if (
-                        (self._CHECK_FULLMATCH and name == self._VALUE_ACTUAL)
-                        or
-                        (not self._CHECK_FULLMATCH and name in self._VALUE_ACTUAL)
-                ):
-                    return True
+        # VALUES ---------------------------------------------------------
+        if isinstance(values, str):
+            values = [values, ]
+        if not values:
+            values = filter(lambda name: not name.startswith("_"), dir(self))
 
-        # final
+        # WORK -----------------------------------------------------------
+        for name in values:
+            try:
+                name_from_obj = list(filter(lambda obj_attr: obj_attr.lower() == name.lower(), dir(self)))[0]
+            except:
+                continue
+
+            acceptance: Optional[bool] = getattr(self, name_from_obj)
+            name = name_from_obj.lower()
+            match = (
+                (self._CHECK_FULLMATCH and name == self._VALUE_ACTUAL)
+                or
+                (not self._CHECK_FULLMATCH and name in self._VALUE_ACTUAL)
+            )
+            if match:
+                if acceptance is True:
+                    return True
+                else:
+                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._VALUE_ACTUAL=}/req={name}]"
+                    print(msg)
+                    if _raise:
+                        raise Exx_Requirement(msg)
+                    else:
+                        return False
+
+        # RESULT -----------------------------------------------------------
         if self._MEET_TRUE:
+            msg = "[ERROR] No TRUE variants MET!"
+            print(msg)
             if _raise:
-                msg = "[ERROR] No TRUE variants MET!"
                 raise Exx_Requirement(msg)
             else:
                 return False
         else:
             return True
 
-    def check_no(self, value: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
-        pass
+    def check_not(self, value: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+        # TODO: finish!!! dont anderstand what i need here
+        result = self.check(values=value)
+        if result is True:
+            return False
 
-    def __getattr__(self, item: str):    # todo: apply
+    def __getattr__(self, item: str):
         """if no exists attr/meth
         """
-        startswith_marker = "check_no_"
-        if item.startswith(startswith_marker):
+        startswith_marker = "check_not_"
+        if item.lower().startswith(startswith_marker):
             param_name = item[len(startswith_marker):]
             print(param_name)
+            return lambda: self.check_not(value=param_name)
         else:
-            pass
-            # raise Exception
+            msg = f"'{self.__class__.__name__}' object has no attribute '{item}' "
+            raise AttributeError(msg)
 
 
 # =====================================================================================================================
 class ReqCheckStr_Os(ReqCheckStr_Base):
     _GETTER: Callable = platform.system
+
+    check_not_LINUX: Callable
+    check_not_WINDOWS: Callable
     Linux: bool
     Windows: bool
 
