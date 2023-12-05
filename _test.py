@@ -88,6 +88,33 @@ class Test_Base:
         self.VICTIM._CHECK_FULLMATCH = False
         assert victim.check() is True
 
+    def test__set_meet_true(self):
+        self.VICTIM._RAISE = False
+        self.VICTIM._GETTER = lambda: "Hello"
+
+        # _MEET_TRUE = True
+        self.VICTIM._MEET_TRUE = True
+        self.VICTIM.hello = True
+
+        victim = self.VICTIM()
+        assert victim.check() is True
+
+        victim.hello = False
+        assert victim.check() is False
+        victim._RAISE = True
+        try:
+            victim.check()
+        except Exx_Requirement:
+            assert True
+        else:
+            assert False
+
+        # _MEET_TRUE = False
+        victim._RAISE = False
+        victim._MEET_TRUE = False
+        victim.hello = True
+        assert victim.check() is True
+
     def test__case_insencitive(self):
         self.VICTIM._GETTER = lambda: "Hello"
         self.VICTIM.HELLO = True

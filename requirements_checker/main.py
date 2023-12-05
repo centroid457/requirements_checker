@@ -32,6 +32,7 @@ class ReqCheckStr_Base:
     SETTINGS
     --------
     :ivar _RAISE: raise in case of inacceptance
+    :ivar _MEET_TRUE: you can use requirement class for check only false variant
     :ivar _CHECK_FULLMATCH:
         True - if need fullmatch (but always case-insensitive)
         False - if partial match by finding mentioned values in value actual
@@ -41,6 +42,7 @@ class ReqCheckStr_Base:
     """
     _GETTER: Callable = None
     _RAISE: bool = True
+    _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
     _VALUE_ACTUAL: Optional[str] = None
 
@@ -61,7 +63,6 @@ class ReqCheckStr_Base:
         except Exception as exx:
             raise Exx_RequirementCantGetActualValue(repr(exx))
 
-        msg = "[ERROR] No TRUE variants MET!"
         for name in dir(self):
             if name.startswith("_"):
                 continue
@@ -77,16 +78,28 @@ class ReqCheckStr_Base:
                     return True
 
         # final
-        if _raise:
-            raise Exx_Requirement(msg)
+        if self._MEET_TRUE:
+            if _raise:
+                msg = "[ERROR] No TRUE variants MET!"
+                raise Exx_Requirement(msg)
+            else:
+                return False
         else:
-            return False
+            return True
 
     def check_no(self, value: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
         pass
 
-    def __getattr__(self, item):    # todo: apply
-        pass
+    def __getattr__(self, item: str):    # todo: apply
+        """if no exists attr/meth
+        """
+        startswith_marker = "check_no_"
+        if item.startswith(startswith_marker):
+            param_name = item[len(startswith_marker):]
+            print(param_name)
+        else:
+            pass
+            # raise Exception
 
 
 # =====================================================================================================================
@@ -101,7 +114,7 @@ class ReqCheckStr_Arch(ReqCheckStr_Base):
     _GETTER: Callable = platform.machine
     AMD64: bool      # standard PC
     x86_64: bool     # wsl standard
-    AARCH64: bool    # raspberry    ARM!
+    AARCH64: bool    # raspberry=ARM!
 
 
 # =====================================================================================================================
