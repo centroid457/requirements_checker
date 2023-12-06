@@ -37,13 +37,18 @@ class ReqCheckStr_Base:
         False - if partial match by finding mentioned values in value actual
 
     :ivar _GETTER: function which will get the exact value to check
-    :ivar _VALUE_ACTUAL:
+    :ivar _value_actual:
     """
+    # settings vital -------------------------------------
     _GETTER: Callable = None
+
+    # settings aux ---------------------------------------
     _RAISE: bool = True
     _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
-    _VALUE_ACTUAL: Optional[str] = None
+
+    # temporary ------------------------------------------
+    _value_actual: Optional[str] = None
 
     def __init__(self):
         self.check()
@@ -59,7 +64,7 @@ class ReqCheckStr_Base:
             raise Exx_RequirementCantGetActualValue(msg)
 
         try:
-            self._VALUE_ACTUAL: str = self.__class__._GETTER().lower()
+            self._value_actual: str = self.__class__._GETTER().lower()
         except Exception as exx:
             raise Exx_RequirementCantGetActualValue(repr(exx))
 
@@ -79,15 +84,15 @@ class ReqCheckStr_Base:
             acceptance: Optional[bool] = getattr(self, name_from_obj)
             name = name_from_obj.lower()
             match = (
-                (self._CHECK_FULLMATCH and name == self._VALUE_ACTUAL)
+                (self._CHECK_FULLMATCH and name == self._value_actual)
                 or
-                (not self._CHECK_FULLMATCH and name in self._VALUE_ACTUAL)
+                (not self._CHECK_FULLMATCH and name in self._value_actual)
             )
             if match:
                 if acceptance is True:
                     return True
                 else:
-                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._VALUE_ACTUAL=}/req={name}]"
+                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._value_actual=}/req={name}]"
                     print(msg)
                     if _raise:
                         raise Exx_Requirement(msg)

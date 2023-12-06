@@ -27,7 +27,7 @@ class Test_Base:
         victim = self.VICTIM()
 
         assert victim.check() is False
-        assert victim._VALUE_ACTUAL == "hello"
+        assert victim._value_actual == "hello"
 
     # ACCEPTANCE VARIANTS ---------------------------------------------------------------------------------------------
     def test__req_met_true(self):
@@ -150,7 +150,7 @@ class Test_Os:
         self.VICTIM.Windows = True
 
         victim = self.VICTIM()
-        assert victim._VALUE_ACTUAL in ["windows", "linux"]
+        assert victim._value_actual in ["windows", "linux"]
         assert victim.check() is True
 
 
