@@ -11,8 +11,9 @@ TODOS/WISHES
 
 
 _MEET_TRUE  
-values in check  
-check_not/check_not_*  
+values in check
+check_is__
+check_is_not__
 
 0.0.2 (2023-12-04)
 -------------------

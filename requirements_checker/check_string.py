@@ -49,7 +49,8 @@ class ReqCheckStr_Base:
     _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
 
-    _check_not__MARKER: str = "check_not__"
+    _check_is__MARKER: str = "check_is__"
+    _check_is_not__MARKER: str = "check_is_not__"
 
     # temporary ------------------------------------------
     _sample_actual: Optional[str] = None
@@ -123,7 +124,11 @@ class ReqCheckStr_Base:
         else:
             return True
 
-    def check_not__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+    def check_is__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+        # TODO: finish!!!
+        pass
+
+    def check_is_not__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
         # TODO: finish!!! dont understand what i need here
         result = self.check(samples=samples, _raise=_raise)
         if result is True:
@@ -132,10 +137,10 @@ class ReqCheckStr_Base:
     def __getattr__(self, item: str):
         """if no exists attr/meth
         """
-        if item.lower().startswith(self._check_not__MARKER):
-            param_name = item[len(self._check_not__MARKER):]
+        if item.lower().startswith(self._check_is_not__MARKER):
+            param_name = item[len(self._check_is_not__MARKER):]
             print(param_name)
-            return lambda: self.check_not__(samples=param_name)
+            return lambda: self.check_is_not__(samples=param_name)
         else:
             msg = f"'{self.__class__.__name__}' object has no attribute '{item}'"
             raise AttributeError(msg)
