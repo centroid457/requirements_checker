@@ -6,6 +6,10 @@ TODOS/WISHES
 1. add check_version (py interpreter for example!)
 2. add check_requirements_txt
 
+0.0.4 (2023-12-06)
+-------------------
+**NEW**
+- deprecate samples in check()
 
 0.0.3 (2023-12-06)
 -------------------
