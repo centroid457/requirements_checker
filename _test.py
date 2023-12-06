@@ -12,8 +12,8 @@ class Test_Base:
     def setup_method(self, method):
         self.VICTIM = type("VICTIM", (ReqCheckStr_Base,), {})
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__exx_no_getter(self):
+    # TRIVIAL CASES ---------------------------------------------------------------------------------------------------
+    def test__no_getter(self):
         try:
             victim = self.VICTIM()
         except Exx_RequirementCantGetActualValue:
@@ -29,6 +29,7 @@ class Test_Base:
         assert victim.check() is False
         assert victim._VALUE_ACTUAL == "hello"
 
+    # ACCEPTANCE VARIANTS ---------------------------------------------------------------------------------------------
     def test__req_met_true(self):
         self.VICTIM._GETTER = lambda: "Hello"
         self.VICTIM.hello = True
@@ -55,6 +56,7 @@ class Test_Base:
         else:
             assert False
 
+    # SETTINGS ATTRIBUTES ---------------------------------------------------------------------------------------------
     def test__set_raise(self):
         # _RAISE = True
         self.VICTIM._GETTER = lambda: "Hello"
@@ -115,6 +117,7 @@ class Test_Base:
         victim.hello = True
         assert victim.check() is True
 
+    #  ---------------------------------------------------------------------------------------------
     def test__case_insencitive(self):
         self.VICTIM._GETTER = lambda: "Hello"
         self.VICTIM.HELLO = True
