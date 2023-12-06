@@ -57,6 +57,18 @@ class ReqCheckStr_Base:
     def __init__(self):
         self.check()
 
+    def _sample_actual__get(self) -> Union[str, NoReturn]:
+        if not self._GETTER:
+            msg = f"[ERROR] incomplete settings [{self._GETTER=}]"
+            raise Exx_RequirementCantGetActualValue(msg)
+
+        try:
+            self._sample_actual: str = self.__class__._GETTER().lower()
+        except Exception as exx:
+            raise Exx_RequirementCantGetActualValue(repr(exx))
+
+        return self._sample_actual
+
     def check(self, samples: Union[None, str, List[str]] = None, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
         """
         :param samples: if not passed - used class settings
@@ -67,14 +79,7 @@ class ReqCheckStr_Base:
             _raise = self._RAISE
 
         # VALUE ACTUAL ---------------------------------------------------
-        if not self._GETTER:
-            msg = f"[ERROR] incomplete settings [{self._GETTER=}]"
-            raise Exx_RequirementCantGetActualValue(msg)
-
-        try:
-            self._sample_actual: str = self.__class__._GETTER().lower()
-        except Exception as exx:
-            raise Exx_RequirementCantGetActualValue(repr(exx))
+        self._sample_actual__get()
 
         # VALUES ---------------------------------------------------------
         if isinstance(samples, str):
