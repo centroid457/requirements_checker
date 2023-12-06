@@ -68,7 +68,11 @@ class ReqCheckStr_Base:
 
         return self._sample_actual
 
-    def check(self, samples: Union[None, str, List[str]] = None, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+    def check(
+            self,
+            # samples: Union[None, str, List[str]] = None,
+            _raise: Optional[bool] = None
+    ) -> Union[bool, NoReturn]:
         """
         :param samples: if not passed - used class settings
             if passed - used only passed values!
@@ -81,20 +85,20 @@ class ReqCheckStr_Base:
         self._sample_actual__get()
 
         # VALUES ---------------------------------------------------------
-        if isinstance(samples, str):
-            samples = [samples, ]
-        if not samples:
-            samples = filter(lambda sample: not sample.startswith("_"), dir(self))
+        # if isinstance(samples, str):
+        #     samples = [samples, ]
+        # if not samples:
+        samples = filter(lambda _sample: not _sample.startswith("_"), dir(self))
 
         # WORK -----------------------------------------------------------
         for sample in samples:
+            sample = sample.lower()
             try:
-                name_from_obj = list(filter(lambda obj_attr: obj_attr.lower() == sample.lower(), dir(self)))[0]
+                name_from_obj = list(filter(lambda obj_attr: obj_attr.lower() == sample, dir(self)))[0]
+                acceptance: Optional[bool] = getattr(self, name_from_obj)
             except:
                 continue
 
-            acceptance: Optional[bool] = getattr(self, name_from_obj)
-            sample = name_from_obj.lower()
             match = (
                 (self._CHECK_FULLMATCH and sample == self._sample_actual)
                 or

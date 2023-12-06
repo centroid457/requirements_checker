@@ -126,32 +126,18 @@ class Test_Base:
         assert victim.check() is True
 
     # PARAMS ----------------------------------------------------------------------------------------------------------
-    def test__param_values(self):
-        self.VICTIM._RAISE = False
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM.HELLO = True
-        victim = self.VICTIM()
-
-        assert victim.check() is True
-        assert victim.check("hellO") is True
-        assert victim.check(["hellO", ]) is True
-
-        assert victim.check("hell") is False
-        assert victim.check(["hell", ]) is False
-
-    # check_not -------------------------------------------------------------------------------------------------------
-    def test__check_not(self):
-        self.VICTIM._RAISE = False
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM.HELLO = True
-        victim = self.VICTIM()
-
-        assert victim.check() is True
-        assert victim.check("hellO") is True
-        assert victim.check(["hellO", ]) is True
-
-        assert victim.check("hell") is False
-        assert victim.check(["hell", ]) is False
+    # def test__param_values(self):
+    #     self.VICTIM._RAISE = False
+    #     self.VICTIM._GETTER = lambda: "Hello"
+    #     self.VICTIM.HELLO = True
+    #     victim = self.VICTIM()
+    #
+    #     assert victim.check() is True
+    #     assert victim.check("hellO") is True
+    #     assert victim.check(["hellO", ]) is True
+    #
+    #     assert victim.check("hell") is False
+    #     assert victim.check(["hell", ]) is False
 
     # IS/ISNOT -------------------------------------------------------------------------------------------------------
     def test__check_IS(self):
