@@ -3,8 +3,6 @@ import platform
 
 
 # =====================================================================================================================
-# TODO: finish check_not__ with __getattr__
-# TODO: add check__ with __getattr__
 # TODO: use samples as DICT with acceptance!!!!?????
 
 
@@ -170,10 +168,12 @@ class ReqCheckStr_Base:
     def __getattr__(self, item: str):
         """if no exists attr/meth
         """
-        if item.lower().startswith(self._check_is_not__MARKER):
-            param_name = item[len(self._check_is_not__MARKER):]
-            print(param_name)
-            return lambda: self.check_is_not__(samples=param_name)
+        if item.lower().startswith(self._check_is__MARKER):
+            sample = item[len(self._check_is__MARKER):]
+            return lambda: self.check_is__(samples=sample)
+        elif item.lower().startswith(self._check_is_not__MARKER):
+            sample = item[len(self._check_is_not__MARKER):]
+            return lambda: self.check_is_not__(samples=sample)
         else:
             msg = f"'{self.__class__.__name__}' object has no attribute '{item}'"
             raise AttributeError(msg)

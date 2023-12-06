@@ -159,22 +159,30 @@ class Test_Base:
         self.VICTIM._GETTER = lambda: "Hello"
         victim = self.VICTIM()
 
-        assert victim.check_is__("hellO11111") is False
+        assert victim.check_is__("hellO999") is False
 
         assert victim.check_is__("hellO") is True
         assert victim.check_is__(["hellO", ]) is True
-        assert victim.check_is__(["hellO", "hellO11111"]) is True
+        assert victim.check_is__(["hellO", "hellO999"]) is True
+
+        # getattr -------
+        assert victim.check_is__HELLO() is True
+        assert victim.check_is__HELLO999() is False
 
     def test__check_IS_NOT(self):
         self.VICTIM._RAISE = False
         self.VICTIM._GETTER = lambda: "Hello"
         victim = self.VICTIM()
 
-        assert victim.check_is_not__("hellO11111") is True
+        assert victim.check_is_not__("hellO999") is True
 
         assert victim.check_is_not__("hellO") is False
         assert victim.check_is_not__(["hellO", ]) is False
-        assert victim.check_is_not__(["hellO", "hellO11111"]) is False
+        assert victim.check_is_not__(["hellO", "hellO999"]) is False
+
+        # getattr -------
+        assert victim.check_is_not__HELLO() is False
+        assert victim.check_is_not__HELLO999() is True
 
 # =====================================================================================================================
 class Test_Os:
