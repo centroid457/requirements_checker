@@ -27,7 +27,7 @@ class Test_Base:
         victim = self.VICTIM()
 
         assert victim.check() is False
-        assert victim._value_actual == "hello"
+        assert victim._sample_actual == "hello"
 
     # ACCEPTANCE VARIANTS ---------------------------------------------------------------------------------------------
     def test__req_met_true(self):
@@ -125,7 +125,22 @@ class Test_Base:
 
         assert victim.check() is True
 
-    def test__check_values(self):
+    # PARAMS ----------------------------------------------------------------------------------------------------------
+    def test__param_values(self):
+        self.VICTIM._RAISE = False
+        self.VICTIM._GETTER = lambda: "Hello"
+        self.VICTIM.HELLO = True
+        victim = self.VICTIM()
+
+        assert victim.check() is True
+        assert victim.check("hellO") is True
+        assert victim.check(["hellO", ]) is True
+
+        assert victim.check("hell") is False
+        assert victim.check(["hell", ]) is False
+
+    # check_not -------------------------------------------------------------------------------------------------------
+    def test__check_not(self):
         self.VICTIM._RAISE = False
         self.VICTIM._GETTER = lambda: "Hello"
         self.VICTIM.HELLO = True
@@ -150,7 +165,7 @@ class Test_Os:
         self.VICTIM.Windows = True
 
         victim = self.VICTIM()
-        assert victim._value_actual in ["windows", "linux"]
+        assert victim._sample_actual in ["windows", "linux"]
         assert victim.check() is True
 
 

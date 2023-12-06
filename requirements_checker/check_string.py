@@ -3,7 +3,9 @@ import platform
 
 
 # =====================================================================================================================
-# TODO: finish check_no with __getattr__
+# TODO: finish check_not__ with __getattr__
+# TODO: add check__ with __getattr__
+# TODO: use samples as DICT with acceptance!
 
 
 # =====================================================================================================================
@@ -19,12 +21,12 @@ class Exx_Requirement(Exception):
 
 # =====================================================================================================================
 class ReqCheckStr_Base:
-    """Base class for check exact requirement by string value
+    """Base class for check exact requirement by string sample
 
     VARIANTS for check
     ------------------
-    add attributes with bool values (case-insensitive)
-        - True - if value is definitely acceptable - Always need at least one True!!!
+    add attributes with bool samples (case-insensitive)
+        - True - if sample is definitely acceptable - Always need at least one True!!!
         - False - if not definitely acceptable
         - None - if requirement is undefined
 
@@ -34,26 +36,32 @@ class ReqCheckStr_Base:
     :ivar _MEET_TRUE: you can use requirement class for check only false variant
     :ivar _CHECK_FULLMATCH:
         True - if need fullmatch (but always case-insensitive)
-        False - if partial match by finding mentioned values in value actual
+        False - if partial match by finding mentioned samples in _sample_actual
 
-    :ivar _GETTER: function which will get the exact value to check
-    :ivar _value_actual:
+    :ivar _GETTER: function which will get the exact sample to check
+    :ivar _sample_actual:
     """
     # settings vital -------------------------------------
-    _GETTER: Callable = None
+    _GETTER: Callable[..., str] = None
 
     # settings aux ---------------------------------------
     _RAISE: bool = True
     _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
 
+    _check_not__MARKER: str = "check_not__"
+
     # temporary ------------------------------------------
-    _value_actual: Optional[str] = None
+    _sample_actual: Optional[str] = None
 
     def __init__(self):
         self.check()
 
-    def check(self, values: Union[None, str, List[str]] = None, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+    def check(self, samples: Union[None, str, List[str]] = None, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+        """
+        :param samples: if not passed - used class settings
+            if passed - used only passed values!
+        """
         # SETTINGS -------------------------------------------------------
         if _raise is None:
             _raise = self._RAISE
@@ -64,18 +72,18 @@ class ReqCheckStr_Base:
             raise Exx_RequirementCantGetActualValue(msg)
 
         try:
-            self._value_actual: str = self.__class__._GETTER().lower()
+            self._sample_actual: str = self.__class__._GETTER().lower()
         except Exception as exx:
             raise Exx_RequirementCantGetActualValue(repr(exx))
 
         # VALUES ---------------------------------------------------------
-        if isinstance(values, str):
-            values = [values, ]
-        if not values:
-            values = filter(lambda name: not name.startswith("_"), dir(self))
+        if isinstance(samples, str):
+            samples = [samples, ]
+        if not samples:
+            samples = filter(lambda name: not name.startswith("_"), dir(self))
 
         # WORK -----------------------------------------------------------
-        for name in values:
+        for name in samples:
             try:
                 name_from_obj = list(filter(lambda obj_attr: obj_attr.lower() == name.lower(), dir(self)))[0]
             except:
@@ -84,15 +92,15 @@ class ReqCheckStr_Base:
             acceptance: Optional[bool] = getattr(self, name_from_obj)
             name = name_from_obj.lower()
             match = (
-                (self._CHECK_FULLMATCH and name == self._value_actual)
+                (self._CHECK_FULLMATCH and name == self._sample_actual)
                 or
-                (not self._CHECK_FULLMATCH and name in self._value_actual)
+                (not self._CHECK_FULLMATCH and name in self._sample_actual)
             )
             if match:
                 if acceptance is True:
                     return True
                 else:
-                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._value_actual=}/req={name}]"
+                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._sample_actual=}/req={name}]"
                     print(msg)
                     if _raise:
                         raise Exx_Requirement(msg)
@@ -110,22 +118,21 @@ class ReqCheckStr_Base:
         else:
             return True
 
-    def check_not(self, value: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
-        # TODO: finish!!! dont anderstand what i need here
-        result = self.check(values=value)
+    def check_not__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
+        # TODO: finish!!! dont understand what i need here
+        result = self.check(samples=samples, _raise=_raise)
         if result is True:
             return False
 
     def __getattr__(self, item: str):
         """if no exists attr/meth
         """
-        startswith_marker = "check_not_"
-        if item.lower().startswith(startswith_marker):
-            param_name = item[len(startswith_marker):]
+        if item.lower().startswith(self._check_not__MARKER):
+            param_name = item[len(self._check_not__MARKER):]
             print(param_name)
-            return lambda: self.check_not(value=param_name)
+            return lambda: self.check_not__(samples=param_name)
         else:
-            msg = f"'{self.__class__.__name__}' object has no attribute '{item}' "
+            msg = f"'{self.__class__.__name__}' object has no attribute '{item}'"
             raise AttributeError(msg)
 
 
@@ -133,8 +140,8 @@ class ReqCheckStr_Base:
 class ReqCheckStr_Os(ReqCheckStr_Base):
     _GETTER: Callable = platform.system
 
-    check_not_LINUX: Callable
-    check_not_WINDOWS: Callable
+    check_not__LINUX: Callable
+    check_not__WINDOWS: Callable
     Linux: bool
     Windows: bool
 
