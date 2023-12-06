@@ -1,9 +1,18 @@
 Release History
 ===============
 
-_MEET_TRUE
-values in check
-check_not/check_not_*
+TODOS/WISHES
+------------
+1. apply check_no with __getattr__
+2. add check_version (py interpreter for example!)
+3. add check_requirements_txt
+
+
+
+
+_MEET_TRUE  
+values in check  
+check_not/check_not_*  
 
 0.0.2 (2023-12-04)
 -------------------

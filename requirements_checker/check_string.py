@@ -3,8 +3,7 @@ import platform
 
 
 # =====================================================================================================================
-# TODO: add Base for version checker (py interpreter for example!)
-# TODO: apply check_no with __getattr__
+# TODO: finish check_no with __getattr__
 
 
 # =====================================================================================================================
