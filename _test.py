@@ -145,7 +145,7 @@ class Test_Os:
         self.VICTIM = type("VICTIM", (ReqCheckStr_Os,), {})
 
     # -----------------------------------------------------------------------------------------------------------------
-    def test__exx_no_getter(self):
+    def test__1(self):
         self.VICTIM.Linux = True
         self.VICTIM.Windows = True
 
