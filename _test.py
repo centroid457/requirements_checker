@@ -29,6 +29,13 @@ class Test_Base:
         assert victim.check() is False
         assert victim._sample_actual == "hello"
 
+    def test__inits(self):
+        assert self.VICTIM(_getter=lambda: "hello", _raise=False, _meet_true=True).check() is False
+        assert self.VICTIM(_getter=lambda: "hello", _raise=False, _meet_true=False).check() is True
+
+        assert self.VICTIM(_getter=lambda: "hello", _raise=False).check_is__("HELLO") is True
+        assert self.VICTIM(_getter=lambda: "hello", _raise=False).check_is__HELLO() is True
+
     # ACCEPTANCE VARIANTS ---------------------------------------------------------------------------------------------
     def test__req_met_true(self):
         self.VICTIM._GETTER = lambda: "Hello"
@@ -169,6 +176,7 @@ class Test_Base:
         # getattr -------
         assert victim.check_is_not__HELLO() is False
         assert victim.check_is_not__HELLO999() is True
+
 
 # =====================================================================================================================
 class Test_Os:

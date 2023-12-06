@@ -47,13 +47,32 @@ class ReqCheckStr_Base:
     _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
 
-    _check_is__MARKER: str = "check_is__"
-    _check_is_not__MARKER: str = "check_is_not__"
+    __check_is__MARKER: str = "check_is__"
+    __check_is_not__MARKER: str = "check_is_not__"
 
     # temporary ------------------------------------------
     _sample_actual: Optional[str] = None
 
-    def __init__(self):
+    # TODO: add values as dict??? - it would be direct great!
+
+    def __init__(
+            self,
+            _getter: Callable[..., str] = None,
+            _raise: Optional[bool] = None,
+            _meet_true: Optional[bool] = None,
+            _check_fullmatch: Optional[bool] = None
+    ):
+        # INIT SETTINGS ----------------------------------
+        if _getter is not None:
+            self.__class__._GETTER = _getter
+        if _raise is not None:
+            self._RAISE = _raise
+        if _meet_true is not None:
+            self._MEET_TRUE = _meet_true
+        if _check_fullmatch is not None:
+            self._CHECK_FULLMATCH = _check_fullmatch
+
+        # WORK -------------------------------------------
         self.check()
 
     def _sample_actual__get(self) -> Union[str, NoReturn]:
@@ -172,11 +191,11 @@ class ReqCheckStr_Base:
     def __getattr__(self, item: str):
         """if no exists attr/meth
         """
-        if item.lower().startswith(self._check_is__MARKER):
-            sample = item[len(self._check_is__MARKER):]
+        if item.lower().startswith(self.__check_is__MARKER):
+            sample = item[len(self.__check_is__MARKER):]
             return lambda: self.check_is__(samples=sample)
-        elif item.lower().startswith(self._check_is_not__MARKER):
-            sample = item[len(self._check_is_not__MARKER):]
+        elif item.lower().startswith(self.__check_is_not__MARKER):
+            sample = item[len(self.__check_is_not__MARKER):]
             return lambda: self.check_is_not__(samples=sample)
         else:
             msg = f"'{self.__class__.__name__}' object has no attribute '{item}'"
