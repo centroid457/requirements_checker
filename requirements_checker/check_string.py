@@ -124,15 +124,48 @@ class ReqCheckStr_Base:
         else:
             return True
 
-    def check_is__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
-        # TODO: finish!!!
-        pass
+    def check_is__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None, _reverse: Optional[bool] = None) -> Union[bool, NoReturn]:
+        # SETTINGS -------------------------------------------------------
+        if _raise is None:
+            _raise = self._RAISE
+        _reverse = _reverse or False
+
+        # VALUES ---------------------------------------------------------
+        if isinstance(samples, str):
+            samples = [samples, ]
+
+        # VALUE ACTUAL ---------------------------------------------------
+        self._sample_actual__get()
+
+        # WORK -----------------------------------------------------------
+        match = None
+        for sample in samples:
+            sample = sample.lower()
+            match = (
+                (self._CHECK_FULLMATCH and sample == self._sample_actual)
+                or
+                (not self._CHECK_FULLMATCH and sample in self._sample_actual)
+            )
+            if match:
+                break
+
+        if match:
+            result = not _reverse
+        else:
+            result = _reverse
+
+        if result:
+            return True
+        else:
+            msg = f"[WARN] sample is not [{self.__class__.__name__}/{self._sample_actual=}/req={samples}]"
+            print(msg)
+            if _raise:
+                raise Exx_Requirement(msg)
+            else:
+                return False
 
     def check_is_not__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
-        # TODO: finish!!! dont understand what i need here
-        result = self.check(samples=samples, _raise=_raise)
-        if result is True:
-            return False
+        return self.check_is__(samples=samples, _raise=_raise, _reverse=True)
 
     def __getattr__(self, item: str):
         """if no exists attr/meth

@@ -12,6 +12,8 @@ TODOS/WISHES
 
 _MEET_TRUE  
 values in check
+
+FINISH
 check_is__
 check_is_not__
 
