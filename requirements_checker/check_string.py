@@ -44,7 +44,7 @@ class ReqCheckStr_Base:
 
     # settings aux ---------------------------------------
     _RAISE: bool = True
-    _MEET_TRUE: bool = True
+    _MEET_TRUE: bool = False
     _CHECK_FULLMATCH: bool = True
 
     __check_is__MARKER: str = "check_is__"
