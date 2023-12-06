@@ -6,6 +6,11 @@ TODOS/WISHES
 1. add check_version (py interpreter for example!)
 2. add check_requirements_txt
 
+0.0.5 (2023-12-06)
+-------------------
+**NEW**
+- add settings in __init__
+
 0.0.4 (2023-12-06)
 -------------------
 **NEW**
