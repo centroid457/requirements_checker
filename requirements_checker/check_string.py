@@ -5,7 +5,7 @@ import platform
 # =====================================================================================================================
 # TODO: finish check_not__ with __getattr__
 # TODO: add check__ with __getattr__
-# TODO: use samples as DICT with acceptance!
+# TODO: use samples as DICT with acceptance!!!!?????
 
 
 # =====================================================================================================================
@@ -86,27 +86,27 @@ class ReqCheckStr_Base:
         if isinstance(samples, str):
             samples = [samples, ]
         if not samples:
-            samples = filter(lambda name: not name.startswith("_"), dir(self))
+            samples = filter(lambda sample: not sample.startswith("_"), dir(self))
 
         # WORK -----------------------------------------------------------
-        for name in samples:
+        for sample in samples:
             try:
-                name_from_obj = list(filter(lambda obj_attr: obj_attr.lower() == name.lower(), dir(self)))[0]
+                name_from_obj = list(filter(lambda obj_attr: obj_attr.lower() == sample.lower(), dir(self)))[0]
             except:
                 continue
 
             acceptance: Optional[bool] = getattr(self, name_from_obj)
-            name = name_from_obj.lower()
+            sample = name_from_obj.lower()
             match = (
-                (self._CHECK_FULLMATCH and name == self._sample_actual)
+                (self._CHECK_FULLMATCH and sample == self._sample_actual)
                 or
-                (not self._CHECK_FULLMATCH and name in self._sample_actual)
+                (not self._CHECK_FULLMATCH and sample in self._sample_actual)
             )
             if match:
                 if acceptance is True:
                     return True
                 else:
-                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._sample_actual=}/req={name}]"
+                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._sample_actual=}/req={sample}]"
                     print(msg)
                     if _raise:
                         raise Exx_Requirement(msg)
