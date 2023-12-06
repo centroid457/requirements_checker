@@ -183,18 +183,24 @@ class ReqCheckStr_Base:
 class ReqCheckStr_Os(ReqCheckStr_Base):
     _GETTER: Callable = platform.system
 
-    check_not__LINUX: Callable
-    check_not__WINDOWS: Callable
     Linux: bool
     Windows: bool
+
+    # DERIVATIVES --------
+    check_is_not__LINUX: Callable[..., bool]
+    check_is_not__WINDOWS: Callable[..., bool]
 
 
 # =====================================================================================================================
 class ReqCheckStr_Arch(ReqCheckStr_Base):
     _GETTER: Callable = platform.machine
+
     AMD64: bool      # standard PC
     x86_64: bool     # wsl standard
     AARCH64: bool    # raspberry=ARM!
+
+    # DERIVATIVES --------
+    check_is_not__AARCH64: Callable[..., bool]
 
 
 # =====================================================================================================================
