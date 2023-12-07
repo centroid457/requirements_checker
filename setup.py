@@ -12,7 +12,7 @@ with open("README.md", "r") as f:
 NAME = "requirements_checker"
 
 setup(
-  version="0.0.5",
+  version="0.0.6",
   description="check requirements (system) and raise if no match",
   keywords=[
     "check requirements", "check system requirements", "raise if no requirements",

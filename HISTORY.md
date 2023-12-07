@@ -9,7 +9,10 @@ TODOS/WISHES
 
 
 
-set _MEET_TRUE as False for default
+0.0.6 (2023-12-07)
+-------------------
+**NEW**
+- apply check_is__/check_is_not__/+getattr as classmethod and instancemethod
 
 0.0.5 (2023-12-06)
 -------------------
