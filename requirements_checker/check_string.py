@@ -4,7 +4,6 @@ import platform
 
 # =====================================================================================================================
 # TODO: use samples as DICT with acceptance!!!!?????
-# TODO: ref into classmethods? seems good!
 
 
 # =====================================================================================================================
@@ -19,7 +18,41 @@ class Exx_Requirement(Exception):
 
 
 # =====================================================================================================================
-class ReqCheckStr_Base:
+class GetattrClassmethod_Meta(type):
+    """ability to apply classmethod for __getattr__
+
+    WHY USE IT
+    ==========
+    cause of direct __getattr__ usage - is not applicable!
+
+        class Cls:
+        @classmethod
+        def __getattr__(cls, item):
+            print(item)
+
+        Cls.hello()
+
+        # RESULT
+            Cls.hello()
+            ^^^^^^^^^
+        AttributeError: type object 'Cls' has no attribute 'hello'
+    """
+    def __getattr__(cls, item):
+        """if no exists attr/meth
+        """
+        if item.lower().startswith(cls._check_is__MARKER):
+            sample = item[len(cls._check_is__MARKER):]
+            return lambda: cls.check_is__(samples=sample)
+        elif item.lower().startswith(cls._check_is_not__MARKER):
+            sample = item[len(cls._check_is_not__MARKER):]
+            return lambda: cls.check_is_not__(samples=sample)
+        else:
+            msg = f"META: '{cls.__name__}' CLASS has no attribute '{item}'"
+            raise AttributeError(msg)
+
+
+# =====================================================================================================================
+class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
     """Base class for check exact requirement by string sample
 
     VARIANTS for check
@@ -45,11 +78,11 @@ class ReqCheckStr_Base:
 
     # settings aux ---------------------------------------
     _RAISE: bool = True
-    _MEET_TRUE: bool = False
+    _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
 
-    __check_is__MARKER: str = "check_is__"
-    __check_is_not__MARKER: str = "check_is_not__"
+    _check_is__MARKER: str = "check_is__"
+    _check_is_not__MARKER: str = "check_is_not__"
 
     # temporary ------------------------------------------
     _sample_actual: Optional[str] = None
@@ -76,17 +109,18 @@ class ReqCheckStr_Base:
         # WORK -------------------------------------------
         self.check()
 
-    def _sample_actual__get(self) -> Union[str, NoReturn]:
-        if not self._GETTER:
-            msg = f"[ERROR] incomplete settings [{self._GETTER=}]"
+    @classmethod
+    def _sample_actual__get(cls) -> Union[str, NoReturn]:
+        if not cls._GETTER:
+            msg = f"[ERROR] incomplete settings [{cls._GETTER=}]"
             raise Exx_RequirementCantGetActualValue(msg)
 
         try:
-            self._sample_actual: str = self.__class__._GETTER().lower()
+            cls._sample_actual = cls._GETTER().lower()
         except Exception as exx:
             raise Exx_RequirementCantGetActualValue(repr(exx))
 
-        return self._sample_actual
+        return cls._sample_actual
 
     def check(
             self,
@@ -146,10 +180,22 @@ class ReqCheckStr_Base:
         else:
             return True
 
-    def check_is__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None, _reverse: Optional[bool] = None) -> Union[bool, NoReturn]:
+    @classmethod
+    def check_is__(cls, samples: Union[str, List[str]], _raise: Optional[bool] = None, _reverse: Optional[bool] = None) -> Union[bool, NoReturn]:
+        """
+        USAGE
+        =====
+        1. instance method
+            # CLASS_NAME().check_is__<NAME>()           # ERROR!!!
+            CLASS_NAME().check_is__("NAME", **kwargs)   # GOOD
+
+        2. classmethod without params!
+            # CLASS_NAME.check_is__<NAME>(**kwargs)     # ERROR!!!
+            CLASS_NAME.check_is__<NAME>()               # GOOD
+        """
         # SETTINGS -------------------------------------------------------
         if _raise is None:
-            _raise = self._RAISE
+            _raise = cls._RAISE
         _reverse = _reverse or False
 
         # VALUES ---------------------------------------------------------
@@ -157,16 +203,16 @@ class ReqCheckStr_Base:
             samples = [samples, ]
 
         # VALUE ACTUAL ---------------------------------------------------
-        self._sample_actual__get()
+        cls._sample_actual__get()
 
         # WORK -----------------------------------------------------------
         match = None
         for sample in samples:
             sample = sample.lower()
             match = (
-                (self._CHECK_FULLMATCH and sample == self._sample_actual)
+                (cls._CHECK_FULLMATCH and sample == cls._sample_actual)
                 or
-                (not self._CHECK_FULLMATCH and sample in self._sample_actual)
+                (not cls._CHECK_FULLMATCH and sample in cls._sample_actual)
             )
             if match:
                 break
@@ -179,36 +225,27 @@ class ReqCheckStr_Base:
         if result:
             return True
         else:
-            msg = f"[WARN] sample is not [{self.__class__.__name__}/{self._sample_actual=}/req={samples}]"
+            msg = f"[WARN] sample is not [{cls.__name__}/{cls._sample_actual=}/req={samples}]"
             print(msg)
             if _raise:
                 raise Exx_Requirement(msg)
             else:
                 return False
 
-    def check_is_not__(self, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
-        return self.check_is__(samples=samples, _raise=_raise, _reverse=True)
-
-    def __getattr__(self, item: str):
-        """if no exists attr/meth
+    @classmethod
+    def check_is_not__(cls, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
         """
-        if item.lower().startswith(self.__check_is__MARKER):
-            sample = item[len(self.__check_is__MARKER):]
-            return lambda: self.check_is__(samples=sample)
-        elif item.lower().startswith(self.__check_is_not__MARKER):
-            sample = item[len(self.__check_is_not__MARKER):]
-            return lambda: self.check_is_not__(samples=sample)
-        else:
-            msg = f"'{self.__class__.__name__}' object has no attribute '{item}'"
-            raise AttributeError(msg)
+        same as check_is__
+        """
+        return cls.check_is__(samples=samples, _raise=_raise, _reverse=True)
 
 
 # =====================================================================================================================
 class ReqCheckStr_Os(ReqCheckStr_Base):
     _GETTER: Callable = platform.system
 
-    Linux: bool
-    Windows: bool
+    LINUX: bool
+    WINDOWS: bool
 
     # DERIVATIVES --------
     check_is_not__LINUX: Callable[..., bool]
