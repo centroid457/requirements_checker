@@ -34,7 +34,7 @@ class Test_Base:
         assert self.VICTIM(_getter=lambda: "hello", _raise=False, _meet_true=False).check() is True
 
         assert self.VICTIM(_getter=lambda: "hello", _raise=False).check_is__("HELLO") is True
-        # assert self.VICTIM(_getter=lambda: "hello", _raise=False).check_is__HELLO() is True
+        assert self.VICTIM(_getter=lambda: "hello", _raise=False).check_is__HELLO() is True
         assert self.VICTIM.check_is__HELLO() is True
 
     # ACCEPTANCE VARIANTS ---------------------------------------------------------------------------------------------
@@ -160,8 +160,8 @@ class Test_Base:
         assert victim.check_is__(["hellO", "hellO999"]) is True
 
         # getattr -------
-        # assert victim.check_is__HELLO() is True
-        # assert victim.check_is__HELLO999() is False
+        assert victim.check_is__HELLO() is True
+        assert victim.check_is__HELLO999() is False
 
         assert self.VICTIM.check_is__HELLO() is True
         assert self.VICTIM.check_is__HELLO999() is False
@@ -178,8 +178,8 @@ class Test_Base:
         assert victim.check_is_not__(["hellO", "hellO999"]) is False
 
         # getattr -------
-        # assert victim.check_is_not__HELLO() is False
-        # assert victim.check_is_not__HELLO999() is True
+        assert victim.check_is_not__HELLO() is False
+        assert victim.check_is_not__HELLO999() is True
 
         assert self.VICTIM.check_is_not__HELLO() is False
         assert self.VICTIM.check_is_not__HELLO999() is True

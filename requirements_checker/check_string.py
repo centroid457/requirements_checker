@@ -109,6 +109,13 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
         # WORK -------------------------------------------
         self.check()
 
+    def __getattr__(self, item):
+        """
+        apply access to not exists methods from instance! in metaclass we have only access as classmethods!
+        """
+        # return super().__getattr__(item)    # AttributeError: 'super' object has no attribute '__getattr__'. Did you mean: '__setattr__'?
+        return GetattrClassmethod_Meta.__getattr__(self.__class__, item)
+
     @classmethod
     def _sample_actual__get(cls) -> Union[str, NoReturn]:
         if not cls._GETTER:
@@ -186,8 +193,8 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
         USAGE
         =====
         1. instance method
-            # CLASS_NAME().check_is__<NAME>()           # ERROR!!!
             CLASS_NAME().check_is__("NAME", **kwargs)   # GOOD
+            CLASS_NAME().check_is__<NAME>()             # GOOD
 
         2. classmethod without params!
             # CLASS_NAME.check_is__<NAME>(**kwargs)     # ERROR!!!
