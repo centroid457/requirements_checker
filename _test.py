@@ -192,8 +192,8 @@ class Test_Os:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__1(self):
-        self.VICTIM.Linux = True
-        self.VICTIM.Windows = True
+        self.VICTIM.LINUX = True
+        self.VICTIM.WINDOWS = True
 
         victim = self.VICTIM()
         assert victim._sample_actual in ["windows", "linux"]
