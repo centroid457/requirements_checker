@@ -258,8 +258,15 @@ class ReqCheckStr_Os(ReqCheckStr_Base):
     WINDOWS: bool
 
     # DERIVATIVES --------
-    check_is_not__LINUX: Callable[..., bool]
-    check_is_not__WINDOWS: Callable[..., bool]
+    bool_if__LINUX: Callable[..., bool]
+    bool_if__WINDOWS: Callable[..., bool]
+    bool_if_not__LINUX: Callable[..., bool]
+    bool_if_not__WINDOWS: Callable[..., bool]
+
+    raise_if__LINUX: Callable[..., Optional[NoReturn]]
+    raise_if__WINDOWS: Callable[..., Optional[NoReturn]]
+    raise_if_not__LINUX: Callable[..., Optional[NoReturn]]
+    raise_if_not__WINDOWS: Callable[..., Optional[NoReturn]]
 
 
 # =====================================================================================================================
@@ -271,7 +278,7 @@ class ReqCheckStr_Arch(ReqCheckStr_Base):
     AARCH64: bool    # raspberry=ARM!
 
     # DERIVATIVES --------
-    check_is_not__AARCH64: Callable[..., bool]
+    raise_if_not__AARCH64: Callable[..., Optional[NoReturn]]
 
 
 # =====================================================================================================================
