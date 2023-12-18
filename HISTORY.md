@@ -6,8 +6,10 @@ TODOS/WISHES
 1. add check_version (py interpreter for example!)
 2. add check_requirements_txt
 
-
-
+0.0.7 (2023-12-18)
+-------------------
+**NEW**
+- apply check_is__/check_is_not__/+getattr as classmethod and instancemethod
 
 0.0.6 (2023-12-07)
 -------------------

@@ -37,15 +37,28 @@ class GetattrClassmethod_Meta(type):
             ^^^^^^^^^
         AttributeError: type object 'Cls' has no attribute 'hello'
     """
+    _bool_if__MARKER: str = "bool_if__"
+    _bool_if_not__MARKER: str = "bool_if_not__"
+    _raise_if__MARKER: str = "raise_if__"
+    _raise_if_not__MARKER: str = "raise_if_not__"
+
     def __getattr__(cls, item):
         """if no exists attr/meth
         """
-        if item.lower().startswith(cls._check_is__MARKER):
-            sample = item[len(cls._check_is__MARKER):]
-            return lambda: cls.check_is__(samples=sample)
-        elif item.lower().startswith(cls._check_is_not__MARKER):
-            sample = item[len(cls._check_is_not__MARKER):]
-            return lambda: cls.check_is_not__(samples=sample)
+        if item.lower().startswith(cls._bool_if__MARKER.lower()):
+            sample = item[len(cls._bool_if__MARKER):]
+            return lambda: cls.check_is__(samples=sample, _raise=False, _reverse=False)
+        elif item.lower().startswith(cls._bool_if_not__MARKER.lower()):
+            sample = item[len(cls._bool_if_not__MARKER):]
+            return lambda: cls.check_is__(samples=sample, _raise=False, _reverse=True)
+
+        elif item.lower().startswith(cls._raise_if__MARKER.lower()):
+            sample = item[len(cls._raise_if__MARKER):]
+            return lambda: not cls.check_is__(samples=sample, _raise=True, _reverse=True) or None
+        elif item.lower().startswith(cls._raise_if_not__MARKER.lower()):
+            sample = item[len(cls._raise_if_not__MARKER):]
+            return lambda: not cls.check_is__(samples=sample, _raise=True, _reverse=False) or None
+
         else:
             msg = f"META: '{cls.__name__}' CLASS has no attribute '{item}'"
             raise AttributeError(msg)
@@ -80,9 +93,6 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
     _RAISE: bool = True
     _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
-
-    _check_is__MARKER: str = "check_is__"
-    _check_is_not__MARKER: str = "check_is_not__"
 
     # temporary ------------------------------------------
     _sample_actual: Optional[str] = None
@@ -188,7 +198,7 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
             return True
 
     @classmethod
-    def check_is__(cls, samples: Union[str, List[str]], _raise: Optional[bool] = None, _reverse: Optional[bool] = None) -> Union[bool, NoReturn]:
+    def check_is__(cls, samples: Union[str, List[str]], _raise: Optional[bool] = None, _reverse: Optional[bool] = None) -> Union[bool, NoReturn, None]:
         """
         USAGE
         =====
@@ -238,13 +248,6 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
                 raise Exx_Requirement(msg)
             else:
                 return False
-
-    @classmethod
-    def check_is_not__(cls, samples: Union[str, List[str]], _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
-        """
-        same as check_is__
-        """
-        return cls.check_is__(samples=samples, _raise=_raise, _reverse=True)
 
 
 # =====================================================================================================================
