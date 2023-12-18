@@ -18,14 +18,11 @@ pip install requirements-checker
 ```
 
 ## Import
-
 ```python
 from requirements_checker import *
 ```
 
-
 ## GUIDE
-
 ### USAGE
 
 ```python
