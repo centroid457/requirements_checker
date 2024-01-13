@@ -6,6 +6,11 @@ TODOS/WISHES
 1. add check_version (py interpreter for example!)
 2. add check_requirements_txt
 
+0.0.8 (2024-01-14)
+-------------------
+- fix ReqCheckStr_Os for derivatives visout settings
+- try add Requirements as modules upgrades
+
 0.0.7 (2023-12-18)
 -------------------
 - rename getattr from check_is__/check_is_not__ into bool_if/raise_if/not

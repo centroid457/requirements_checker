@@ -253,6 +253,7 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
 # =====================================================================================================================
 class ReqCheckStr_Os(ReqCheckStr_Base):
     _GETTER: Callable = platform.system
+    _MEET_TRUE: bool = False        # need to use class as checker
 
     LINUX: bool
     WINDOWS: bool
@@ -272,6 +273,7 @@ class ReqCheckStr_Os(ReqCheckStr_Base):
 # =====================================================================================================================
 class ReqCheckStr_Arch(ReqCheckStr_Base):
     _GETTER: Callable = platform.machine
+    _MEET_TRUE: bool = False
 
     AMD64: bool      # standard PC
     x86_64: bool     # wsl standard

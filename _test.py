@@ -200,6 +200,15 @@ class Test_Os:
         self.VICTIM = type("VICTIM", (ReqCheckStr_Os,), {})
 
     # -----------------------------------------------------------------------------------------------------------------
+    def test__bool(self):
+        victim = self.VICTIM()
+
+        assert not hasattr(victim, "WINDOWS")
+
+        assert victim.bool_if__WINDOWS() != victim.bool_if__LINUX()
+        if victim._sample_actual in ["windows", ]:
+            assert victim.bool_if__WINDOWS() is True
+
     def test__1(self):
         self.VICTIM.LINUX = True
         self.VICTIM.WINDOWS = True
@@ -207,6 +216,8 @@ class Test_Os:
         victim = self.VICTIM()
         assert victim._sample_actual in ["windows", "linux"]
         assert victim.check() is True
+
+
 
 
 # =====================================================================================================================
