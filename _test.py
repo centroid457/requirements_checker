@@ -228,5 +228,9 @@ class Test_Pkg:
     def test__upgrade(self):
         victim = self.VICTIM()
 
+    @pytest.mark.skip
+    def test__upgrade_file(self):
+        victim = self.VICTIM()
+
 
 # =====================================================================================================================
