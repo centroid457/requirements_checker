@@ -41,6 +41,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     VERSION: Tuple[int, int, int] = (0, 1, 0)
     VERSION_STR: str = ".".join(map(str, VERSION))
     TODO: List[str] = [
+        "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
         "add work with packages",
     ]
