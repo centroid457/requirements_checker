@@ -9,7 +9,7 @@ TODOS/WISHES
 0.0.8 (2024-01-14)
 -------------------
 - fix ReqCheckStr_Os for derivatives visout settings
-- try add Requirements as modules upgrades
+- try add Packages as modules upgrades
 
 0.0.7 (2023-12-18)
 -------------------
