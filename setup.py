@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from PROJECT import PROJECT
 
 
 with open("README.md", "r") as f:
@@ -9,14 +10,11 @@ with open("README.md", "r") as f:
 # EDIT ================================================================================================================
 # EDIT ================================================================================================================
 # EDIT ================================================================================================================
-NAME = "requirements_checker"
 
 setup(
-  version="0.0.9",
-  description="check requirements (system) and raise if no match",
-  keywords=[
-    "check requirements", "check system requirements", "raise if no requirements",
-  ],
+  version=PROJECT.VERSION_STR,
+  description=PROJECT.DESCRIPTION_SHORT,
+  keywords=PROJECT.KEYWORDS,
   classifiers=[
     # "Topic :: ________________",
 
@@ -34,25 +32,25 @@ setup(
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
     "Operating System :: OS Independent",
-    "Environment :: Console",
+    # "Environment :: Console",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Typing :: Typed",
   ],
 
-  name=NAME,
-  author="Andrei Starichenko",
-  author_email="centroid@mail.ru",
+  name=PROJECT.NAME_IMPORT,
+  author=PROJECT.AUTHOR_NAME,
+  author_email=PROJECT.AUTHOR_EMAIL,
   long_description=readme,
   long_description_content_type="text/markdown",
 
-  url="https://github.com/centroid457/",  # HOMEPAGE
+  url=PROJECT.AUTHOR_HOMEPAGE,  # HOMEPAGE
   project_urls={
     # "Documentation": f"https://github.com/centroid457/{NAME}/blob/main/GUIDE.md",
-    "Source": f"https://github.com/centroid457/{NAME}",
+    "Source": f"https://github.com/centroid457/{PROJECT.NAME_IMPORT}",
   },
 
-  packages=[NAME, ],
+  packages=[PROJECT.NAME_IMPORT, ],
   install_requires=[],
   python_requires=">=3.6"
 )
