@@ -6,6 +6,10 @@ TODOS/WISHES
 1. add check_version (py interpreter for example!)
 2. add check_requirements_txt
 
+0.0.9 (2024-01-14)
+-------------------
+- move requirents__centr457 from file into list + add all projects
+
 0.0.8 (2024-01-14)
 -------------------
 - fix ReqCheckStr_Os for derivatives visout settings
