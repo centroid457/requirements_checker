@@ -61,6 +61,54 @@ class Packages:
 
     # =================================================================================================================
     def upgrade(self, modules: Union[str, List[str]]) -> bool:
+        """
+FIXME: sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!!
+==================================================
+[#####################ERROR#####################]
+self.counter=1
+self.counter_in_list=0
+self.last_cmd='python -m pip install --upgrade private_values'
+self.last_duration=1.392156
+self.last_finished=True
+self.last_finished_success=False
+self.last_retcode=1
+--------------------------------------------------
+self.last_stdout=
+        |'Collecting private_values'
+        |'  Using cached private_values-0.5.4.tar.gz (8.8 kB)'
+        |'  Preparing metadata (setup.py): started'
+        |"  Preparing metadata (setup.py): finished with status 'error'"
+        |''
+--------------------------------------------------
+self.last_stderr=
+        |'  error: subprocess-exited-with-error'
+        |'  '
+        |'  python setup.py egg_info did not run successfully.'
+        |'  exit code: 1'
+        |'  '
+        |'  [6 lines of output]'
+        |'  Traceback (most recent call last):'
+        |'    File "<string>", line 2, in <module>'
+        |'    File "<pip-setuptools-caller>", line 34, in <module>'
+        |'    File "C:\\Users\\a.starichenko\\AppData\\Local\\Temp\\pip-install-u6219r9f\\private-values_f5cf3965eb014632a70ff97372b73571\\setup.py", line 2, in <module>'
+        |'      from PROJECT import PROJECT'
+        |"  ModuleNotFoundError: No module named 'PROJECT'"
+        |'  [end of output]'
+        |'  '
+        |'  note: This error originates from a subprocess, and is likely not a problem with pip.'
+        |'error: metadata-generation-failed'
+        |''
+        |'Encountered error while generating package metadata.'
+        |''
+        |'See above for output.'
+        |''
+        |'note: This is an issue with the package mentioned above, not pip.'
+        |'hint: See above for details.'
+        |''
+--------------------------------------------------
+self.last_exx_timeout=None
+==================================================
+"""
         # LIST -----------------------------------------------
         if isinstance(modules, (list, tuple, set, )):
             result = True

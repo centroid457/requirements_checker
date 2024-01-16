@@ -46,7 +46,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "add work with packages",
     ]
     FIXME: List[str] = [
-        "..."
+        "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
         "apply new pypi template"
