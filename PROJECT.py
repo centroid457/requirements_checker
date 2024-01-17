@@ -44,6 +44,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
         "add work with packages",
+        "add within moduls upgrade module versions before and after",
     ]
     FIXME: List[str] = [
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"

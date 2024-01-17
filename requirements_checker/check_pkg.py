@@ -108,6 +108,30 @@ self.last_stderr=
 --------------------------------------------------
 self.last_exx_timeout=None
 ==================================================
+
+
+ALREADY LAST
+==================================================
+Requirement already satisfied: pip in c:\python3.12.0x64\lib\site-packages (23.3.2)
+
+
+GOOD UPGRADE
+==================================================
+C:\Users\a.starichenko>pip install --upgrade pyqt-templates
+Requirement already satisfied: pyqt-templates in c:\python3.12.0x64\lib\site-packages (0.0.4)
+Collecting pyqt-templates
+  Using cached pyqt_templates-0.0.6-py3-none-any.whl.metadata (4.9 kB)
+Using cached pyqt_templates-0.0.6-py3-none-any.whl (21 kB)
+Installing collected packages: pyqt-templates
+  Attempting uninstall: pyqt-templates
+    Found existing installation: pyqt-templates 0.0.4
+    Uninstalling pyqt-templates-0.0.4:
+      Successfully uninstalled pyqt-templates-0.0.4
+Successfully installed pyqt-templates-0.0.6
+
+C:\Users\a.starichenko>
+==================================================
+
 """
         # LIST -----------------------------------------------
         if isinstance(modules, (list, tuple, set, )):
@@ -118,6 +142,9 @@ self.last_exx_timeout=None
 
         # ONE -----------------------------------------------
         cmd = f"{self.PYTHON_PIP} install --upgrade {modules}"
+        # TODO: add module versions before and after or only if upgraded
+        """
+        """
         return CliUser().send(cmd, timeout=60 * 2)
 
     def upgrade_pip(self) -> bool:
