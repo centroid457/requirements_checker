@@ -8,10 +8,15 @@
 
 ********************************************************************************
 ## FIXME
-1. ...  
+1. sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!  
 
 ********************************************************************************
 ## NEWS
+
+0.1.1 (2024/01/18 12:18:30)
+------------------------------
+- show result for module installation  
+- apply new PRJ version 0.0.2  
 
 0.1.0 (2024/01/14 07:58:12)
 ------------------------------
