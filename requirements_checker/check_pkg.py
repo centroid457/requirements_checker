@@ -1,5 +1,6 @@
 from typing import *
 import pathlib
+import re
 from cli_user import CliUser
 
 from . import ReqCheckStr_Os
@@ -62,7 +63,89 @@ class Packages:
     # =================================================================================================================
     def upgrade(self, modules: Union[str, List[str]]) -> bool:
         """
+NOT EXISTS
+==================================================
+[CLI_SEND] [python -m pip install --upgrade singleton-meta]
+==================================================
+self.counter=1
+self.counter_in_list=0
+self.last_cmd='python -m pip install --upgrade singleton-meta'
+self.last_duration=1.347492
+self.last_finished=True
+self.last_finished_success=True
+self.last_retcode=0
+--------------------------------------------------
+self.last_stdout=
+	|'Collecting singleton-meta'
+	|'  Using cached singleton_meta-0.1.1-py3-none-any.whl.metadata (2.8 kB)'
+	|'Using cached singleton_meta-0.1.1-py3-none-any.whl (5.4 kB)'
+	|'Installing collected packages: singleton-meta'
+	|'Successfully installed singleton-meta-0.1.1'
+	|''
+--------------------------------------------------
+self.last_stderr=
+--------------------------------------------------
+self.last_exx_timeout=None
+==================================================
+
+
+
+ALREADY OK
+==================================================
+[CLI_SEND] [python -m pip install --upgrade singleton-meta]
+==================================================
+self.counter=1
+self.counter_in_list=0
+self.last_cmd='python -m pip install --upgrade singleton-meta'
+self.last_duration=1.39782
+self.last_finished=True
+self.last_finished_success=True
+self.last_retcode=0
+--------------------------------------------------
+self.last_stdout=
+	|'Requirement already satisfied: singleton-meta in c:\\python3.12.0x64\\lib\\site-packages (0.1.1)'
+	|''
+--------------------------------------------------
+self.last_stderr=
+--------------------------------------------------
+self.last_exx_timeout=None
+==================================================
+
+
+
+GOOD UPGRADE
+==================================================
+[CLI_SEND] [python -m pip install --upgrade requirements-checker]
+==================================================
+self.counter=1
+self.counter_in_list=0
+self.last_cmd='python -m pip install --upgrade requirements-checker'
+self.last_duration=1.367846
+self.last_finished=True
+self.last_finished_success=True
+self.last_retcode=0
+--------------------------------------------------
+self.last_stdout=
+	|'Requirement already satisfied: requirements-checker in c:\\!=starichenko=element\\!=projects\\abc=requirements_checker (0.0.7)'
+	|'Collecting requirements-checker'
+	|'  Using cached requirements_checker-0.1.0-py3-none-any.whl.metadata (2.2 kB)'
+	|'Using cached requirements_checker-0.1.0-py3-none-any.whl (7.8 kB)'
+	|'Installing collected packages: requirements-checker'
+	|'  Attempting uninstall: requirements-checker'
+	|'    Found existing installation: requirements-checker 0.0.7'
+	|"    Can't uninstall 'requirements-checker'. No files were found to uninstall."
+	|'Successfully installed requirements-checker-0.1.0'
+	|''
+--------------------------------------------------
+self.last_stderr=
+--------------------------------------------------
+self.last_exx_timeout=None
+==================================================
+
+
+
 FIXME: sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!!
+ERROR ON DISTRIBUTION
 ==================================================
 [#####################ERROR#####################]
 self.counter=1
@@ -108,30 +191,6 @@ self.last_stderr=
 --------------------------------------------------
 self.last_exx_timeout=None
 ==================================================
-
-
-ALREADY LAST
-==================================================
-Requirement already satisfied: pip in c:\python3.12.0x64\lib\site-packages (23.3.2)
-
-
-GOOD UPGRADE
-==================================================
-C:\Users\a.starichenko>pip install --upgrade pyqt-templates
-Requirement already satisfied: pyqt-templates in c:\python3.12.0x64\lib\site-packages (0.0.4)
-Collecting pyqt-templates
-  Using cached pyqt_templates-0.0.6-py3-none-any.whl.metadata (4.9 kB)
-Using cached pyqt_templates-0.0.6-py3-none-any.whl (21 kB)
-Installing collected packages: pyqt-templates
-  Attempting uninstall: pyqt-templates
-    Found existing installation: pyqt-templates 0.0.4
-    Uninstalling pyqt-templates-0.0.4:
-      Successfully uninstalled pyqt-templates-0.0.4
-Successfully installed pyqt-templates-0.0.6
-
-C:\Users\a.starichenko>
-==================================================
-
 """
         # LIST -----------------------------------------------
         if isinstance(modules, (list, tuple, set, )):
@@ -142,10 +201,32 @@ C:\Users\a.starichenko>
 
         # ONE -----------------------------------------------
         cmd = f"{self.PYTHON_PIP} install --upgrade {modules}"
-        # TODO: add module versions before and after or only if upgraded
-        """
-        """
-        return CliUser().send(cmd, timeout=60 * 2)
+        cli = CliUser()
+        cli.send(cmd, timeout=60 * 2, print_all_states=False)
+
+        # RESULTS ===================================================
+        result = f"[{modules}]"
+        # RESULT EXISTS ---------------------------------------------
+        # 'Requirement already satisfied: requirements-checker in c:\\!=starichenko=element\\!=projects\\abc=requirements_checker (0.0.7)'
+        match = re.search(r'Requirement already satisfied: .+ \((\d+\.\d+\.\d+)\)', cli.last_stdout)
+        if len(cli.last_stdout.split("\n")) == 2 and match:
+            result += f"(already new){match[1]}"
+
+        # result EXISTS OLD ---------------------------------------------
+        # 'Found existing installation: requirements-checker 0.0.7'
+        match = re.search(r'Found existing installation: \S+ (\d+\.\d+\.\d+)\s', cli.last_stdout)
+        if match:
+            result += f"(existed old){match[1]}"
+
+        # result NEW VERSION! ---------------------------------------------
+        # 'Successfully installed singleton-meta-0.1.1'
+        match = re.search(r'Successfully installed \S+-(\d+\.\d+\.\d+)\s', cli.last_stdout)
+        if match:
+            result += f"->{match[1]}(upgraded new)"
+
+        # FINISH ===================================================
+        print(result)
+        return cli.last_finished_success
 
     def upgrade_pip(self) -> bool:
         return self.upgrade("pip")

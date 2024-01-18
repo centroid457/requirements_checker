@@ -10,5 +10,5 @@ from requirements_checker import *
 # # victim.check_no_HELLO()
 
 
-Packages().upgrade_pip()
+# Packages().upgrade_pip()
 Packages().upgrade__centroid457()

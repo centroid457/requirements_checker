@@ -203,7 +203,8 @@ class History(ReleaseFileBase):
             splits = re.split(r'\s*0\.0\.0 \(', self.LAST_NEWS)
             self.LAST_NEWS = splits[0]
 
-            # VAR 2 --------------------------------
+        else:
+            self.LAST_NEWS = splits[0]
 
         # print(f"{string=}")
         # print(f"{self.LAST_NEWS=}")
