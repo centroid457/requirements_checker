@@ -48,7 +48,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        "add version_get/check_installed",
+        ["add with tests", "version_get", "check_installed", "uninstall", ],
     ]
 
 

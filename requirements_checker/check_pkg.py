@@ -65,6 +65,9 @@ class Packages:
     # =================================================================================================================
     def upgrade(self, modules: Union[str, List[str]]) -> bool:
         """
+        you can use explicit version definitions!
+            name==0.0.1
+
 NOT EXISTS
 ==================================================
 [CLI_SEND] [python -m pip install --upgrade singleton-meta]
@@ -257,8 +260,7 @@ self.last_exx_timeout=None
     # =================================================================================================================
     def version_get(self, name: str) -> Optional[str]:
         """
-
-        C:\Users\a.starichenko>pip show object-info
+        C:\\Users\\a.starichenko>pip show object-info
         Name: object-info
         Version: 0.1.12
         Summary: print info about object (attributes+properties+methods results)
@@ -270,7 +272,7 @@ self.last_exx_timeout=None
         Requires:
         Required-by:
 
-        C:\Users\a.starichenko>pip show object_info
+        C:\\Users\\a.starichenko>pip show object_info
         Name: object-info
         Version: 0.1.12
         Summary: print info about object (attributes+properties+methods results)
@@ -282,7 +284,7 @@ self.last_exx_timeout=None
         Requires:
         Required-by:
 
-        C:\Users\a.starichenko>
+        C:\\Users\\a.starichenko>
         """
         cmd = f"{self.PYTHON_PIP} show {name}"
 
@@ -302,19 +304,15 @@ self.last_exx_timeout=None
         # ONE -----------------------------------------------
         return self.version_get(modules) is not None
 
-    def uninstall(self, modules: Union[str, List[str]]) -> bool:
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        pass
+    def uninstall(self, modules: Union[str, List[str]]) -> None:
+        # LIST -----------------------------------------------
+        if isinstance(modules, (list, tuple, set, )):
+            for module in modules:
+                self.uninstall(module)
+
+        # ONE -----------------------------------------------
+        cmd = f"{self.PYTHON_PIP} uninstall -y {modules}"
+        self.cli.send(cmd, timeout=60)
 
 
 # =====================================================================================================================

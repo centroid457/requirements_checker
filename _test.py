@@ -224,12 +224,28 @@ class Test_Pkg:
         self.VICTIM = type("VICTIM", (Packages,), {})
 
     # -----------------------------------------------------------------------------------------------------------------
-    @pytest.mark.skip
-    def test__upgrade(self):
+    def test__all_methods(self):
+        dummy_module_name = "dummy-module"
         victim = self.VICTIM()
 
+        for version in ["0.0.1", "0.0.2", ]:
+            assert victim.upgrade(f"{dummy_module_name}=={version}")
+            assert victim.version_get(dummy_module_name) == version
+            assert victim.check_installed(dummy_module_name) is True
+
+        victim.uninstall(dummy_module_name)
+        assert victim.version_get(dummy_module_name) is None
+        assert victim.check_installed(dummy_module_name) is False
+
+
+# =====================================================================================================================
+class Test_File:
+    def setup_method(self, method):
+        self.VICTIM = type("VICTIM", (Packages,), {})
+
+    # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.skip
-    def test__upgrade_file(self):
+    def test__upgrade(self):
         victim = self.VICTIM()
 
 
