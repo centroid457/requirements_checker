@@ -4,7 +4,6 @@
 ## TODO
 1. add WARN_if__*/if_not__* (and use message in stderr)  
 2. add check_version (py interpreter for example!)  
-3. add work with packages  
 
 ********************************************************************************
 ## FIXME
@@ -12,6 +11,13 @@
 
 ********************************************************************************
 ## NEWS
+
+0.1.2 (2024/01/19 16:34:41)
+------------------------------
+- add with tests:  
+	- version_get  
+	- check_installed  
+	- uninstall  
 
 0.1.1 (2024/01/18 12:18:30)
 ------------------------------
