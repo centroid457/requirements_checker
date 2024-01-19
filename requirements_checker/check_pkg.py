@@ -248,9 +248,11 @@ self.last_exx_timeout=None
         # TODO: FINISH
         # TODO: FINISH
         # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
         pass
-        # cmd = ""
-        # CliUser().send(cmd)
 
     # =================================================================================================================
     def version_get(self, name: str) -> Optional[str]:
@@ -290,16 +292,21 @@ self.last_exx_timeout=None
                 return match[1]
 
     def check_installed(self, modules: Union[str, List[str]]) -> bool:
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
+        # LIST -----------------------------------------------
+        if isinstance(modules, (list, tuple, set, )):
+            for module in modules:
+                if not self.upgrade(module):
+                    return False
+            return True
+
+        # ONE -----------------------------------------------
         return self.version_get(modules) is not None
 
-    def delete(self, modules: Union[str, List[str]]) -> bool:
+    def uninstall(self, modules: Union[str, List[str]]) -> bool:
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
         # TODO: FINISH
         # TODO: FINISH
         # TODO: FINISH
@@ -308,8 +315,6 @@ self.last_exx_timeout=None
         # TODO: FINISH
         # TODO: FINISH
         pass
-        # cmd = ""
-        # CliUser().send(cmd)
 
 
 # =====================================================================================================================
