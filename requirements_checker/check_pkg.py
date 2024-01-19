@@ -38,6 +38,7 @@ class Packages:
 
     pip_name: str
     python_name: str
+    cli: CliUser
 
     # FILENAME_457: str = "requirements__centoid457.txt"      # FILE WILL NOT GO WITHING MODULE AS PART!
     # FILEPATH_457: pathlib.Path = pathlib.Path(__file__).parent.joinpath(FILENAME_457)
@@ -59,6 +60,7 @@ class Packages:
             self.python_name = "python3"
 
         self.PYTHON_PIP = f"{self.python_name} -m pip"
+        self.cli = CliUser()
 
     # =================================================================================================================
     def upgrade(self, modules: Union[str, List[str]]) -> bool:
@@ -201,32 +203,31 @@ self.last_exx_timeout=None
 
         # ONE -----------------------------------------------
         cmd = f"{self.PYTHON_PIP} install --upgrade {modules}"
-        cli = CliUser()
-        cli.send(cmd, timeout=60 * 2, print_all_states=False)
+        self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
 
         # RESULTS ===================================================
         result = f"[{modules}]"
         # RESULT EXISTS ---------------------------------------------
         # 'Requirement already satisfied: requirements-checker in c:\\!=starichenko=element\\!=projects\\abc=requirements_checker (0.0.7)'
-        match = re.search(r'Requirement already satisfied: .+ \((\d+\.\d+\.\d+)\)', cli.last_stdout)
-        if len(cli.last_stdout.split("\n")) == 2 and match:
+        match = re.search(r'Requirement already satisfied: .+ \((\d+\.\d+\.\d+)\)', self.cli.last_stdout)
+        if len(self.cli.last_stdout.split("\n")) == 2 and match:
             result += f"(already new){match[1]}"
 
         # result EXISTS OLD ---------------------------------------------
         # 'Found existing installation: requirements-checker 0.0.7'
-        match = re.search(r'Found existing installation: \S+ (\d+\.\d+\.\d+)\s', cli.last_stdout)
+        match = re.search(r'Found existing installation: \S+ (\d+\.\d+\.\d+)\s', self.cli.last_stdout)
         if match:
             result += f"(existed old){match[1]}"
 
         # result NEW VERSION! ---------------------------------------------
         # 'Successfully installed singleton-meta-0.1.1'
-        match = re.search(r'Successfully installed \S+-(\d+\.\d+\.\d+)\s', cli.last_stdout)
+        match = re.search(r'Successfully installed \S+-(\d+\.\d+\.\d+)\s', self.cli.last_stdout)
         if match:
             result += f"->{match[1]}(upgraded new)"
 
         # FINISH ===================================================
         print(result)
-        return cli.last_finished_success
+        return self.cli.last_finished_success
 
     def upgrade_pip(self) -> bool:
         return self.upgrade("pip")
@@ -238,34 +239,71 @@ self.last_exx_timeout=None
     def upgrade_file(self, filepath: Union[str, pathlib.Path]) -> bool:
         filepath = pathlib.Path(filepath)
         cmd = f"{self.PYTHON_PIP} install --upgrade -r '{filepath}'"
-        return CliUser().send(cmd, timeout=60 * 5)
-
-    # =================================================================================================================
-    def delete(self, modules: Union[str, List[str]]) -> bool:
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        pass
-        # cmd = ""
-        # CliUser().send(cmd)
-
-    def check_installed(self, modules: Union[str, List[str]]) -> bool:
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        pass
-        # cmd = ""
-        # CliUser().send(cmd)
+        return self.cli.send(cmd, timeout=60 * 5)
 
     def check_file(self, file) -> bool:
         # TODO: FINISH
         # TODO: FINISH
         # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
         pass
         # cmd = ""
         # CliUser().send(cmd)
 
-    def get_version(self, modules: str) -> str:
+    # =================================================================================================================
+    def version_get(self, name: str) -> Optional[str]:
+        """
+
+        C:\Users\a.starichenko>pip show object-info
+        Name: object-info
+        Version: 0.1.12
+        Summary: print info about object (attributes+properties+methods results)
+        Home-page: https://github.com/centroid457/
+        Author: Andrei Starichenko
+        Author-email: centroid@mail.ru
+        License:
+        Location: C:\Python3.12.0x64\Lib\site-packages
+        Requires:
+        Required-by:
+
+        C:\Users\a.starichenko>pip show object_info
+        Name: object-info
+        Version: 0.1.12
+        Summary: print info about object (attributes+properties+methods results)
+        Home-page: https://github.com/centroid457/
+        Author: Andrei Starichenko
+        Author-email: centroid@mail.ru
+        License:
+        Location: C:\Python3.12.0x64\Lib\site-packages
+        Requires:
+        Required-by:
+
+        C:\Users\a.starichenko>
+        """
+        cmd = f"{self.PYTHON_PIP} show {name}"
+
+        if self.cli.send(cmd, timeout=1, print_all_states=False) and self.cli.last_stdout:
+            match = re.search(r'Version: (\d+\.\d+\.\d+)\s*', self.cli.last_stdout)
+            if match:
+                return match[1]
+
+    def check_installed(self, modules: Union[str, List[str]]) -> bool:
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        return self.version_get(modules) is not None
+
+    def delete(self, modules: Union[str, List[str]]) -> bool:
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
         # TODO: FINISH
         # TODO: FINISH
         # TODO: FINISH

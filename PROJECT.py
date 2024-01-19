@@ -38,19 +38,17 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 1)
+    VERSION: Tuple[int, int, int] = (0, 1, 2)
     VERSION_STR: str = ".".join(map(str, VERSION))
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
-        "add work with packages",
     ]
     FIXME: List[str] = [
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        "show result for module installation",
-        "apply new PRJ version 0.0.2"
+        "add version_get/check_installed",
     ]
 
 
