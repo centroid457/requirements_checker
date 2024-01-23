@@ -16,6 +16,7 @@ class PROJECT:
     NAME_IMPORT: str = "requirements_checker"
     KEYWORDS: List[str] = [
         "check requirements", "check system requirements", "raise/bool if no requirements",
+        "python packages work (upgrade/delete/version get)"
     ]
     CLASSIFIERS_TOPICS_ADD: List[str] = [
         # "Topic :: Communications",
@@ -34,11 +35,12 @@ designed for check requirements (systemOs) and raise/bool if no match
 
         "check requirements (systemOs), raise/bool if no match",
         "create fuck(?)/getter and is it for check for settings",
+        ["python packages work", "upgrade", "delete", "version_get", "check_installed)", "upgrade pip"],
         "...see tests for this!"
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 2)
+    VERSION: Tuple[int, int, int] = (0, 1, 3)
     VERSION_STR: str = ".".join(map(str, VERSION))
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
@@ -48,7 +50,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        ["add with tests", "version_get", "check_installed", "uninstall", ],
+        "use current interpreter path for pkg installation"
     ]
 
 

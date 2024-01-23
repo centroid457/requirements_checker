@@ -1,6 +1,7 @@
 from typing import *
 import pathlib
 import re
+import sys
 from cli_user import CliUser
 
 from . import ReqCheckStr_Os
@@ -36,8 +37,8 @@ class Packages:
         "bdist-wheel-name",
     ]
 
-    pip_name: str
-    python_name: str
+    _pip_name: str
+    _python_path: str
     cli: CliUser
 
     # FILENAME_457: str = "requirements__centoid457.txt"      # FILE WILL NOT GO WITHING MODULE AS PART!
@@ -52,14 +53,16 @@ class Packages:
     #     print(f"{self.FILEPATH_457.exists()}")
 
     def __init__(self):
-        if ReqCheckStr_Os().bool_if__WINDOWS():
-            self.pip_name = "pip"
-            self.python_name = "python"
-        else:
-            self.pip_name = "pip3"
-            self.python_name = "python3"
+        # if ReqCheckStr_Os().bool_if__WINDOWS():
+        #     self._pip_name = "pip"
+        #     self._python_path = "python"
+        # else:
+        #     self._pip_name = "pip3"
+        #     self._python_path = "python3"
 
-        self.PYTHON_PIP = f"{self.python_name} -m pip"
+        self._python_path = sys.executable
+
+        self.PYTHON_PIP = f"{self._python_path} -m pip"
         self.cli = CliUser()
 
     # =================================================================================================================
