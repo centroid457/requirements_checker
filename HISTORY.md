@@ -12,6 +12,10 @@
 ********************************************************************************
 ## NEWS
 
+0.1.3 (2024/01/23 10:36:20)
+------------------------------
+- use current interpreter path for pkg installation  
+
 0.1.2 (2024/01/19 16:34:41)
 ------------------------------
 - add with tests:  
@@ -34,7 +38,7 @@
 
 0.0.8 (2024-01-14)
 -------------------
-- fix ReqCheckStr_Os for derivatives visout settings
+- fix ReqCheckStr_Os for derivatives without settings
 - try add Packages as modules upgrades
 
 0.0.7 (2023-12-18)

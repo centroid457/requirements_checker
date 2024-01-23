@@ -1,4 +1,4 @@
-# requirements_checker (v0.1.2)
+# requirements_checker (v0.1.3)
 
 ## DESCRIPTION_SHORT
 Check if requirements met
@@ -10,7 +10,13 @@ designed for check requirements (systemos) and raise/bool if no match
 ## Features
 1. check requirements (systemOs), raise/bool if no match  
 2. create fuck(?)/getter and is it for check for settings  
-3. ...see tests for this!  
+3. python packages work:  
+	- upgrade  
+	- delete  
+	- version_get  
+	- check_installed)  
+	- upgrade pip  
+4. ...see tests for this!  
 
 
 ********************************************************************************
