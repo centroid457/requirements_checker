@@ -13,6 +13,8 @@ class Packages:
         # =============================
         # CENTROID457 all projects
         # -----------------------------
+        "dummy-module",
+
         "requirements-checker",
         "object-info",
         "singleton-meta",
@@ -27,7 +29,9 @@ class Packages:
         "bus-user",
 
         "threading-manager",
-        "pyqt_templates",
+        "pyqt-templates",
+
+        "testplans",
 
         # =============================
         # DISTRIBUTION PyPI
