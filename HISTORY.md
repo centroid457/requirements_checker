@@ -12,6 +12,13 @@
 ********************************************************************************
 ## NEWS
 
+0.1.5 (2024/01/26 17:31:01)
+------------------------------
+- add new modules in PKGSET__CENTROID_457:  
+	- dummy-module  
+	- testplans  
+	- server-templates  
+
 0.1.3 (2024/01/23 10:36:20)
 ------------------------------
 - use current interpreter path for pkg installation  

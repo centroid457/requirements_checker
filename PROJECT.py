@@ -40,7 +40,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 4)
+    VERSION: Tuple[int, int, int] = (0, 1, 5)
     VERSION_STR: str = ".".join(map(str, VERSION))
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
@@ -50,7 +50,11 @@ designed for check requirements (systemOs) and raise/bool if no match
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        "add new modules in PKGSET__CENTROID_457: server-templates",
+        ["add new modules in PKGSET__CENTROID_457",
+         "dummy-module",
+         "testplans",
+         "server-templates",
+         ],
     ]
 
 

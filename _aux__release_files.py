@@ -218,6 +218,9 @@ class History(ReleaseFileBase):
 
         # ----------------------------
         for news_item in PROJECT.NEWS:
+            if isinstance(news_item, list):
+                news_item = news_item[0]
+
             if re.search(r'- ' + str(news_item) + r'\s*\n', self.LAST_NEWS):
                 msg = f"exists_news"
                 print(msg)
