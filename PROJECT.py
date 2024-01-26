@@ -50,7 +50,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        ["add new modules in PKGSET__CENTROID_457", "dummy-module", "testplans"],
+        "add new modules in PKGSET__CENTROID_457: server-templates",
     ]
 
 

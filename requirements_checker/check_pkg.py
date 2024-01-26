@@ -32,6 +32,7 @@ class Packages:
         "pyqt-templates",
 
         "testplans",
+        "server-templates",
 
         # =============================
         # DISTRIBUTION PyPI
