@@ -281,7 +281,7 @@ self.last_exx_timeout=None
         Author: Andrei Starichenko
         Author-email: centroid@mail.ru
         License:
-        Location: C:\Python3.12.0x64\Lib\site-packages
+        Location: C:\\Python3.12.0x64\\Lib\\site-packages
         Requires:
         Required-by:
 
@@ -293,7 +293,7 @@ self.last_exx_timeout=None
         Author: Andrei Starichenko
         Author-email: centroid@mail.ru
         License:
-        Location: C:\Python3.12.0x64\Lib\site-packages
+        Location: C:\\Python3.12.0x64\\Lib\\site-packages
         Requires:
         Required-by:
 
