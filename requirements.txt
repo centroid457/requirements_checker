@@ -1,3 +1,12 @@
+# ==========================
+# VERSION = (0, 0, 1)   # just add version
+
+# COMMON ===================
 pytest
-cli-user
-dummy-module
+requirements-checker
+object-info
+
+# ========================================
+# SPECIAL FOR THIS PROJECT ---------------
+
+# ========================================
