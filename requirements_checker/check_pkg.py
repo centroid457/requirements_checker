@@ -37,9 +37,14 @@ class Packages:
         # =============================
         # DISTRIBUTION PyPI
         # -----------------------------
+        # new setup
+        "build",
+
+        # old setup (maybe not all)
         "sdist",
         "setuptools",
         "bdist-wheel-name",
+
     ]
 
     _pip_name: str

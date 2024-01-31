@@ -1,10 +1,10 @@
-# requirements_checker (v0.1.5)
+# requirements_checker (v0.1.6)
 
 ## DESCRIPTION_SHORT
-Check if requirements met
+check if requirements met
 
 ## DESCRIPTION_LONG
-designed for check requirements (systemos) and raise/bool if no match
+designed for check requirements (systemOs) and raise/bool if no match
 
 
 ## Features
