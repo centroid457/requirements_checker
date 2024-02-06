@@ -1,4 +1,4 @@
-# requirements_checker (v0.1.6)
+# requirements_checker (v0.1.7)
 
 ## DESCRIPTION_SHORT
 check if requirements met
