@@ -1,18 +1,19 @@
 from typing import *
+from _aux__release_files import release_files_update
+
+
+# =====================================================================================================================
+VERSION = (0, 0, 3)   # 1/deprecate _VERSION_TEMPLATE from PRJ object +2/place update_prj here in __main__ +3/separate finalize attrs
 
 
 # =====================================================================================================================
 class PROJECT:
-    # AUX --------------------------------------------------
-    _VERSION_TEMPLATE: Tuple[int] = (0, 0, 2)
-
     # AUTHOR -----------------------------------------------
     AUTHOR_NAME: str = "Andrei Starichenko"
     AUTHOR_EMAIL: str = "centroid@mail.ru"
     AUTHOR_HOMEPAGE: str = "https://github.com/centroid457/"
 
     # PROJECT ----------------------------------------------
-    NAME_INSTALL: str = "requirements-checker"
     NAME_IMPORT: str = "requirements_checker"
     KEYWORDS: List[str] = [
         "check requirements", "check system requirements", "raise/bool if no requirements",
@@ -40,8 +41,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 6)
-    VERSION_STR: str = ".".join(map(str, VERSION))
+    VERSION: Tuple[int, int, int] = (0, 1, 7)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
@@ -50,15 +50,17 @@ designed for check requirements (systemOs) and raise/bool if no match
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        ["add new modules in PKGSET__CENTROID_457/2",
-         "build - as new setup",
-         ],
+        "zero use pypi new version",
     ]
+
+    # FINALIZE -----------------------------------------------
+    VERSION_STR: str = ".".join(map(str, VERSION))
+    NAME_INSTALL: str = NAME_IMPORT.replace("_", "-")
 
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    pass
+    release_files_update(PROJECT)
 
 
 # =====================================================================================================================
