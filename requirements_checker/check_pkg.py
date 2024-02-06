@@ -39,6 +39,7 @@ class Packages:
         # -----------------------------
         # new setup
         "build",
+        "twine",    # necessary! share project on pypi!
 
         # old setup (maybe not all)
         "sdist",
