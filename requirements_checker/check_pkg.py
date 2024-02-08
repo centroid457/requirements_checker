@@ -256,6 +256,10 @@ self.last_exx_timeout=None
     def upgrade_file(self, filepath: Union[str, pathlib.Path]) -> bool:
         filepath = pathlib.Path(filepath)
         cmd = f"{self.PYTHON_PIP} install --upgrade -r {filepath}"
+        print("-" *20)
+        print(f"{filepath=}")
+        print(filepath.read_text(encoding="utf8"))
+        print("-" *20)
         return self.cli.send(cmd, timeout=60 * 5)
 
     def check_file(self, file) -> bool:

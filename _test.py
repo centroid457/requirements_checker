@@ -262,5 +262,13 @@ class Test_File:
 
         assert victim.check_installed(DUMMY_MODULE_NAME) is True
 
+    def test__print(self, tmpdir):
+        """just see printed file content"""
+        victim = self.VICTIM()
+
+        filepath = pathlib.Path(tmpdir.strpath).joinpath("requirements.txt")
+        filepath.write_text(DUMMY_MODULE_NAME)
+        victim.upgrade_file(filepath)
+
 
 # =====================================================================================================================
