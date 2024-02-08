@@ -22,7 +22,7 @@ print("3=upgrade__centroid457=================================")
 pkgs_cli.upgrade__centroid457()
 print()
 print("4=requirements.txt=====================================")
-filepath = pathlib.Path(__file__).parent.joinpath("requirements.txt")   # FIXME: not working!
+filepath = pathlib.Path(__file__).parent.joinpath("requirements.txt")
 pkgs_cli.upgrade_file(filepath)
 
 

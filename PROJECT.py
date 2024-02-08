@@ -41,16 +41,17 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 8)
+    VERSION: Tuple[int, int, int] = (0, 1, 9)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
+        "add check_file"
     ]
     FIXME: List[str] = [
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        "add twine for share on pypi",
+        "fix upgrade_file",
     ]
 
     # FINALIZE -----------------------------------------------
