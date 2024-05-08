@@ -11,14 +11,18 @@ from . import ReqCheckStr_Os
 class Packages:
     PKGSET__CENTROID_457: List[str] = [
         # =============================
-        # CENTROID457 all projects
+        # CENTROID457 common projects
         # -----------------------------
-        "dummy-module",
-
         "requirements-checker",
         "object-info",
         "singleton-meta",
         "funcs-aux",
+        "logger-aux",
+
+        # =============================
+        # CENTROID457 other projects
+        # -----------------------------
+        "dummy-module",
 
         "annot-attrs",
         "private-values",
