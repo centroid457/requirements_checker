@@ -41,7 +41,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 12)
+    VERSION: Tuple[int, int, int] = (0, 1, 13)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
@@ -51,7 +51,8 @@ designed for check requirements (systemOs) and raise/bool if no match
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        "[Packages] add upgrade_prj",
+        "[__INIT__.py] fix import",
+        "apply last pypi template",
     ]
 
     # FINALIZE -----------------------------------------------
