@@ -1,5 +1,8 @@
-from requirements_checker import *
+# DON'T DELETE!
+# useful to start smth without pytest and not to run in main script!
 
+
+from requirements_checker import *
 
 # class ReqCheckStr_Base(ReqCheckStr_Base):
 #     _GETTER = lambda: "hello"

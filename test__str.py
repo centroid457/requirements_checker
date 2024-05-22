@@ -9,11 +9,7 @@ from requirements_checker import *
 
 
 # =====================================================================================================================
-DUMMY_MODULE_NAME = "dummy-module"
-
-
-# =====================================================================================================================
-class Test_Base:
+class Test__Str:
     def setup_method(self, method):
         self.VICTIM = type("VICTIM", (ReqCheckStr_Base,), {})
 
@@ -197,78 +193,6 @@ class Test_Base:
             pass
         else:
             assert False
-
-
-# =====================================================================================================================
-class Test_Os:
-    def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (ReqCheckStr_Os,), {})
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__bool(self):
-        victim = self.VICTIM()
-
-        assert not hasattr(victim, "WINDOWS")
-
-        assert victim.bool_if__WINDOWS() != victim.bool_if__LINUX()
-        if victim._sample_actual in ["windows", ]:
-            assert victim.bool_if__WINDOWS() is True
-
-    def test__1(self):
-        self.VICTIM.LINUX = True
-        self.VICTIM.WINDOWS = True
-
-        victim = self.VICTIM()
-        assert victim._sample_actual in ["windows", "linux"]
-        assert victim.check() is True
-
-
-# =====================================================================================================================
-class Test_Pkg:
-    def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (Packages,), {})
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__all_methods(self):
-        victim = self.VICTIM()
-
-        for version in ["0.0.1", "0.0.2", ]:
-            assert victim.upgrade(f"{DUMMY_MODULE_NAME}=={version}")
-            assert victim.version_get(DUMMY_MODULE_NAME) == version
-            assert victim.check_installed(DUMMY_MODULE_NAME) is True
-
-        victim.uninstall(DUMMY_MODULE_NAME)
-        assert victim.version_get(DUMMY_MODULE_NAME) is None
-        assert victim.check_installed(DUMMY_MODULE_NAME) is False
-
-
-# =====================================================================================================================
-class Test_File:
-    def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (Packages,), {})
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__upgrade(self, tmpdir):
-        # print(tmpdir)
-        # ObjectInfo(tmpdir).print()
-
-        victim = self.VICTIM()
-        victim.uninstall(DUMMY_MODULE_NAME)
-        assert victim.check_installed(DUMMY_MODULE_NAME) is False
-
-        filepath = pathlib.Path(tmpdir.strpath).joinpath("requirements.txt")
-        filepath.write_text(DUMMY_MODULE_NAME)
-        assert victim.upgrade_file(filepath) is True
-
-        assert victim.check_installed(DUMMY_MODULE_NAME) is True
-
-    def test__print(self, tmpdir):
-        """just see printed file content"""
-        victim = self.VICTIM()
-
-        filepath = pathlib.Path(tmpdir.strpath).joinpath("requirements.txt")
-        filepath.write_text(DUMMY_MODULE_NAME)
-        victim.upgrade_file(filepath)
 
 
 # =====================================================================================================================

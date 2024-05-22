@@ -2,9 +2,8 @@ from typing import *
 import pathlib
 import re
 import sys
-from cli_user import CliUser
 
-from . import ReqCheckStr_Os
+from cli_user import CliUser
 
 
 # =====================================================================================================================
