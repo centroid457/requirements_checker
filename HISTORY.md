@@ -9,9 +9,18 @@
 ********************************************************************************
 ## FIXME
 1. sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!  
+2. FIX TESTS!  
 
 ********************************************************************************
 ## NEWS
+
+0.1.14 (2024/05/27 15:44:37)
+------------------------------
+- [STR] big ref (just start):  
+	- use only one check() method!  
+	- renames  
+	- apply variants as DICT  
+	- try apply None value in params  
 
 0.1.13 (2024/05/22 15:31:22)
 ------------------------------

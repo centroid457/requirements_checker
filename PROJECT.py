@@ -41,21 +41,22 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 13)
+    VERSION: Tuple[int, int, int] = (0, 1, 14)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
         "add check_file"
     ]
     FIXME: List[str] = [
-        "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
+        "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!",
+        "FIX TESTS!"
     ]
     NEWS: List[str] = [
-
-
-
-        ["[STR] big ref",
-            "use only one check() method!"
+        ["[STR] big ref (just start)",
+            "use only one check() method!",
+            "renames",
+            "apply variants as DICT",
+            "try apply None value in params",
          ]
     ]
 

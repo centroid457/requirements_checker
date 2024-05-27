@@ -239,7 +239,7 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
             else:
                 return False
 
-        elif result in (True, None):
+        if result in (True, None):
             return result
         else:
             msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={values}]"

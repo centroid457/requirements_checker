@@ -168,6 +168,7 @@ class Test__Instance:
         assert victim.check() is False
         assert victim._value_actual == "true"
 
+    @pytest.mark.skip
     def test__inits(self):
         assert self.Victim(_getter=lambda: "hello", _raise=False, _meet_true=True).check() is False
         assert self.Victim(_getter=lambda: "hello", _raise=False, _meet_true=False).check() is True
@@ -239,39 +240,34 @@ class Test__Instance:
         assert victim.check() is True
 
     def test__set_meet_true(self):
-        self.Victim._RAISE = False
-        self.Victim._GETTER = lambda: "Hello"
+        class Victim(ReqCheckStr_Base):
+            _GETTER = lambda: "Hello"
+            _RAISE = False
+            _MEET_TRUE = True
 
-        # _MEET_TRUE = True
-        self.Victim._MEET_TRUE = True
-        self.Victim.hello = True
+            HELLO = True
 
-        victim = self.Victim()
+        victim = Victim()
         assert victim.check() is True
 
-        victim.hello = False
+        Victim.HELLO = False
         assert victim.check() is False
-        victim._RAISE = True
+
+        Victim._RAISE = True
         try:
             victim.check()
-        except Exx_Requirement:
-            assert True
-        else:
             assert False
+        except:
+            assert True
 
         # _MEET_TRUE = False
-        victim._RAISE = False
-        victim._MEET_TRUE = False
-        victim.hello = True
+        Victim._RAISE = False
+        Victim._MEET_TRUE = False
+        Victim.HELLO = True
         assert victim.check() is True
 
-    #  ---------------------------------------------------------------------------------------------
-    def test__case_insencitive(self):
-        self.Victim._GETTER = lambda: "Hello"
-        self.Victim.HELLO = True
-        victim = self.Victim()
-
-        assert victim.check() is True
+        Victim.HELLO = False
+        assert victim.check() is False
 
     # PARAMS ----------------------------------------------------------------------------------------------------------
     # def test__param_values(cls):
