@@ -15,11 +15,11 @@ DUMMY_MODULE_NAME = "dummy-module"
 # =====================================================================================================================
 class Test_Pkg:
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (Packages,), {})
+        self.Victim = type("Victim", (Packages,), {})
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__all_methods(self):
-        victim = self.VICTIM()
+        victim = self.Victim()
 
         for version in ["0.0.1", "0.0.2", ]:
             assert victim.upgrade(f"{DUMMY_MODULE_NAME}=={version}")
@@ -34,7 +34,7 @@ class Test_Pkg:
 # =====================================================================================================================
 class Test_File:
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (Packages,), {})
+        self.VICTIM = type("Victim", (Packages,), {})
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__upgrade(self, tmpdir):

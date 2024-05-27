@@ -3,7 +3,11 @@ import platform
 
 
 # =====================================================================================================================
-# TODO: use samples as DICT with acceptance!!!!?????
+# TODO: use values as DICT with acceptance!!!!?????
+TYPE__VALUES = Union[str, list[str], dict[str, bool | None]]
+
+TYPE__RESULT_BOOL = Callable[..., bool]
+TYPE__RESULT_RAISE = Callable[..., Optional[NoReturn]]
 
 
 # =====================================================================================================================
@@ -36,28 +40,36 @@ class GetattrClassmethod_Meta(type):
             Cls.hello()
             ^^^^^^^^^
         AttributeError: type object 'Cls' has no attribute 'hello'
-    """
-    _bool_if__MARKER: str = "bool_if__"
-    _bool_if_not__MARKER: str = "bool_if_not__"
-    _raise_if__MARKER: str = "raise_if__"
-    _raise_if_not__MARKER: str = "raise_if_not__"
 
-    def __getattr__(cls, item):
+    WHY WE NEED CLASSMETH instead of simple SELFMETHOD
+    --------------------------------------------------
+    1. ability to use methods without creating instances - its a quick/simple
+        from requirements_checker import ReqCheckStr_Os
+        ReqCheckStr_Os.raise_if_not__LINUX
+
+
+    """
+    _MARKER__BOOL_IF: str = "bool_if__"
+    _MARKER__BOOL_IF_NOT: str = "bool_if_not__"
+    _MARKER__RAISE_IF: str = "raise_if__"
+    _MARKER__RAISE_IF_NOT: str = "raise_if_not__"
+
+    def __getattr__(cls, item: str):
         """if no exists attr/meth
         """
-        if item.lower().startswith(cls._bool_if__MARKER.lower()):
-            sample = item[len(cls._bool_if__MARKER):]
-            return lambda: cls.check_is__(samples=sample, _raise=False, _reverse=False)
-        elif item.lower().startswith(cls._bool_if_not__MARKER.lower()):
-            sample = item[len(cls._bool_if_not__MARKER):]
-            return lambda: cls.check_is__(samples=sample, _raise=False, _reverse=True)
+        if item.lower().startswith(cls._MARKER__BOOL_IF.lower()):
+            attr_name = item.replace(cls._MARKER__BOOL_IF, "")
+            return lambda: cls.check(values=attr_name, _raise=False, _reverse=False, _meet_true=False)
+        elif item.lower().startswith(cls._MARKER__BOOL_IF_NOT.lower()):
+            attr_name = item.replace(cls._MARKER__BOOL_IF_NOT, "")
+            return lambda: cls.check(values=attr_name, _raise=False, _reverse=True, _meet_true=False)
 
-        elif item.lower().startswith(cls._raise_if__MARKER.lower()):
-            sample = item[len(cls._raise_if__MARKER):]
-            return lambda: not cls.check_is__(samples=sample, _raise=True, _reverse=True) or None
-        elif item.lower().startswith(cls._raise_if_not__MARKER.lower()):
-            sample = item[len(cls._raise_if_not__MARKER):]
-            return lambda: not cls.check_is__(samples=sample, _raise=True, _reverse=False) or None
+        elif item.lower().startswith(cls._MARKER__RAISE_IF.lower()):
+            attr_name = item.replace(cls._MARKER__RAISE_IF, "")
+            return lambda: not cls.check(values=attr_name, _raise=True, _reverse=True, _meet_true=False) or None
+        elif item.lower().startswith(cls._MARKER__RAISE_IF_NOT.lower()):
+            attr_name = item.replace(cls._MARKER__RAISE_IF_NOT, "")
+            return lambda: not cls.check(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
 
         else:
             msg = f"META: '{cls.__name__}' CLASS has no attribute '{item}'"
@@ -66,12 +78,17 @@ class GetattrClassmethod_Meta(type):
 
 # =====================================================================================================================
 class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
-    """Base class for check exact requirement by string sample
+    """Base class for check exact requirement by string value
+
+    NOTE
+    ----
+    USUALLY YOU DONT NEED USING IT LIKE INSTANCE!
+    just create appropriate class with _GETTER +add bare annotations with markers (see examples like ReqCheckStr_Os)
 
     VARIANTS for check
     ------------------
-    add attributes with bool samples (case-insensitive)
-        - True - if sample is definitely acceptable - Always need at least one True!!!
+    add attributes with bool values (case-insensitive)
+        - True - if value is definitely acceptable - Always need at least one True!!!
         - False - if not definitely acceptable
         - None - if requirement is undefined
 
@@ -81,21 +98,21 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
     :ivar _MEET_TRUE: you can use requirement class for check only false variant
     :ivar _CHECK_FULLMATCH:
         True - if need fullmatch (but always case-insensitive)
-        False - if partial match by finding mentioned samples in _sample_actual
+        False - if partial match by finding mentioned values in _value_actual
 
-    :ivar _GETTER: function which will get the exact sample to check
+    :ivar _GETTER: function which will get the exact value to check
     :ivar _sample_actual:
     """
-    # settings vital -------------------------------------
+    # SETTINGS -------------------------------------
     _GETTER: Callable[..., str] = None
 
-    # settings aux ---------------------------------------
+    # AUX ---------------------------------------
     _RAISE: bool = True
     _MEET_TRUE: bool = True
     _CHECK_FULLMATCH: bool = True
 
     # temporary ------------------------------------------
-    _sample_actual: Optional[str] = None
+    _value_actual: Optional[str]
 
     # TODO: add values as dict??? - it would be direct great!
 
@@ -127,122 +144,102 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
         return GetattrClassmethod_Meta.__getattr__(self.__class__, item)
 
     @classmethod
-    def _sample_actual__get(cls) -> Union[str, NoReturn]:
+    def values_acceptance__get(cls) -> dict[str, bool | None]:
+        """get settings from class"""
+        values = {}
+        for attr in dir(cls):
+            attr_value = getattr(cls, attr)
+            if not attr.startswith("_") and not callable(attr_value) and isinstance(attr_value, (bool, type(None))):
+                values.update({attr: attr_value})
+        return values
+
+    @classmethod
+    def _value_actual__get(cls) -> Union[str, NoReturn]:
         if not cls._GETTER:
             msg = f"[ERROR] incomplete settings [{cls._GETTER=}]"
             raise Exx_RequirementCantGetActualValue(msg)
 
         try:
-            cls._sample_actual = cls._GETTER().lower()
+            cls._value_actual = cls._GETTER().lower()
         except Exception as exx:
             raise Exx_RequirementCantGetActualValue(repr(exx))
 
-        return cls._sample_actual
+        return cls._value_actual
 
-    def check(
-            self,
-            # samples: Union[None, str, List[str]] = None,
-            _raise: Optional[bool] = None
-    ) -> Union[bool, NoReturn]:
-        """
-        :param samples: if not passed - used class settings
-            if passed - used only passed values!
-        """
-        # SETTINGS -------------------------------------------------------
-        if _raise is None:
-            _raise = self._RAISE
-
-        # VALUE ACTUAL ---------------------------------------------------
-        self._sample_actual__get()
-
-        # VALUES ---------------------------------------------------------
-        # if isinstance(samples, str):
-        #     samples = [samples, ]
-        # if not samples:
-        samples = filter(lambda _sample: not _sample.startswith("_"), dir(self))
-
-        # WORK -----------------------------------------------------------
-        for sample in samples:
-            sample = sample.lower()
-            try:
-                name_from_obj = list(filter(lambda obj_attr: obj_attr.lower() == sample, dir(self)))[0]
-                acceptance: Optional[bool] = getattr(self, name_from_obj)
-            except:
-                continue
-
-            match = (
-                (self._CHECK_FULLMATCH and sample == self._sample_actual)
-                or
-                (not self._CHECK_FULLMATCH and sample in self._sample_actual)
-            )
-            if match:
-                if acceptance is True:
-                    return True
-                else:
-                    msg = f"[ERROR] requirement not ACCEPTABLE [{self.__class__.__name__}/{self._sample_actual=}/req={sample}]"
-                    print(msg)
-                    if _raise:
-                        raise Exx_Requirement(msg)
-                    else:
-                        return False
-
-        # RESULT -----------------------------------------------------------
-        if self._MEET_TRUE:
-            msg = "[ERROR] No TRUE variants MET!"
-            print(msg)
-            if _raise:
-                raise Exx_Requirement(msg)
-            else:
-                return False
-        else:
-            return True
-
+    # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def check_is__(cls, samples: Union[str, List[str]], _raise: Optional[bool] = None, _reverse: Optional[bool] = None) -> Union[bool, NoReturn, None]:
-        """
-        USAGE
-        =====
-        1. instance method
-            CLASS_NAME().check_is__("NAME", **kwargs)   # GOOD
-            CLASS_NAME().check_is__<NAME>()             # GOOD
-
-        2. classmethod without params!
-            # CLASS_NAME.check_is__<NAME>(**kwargs)     # ERROR!!!
-            CLASS_NAME.check_is__<NAME>()               # GOOD
-        """
+    def check(
+            cls,
+            values: TYPE__VALUES | None = None,
+            _raise: Optional[bool] = None,
+            _reverse: Optional[bool] = None,    # special for bool_if_not__* like methods
+            _meet_true: bool | None = None,
+    ) -> Union[bool, NoReturn, None]:
         # SETTINGS -------------------------------------------------------
         if _raise is None:
             _raise = cls._RAISE
         _reverse = _reverse or False
 
+        if _meet_true is None:
+            _meet_true = cls._MEET_TRUE
+
         # VALUES ---------------------------------------------------------
-        if isinstance(samples, str):
-            samples = [samples, ]
+        # use values-1=from class settings -----------
+        if values is None:
+            values = cls.values_acceptance__get()
+
+        # use values-2=as exact one -----------
+        if isinstance(values, str):
+            values = {values: True}
+
+        # use values-3=as exact several -----------
+        if isinstance(values, list):
+            values = dict.fromkeys(values, True)
+
+        # REVERSE ---------------------------------------------------
+        if _reverse:
+            for value, acceptance in values.items():
+                if acceptance in (True, False):
+                    values.update({value: not acceptance})
 
         # VALUE ACTUAL ---------------------------------------------------
-        cls._sample_actual__get()
+        _value_actual = cls._value_actual__get()
 
         # WORK -----------------------------------------------------------
+        acceptance = True
         match = None
-        for sample in samples:
-            sample = sample.lower()
+        for value, acceptance in values.items():
+            value = value.lower()
             match = (
-                (cls._CHECK_FULLMATCH and sample == cls._sample_actual)
+                (cls._CHECK_FULLMATCH and value == _value_actual)
                 or
-                (not cls._CHECK_FULLMATCH and sample in cls._sample_actual)
+                (not cls._CHECK_FULLMATCH and value in _value_actual)
             )
             if match:
                 break
 
-        if match:
-            result = not _reverse
-        else:
-            result = _reverse
+        # acceptance --------------
+        result = None
+        if acceptance is True:
+            result = match
+        elif acceptance is False:
+            result = not match
+        elif acceptance is None:
+            result = None
 
-        if result:
-            return True
+        # FINAL --------------
+        if _meet_true is True and result is None:
+            msg = f"[WARN] value is not MeetTrue [{cls.__name__}/{cls._value_actual=}/req={values}]"
+            print(msg)
+            if _raise:
+                raise Exx_Requirement(msg)
+            else:
+                return False
+
+        elif result in (True, None):
+            return result
         else:
-            msg = f"[WARN] sample is not [{cls.__name__}/{cls._sample_actual=}/req={samples}]"
+            msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={values}]"
             print(msg)
             if _raise:
                 raise Exx_Requirement(msg)
@@ -259,15 +256,15 @@ class ReqCheckStr_Os(ReqCheckStr_Base):
     WINDOWS: bool
 
     # DERIVATIVES --------
-    bool_if__LINUX: Callable[..., bool]
-    bool_if__WINDOWS: Callable[..., bool]
-    bool_if_not__LINUX: Callable[..., bool]
-    bool_if_not__WINDOWS: Callable[..., bool]
+    bool_if__LINUX: TYPE__RESULT_BOOL
+    bool_if__WINDOWS: TYPE__RESULT_BOOL
+    bool_if_not__LINUX: TYPE__RESULT_BOOL
+    bool_if_not__WINDOWS: TYPE__RESULT_BOOL
 
-    raise_if__LINUX: Callable[..., Optional[NoReturn]]
-    raise_if__WINDOWS: Callable[..., Optional[NoReturn]]
-    raise_if_not__LINUX: Callable[..., Optional[NoReturn]]
-    raise_if_not__WINDOWS: Callable[..., Optional[NoReturn]]
+    raise_if__LINUX: TYPE__RESULT_RAISE
+    raise_if__WINDOWS: TYPE__RESULT_RAISE
+    raise_if_not__LINUX: TYPE__RESULT_RAISE
+    raise_if_not__WINDOWS: TYPE__RESULT_RAISE
 
 
 # =====================================================================================================================
@@ -280,7 +277,7 @@ class ReqCheckStr_Arch(ReqCheckStr_Base):
     AARCH64: bool    # raspberry=ARM!
 
     # DERIVATIVES --------
-    raise_if_not__AARCH64: Callable[..., Optional[NoReturn]]
+    raise_if_not__AARCH64: TYPE__RESULT_RAISE
 
 
 # =====================================================================================================================

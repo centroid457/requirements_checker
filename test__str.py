@@ -9,58 +9,164 @@ from requirements_checker import *
 
 
 # =====================================================================================================================
+class Test__ClsDirectMarkers:
+    # CLS -------------------------------------------------------------------------------------------------------------
+    def test__1(self):
+        class Victim(ReqCheckStr_Base):
+            _GETTER = lambda: "true"
+            TRUE = True
+            FALSE = False
+            NONE = None
+            NOT_EXIST: Any
+
+            bool_if__TRUE: TYPE__RESULT_BOOL
+            bool_if_not__TRUE: TYPE__RESULT_BOOL
+            # ...
+            raise_if__TRUE: TYPE__RESULT_RAISE
+            raise_if_not__TRUE: TYPE__RESULT_RAISE
+            # ...
+
+        assert Victim.bool_if__true() is True
+        assert Victim.BOOL_IF__TRUE() is False  # caseinsensitive only for end!
+
+        assert Victim.bool_if__TRUE() is True
+        assert Victim.bool_if__FALSE() is False
+        assert Victim.bool_if__NONE() is False
+        assert Victim.bool_if__NOT_EXIST() is False
+
+        assert Victim.bool_if_not__TRUE() is False
+        assert Victim.bool_if_not__FALSE() is True
+        assert Victim.bool_if_not__NONE() is True
+        assert Victim.bool_if_not__NOT_EXIST() is True
+
+        try:
+            Victim.raise_if__TRUE()
+            assert False
+        except:
+            assert True
+        Victim.raise_if__FALSE()
+        Victim.raise_if__NONE()
+        Victim.raise_if__NOT_EXIST()
+
+        Victim.raise_if_not__TRUE()
+        try:
+            Victim.raise_if_not__FALSE()
+            assert False
+        except:
+            assert True
+        try:
+            Victim.raise_if_not__NONE()
+            assert False
+        except:
+            assert True
+        try:
+            Victim.raise_if_not__NOT_EXIST()
+            assert False
+        except:
+            assert True
+
+
+# =====================================================================================================================
+class Test__ValuesDict:
+    # CLS -------------------------------------------------------------------------------------------------------------
+    def test__1(self):
+        class Victim(ReqCheckStr_Base):
+            _GETTER = lambda: "true"
+            TRUE = True
+            FALSE = False
+            NONE = None
+            NOT_EXIST: Any
+
+        assert Victim.bool_if__TRUE() is True
+        assert Victim.bool_if__FALSE() is False
+        assert Victim.bool_if__NONE() is False
+        assert Victim.bool_if__NOT_EXIST() is False
+
+        assert Victim.bool_if_not__TRUE() is False
+        assert Victim.bool_if_not__FALSE() is True
+        assert Victim.bool_if_not__NONE() is True
+        assert Victim.bool_if_not__NOT_EXIST() is True
+
+        try:
+            Victim.raise_if__TRUE()
+            assert False
+        except:
+            assert True
+        Victim.raise_if__FALSE()
+        Victim.raise_if__NONE()
+        Victim.raise_if__NOT_EXIST()
+
+        Victim.raise_if_not__TRUE()
+        try:
+            Victim.raise_if_not__FALSE()
+            assert False
+        except:
+            assert True
+        try:
+            Victim.raise_if_not__NONE()
+            assert False
+        except:
+            assert True
+        try:
+            Victim.raise_if_not__NOT_EXIST()
+            assert False
+        except:
+            assert True
+
+
+# =====================================================================================================================
 class Test__Str:
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (ReqCheckStr_Base,), {})
+        self.Victim = type("Victim", (ReqCheckStr_Base,), {})
 
     # TRIVIAL CASES ---------------------------------------------------------------------------------------------------
     def test__no_getter(self):
         try:
-            victim = self.VICTIM()
+            victim = self.Victim()
         except Exx_RequirementCantGetActualValue:
             assert True
         else:
             assert False
 
     def test__no_reqs(self):
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM._RAISE = False
-        victim = self.VICTIM()
+        self.Victim._GETTER = lambda: "Hello"
+        self.Victim._RAISE = False
+        victim = self.Victim()
 
         assert victim.check() is False
-        assert victim._sample_actual == "hello"
+        assert victim._value_actual == "hello"
 
     def test__inits(self):
-        assert self.VICTIM(_getter=lambda: "hello", _raise=False, _meet_true=True).check() is False
-        assert self.VICTIM(_getter=lambda: "hello", _raise=False, _meet_true=False).check() is True
+        assert self.Victim(_getter=lambda: "hello", _raise=False, _meet_true=True).check() is False
+        assert self.Victim(_getter=lambda: "hello", _raise=False, _meet_true=False).check() is True
 
-        assert self.VICTIM(_getter=lambda: "hello", _raise=False).check_is__("HELLO") is True
-        assert self.VICTIM(_getter=lambda: "hello", _raise=False).bool_if__HELLO() is True
+        assert self.Victim(_getter=lambda: "hello", _raise=False).check("HELLO") is True
+        assert self.Victim(_getter=lambda: "hello", _raise=False).bool_if__HELLO() is True
 
-        assert self.VICTIM.bool_if__HELLO() is True
+        assert self.Victim.bool_if__HELLO() is True
 
     # ACCEPTANCE VARIANTS ---------------------------------------------------------------------------------------------
     def test__req_met_true(self):
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM.hello = True
-        victim = self.VICTIM()
+        self.Victim._GETTER = lambda: "Hello"
+        self.Victim.hello = True
+        victim = self.Victim()
 
         assert victim.check() is True
 
     def test__req_met_true__several_variants(self):
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM.hello1 = False
-        self.VICTIM.hello = True
-        self.VICTIM.hello2 = False
-        victim = self.VICTIM()
+        self.Victim._GETTER = lambda: "Hello"
+        self.Victim.hello1 = False
+        self.Victim.hello = True
+        self.Victim.hello2 = False
+        victim = self.Victim()
 
         assert victim.check() is True
 
     def test__req_met_false(self):
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM.hello = False
+        self.Victim._GETTER = lambda: "Hello"
+        self.Victim.hello = False
         try:
-            victim = self.VICTIM()
+            victim = self.Victim()
         except Exx_Requirement:
             assert True
         else:
@@ -69,46 +175,46 @@ class Test__Str:
     # SETTINGS ATTRIBUTES ---------------------------------------------------------------------------------------------
     def test__set_raise(self):
         # _RAISE = True
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM._RAISE = True
-        self.VICTIM.hello = False
+        self.Victim._GETTER = lambda: "Hello"
+        self.Victim._RAISE = True
+        self.Victim.hello = False
         try:
-            victim = self.VICTIM()
+            victim = self.Victim()
         except Exx_Requirement:
             assert True
         else:
             assert False
 
         # _RAISE = False
-        self.VICTIM._RAISE = False
-        victim = self.VICTIM()
+        self.Victim._RAISE = False
+        victim = self.Victim()
         assert victim.check() is False
 
     def test__set_part(self):
-        self.VICTIM._RAISE = False
-        self.VICTIM._GETTER = lambda: "Hello"
+        self.Victim._RAISE = False
+        self.Victim._GETTER = lambda: "Hello"
 
         # _CHECK_FULLMATCH = True
-        self.VICTIM._CHECK_FULLMATCH = True
-        self.VICTIM.hell = True
+        self.Victim._CHECK_FULLMATCH = True
+        self.Victim.hell = True
 
-        victim = self.VICTIM()
+        victim = self.Victim()
         # victim.hello
         assert victim.check() is False
 
         # _CHECK_FULLMATCH = False
-        self.VICTIM._CHECK_FULLMATCH = False
+        self.Victim._CHECK_FULLMATCH = False
         assert victim.check() is True
 
     def test__set_meet_true(self):
-        self.VICTIM._RAISE = False
-        self.VICTIM._GETTER = lambda: "Hello"
+        self.Victim._RAISE = False
+        self.Victim._GETTER = lambda: "Hello"
 
         # _MEET_TRUE = True
-        self.VICTIM._MEET_TRUE = True
-        self.VICTIM.hello = True
+        self.Victim._MEET_TRUE = True
+        self.Victim.hello = True
 
-        victim = self.VICTIM()
+        victim = self.Victim()
         assert victim.check() is True
 
         victim.hello = False
@@ -129,18 +235,18 @@ class Test__Str:
 
     #  ---------------------------------------------------------------------------------------------
     def test__case_insencitive(self):
-        self.VICTIM._GETTER = lambda: "Hello"
-        self.VICTIM.HELLO = True
-        victim = self.VICTIM()
+        self.Victim._GETTER = lambda: "Hello"
+        self.Victim.HELLO = True
+        victim = self.Victim()
 
         assert victim.check() is True
 
     # PARAMS ----------------------------------------------------------------------------------------------------------
     # def test__param_values(cls):
-    #     cls.VICTIM._RAISE = False
-    #     cls.VICTIM._GETTER = lambda: "Hello"
-    #     cls.VICTIM.HELLO = True
-    #     victim = cls.VICTIM()
+    #     cls.Victim._RAISE = False
+    #     cls.Victim._GETTER = lambda: "Hello"
+    #     cls.Victim.HELLO = True
+    #     victim = cls.Victim()
     #
     #     assert victim.check() is True
     #     assert victim.check("hellO") is True
@@ -150,45 +256,45 @@ class Test__Str:
     #     assert victim.check(["hell", ]) is False
 
     # IS/ISNOT -------------------------------------------------------------------------------------------------------
-    def test__check_is(self):
-        self.VICTIM._RAISE = False
-        self.VICTIM._GETTER = lambda: "Hello"
-        victim = self.VICTIM()
+    def test__check(self):
+        self.Victim._RAISE = False
+        self.Victim._GETTER = lambda: "Hello"
+        victim = self.Victim()
 
-        assert victim.check_is__("hellO999") is False
-        assert victim.check_is__("hellO") is True
-        assert victim.check_is__(["hellO", ]) is True
-        assert victim.check_is__(["hellO", "hellO999"]) is True
+        assert victim.check("hellO999") is False
+        assert victim.check("hellO") is True
+        assert victim.check(["hellO", ]) is True
+        assert victim.check(["hellO", "hellO999"]) is True
 
-        assert victim.check_is__("hellO999", _reverse=True) is True
-        assert victim.check_is__("hellO", _reverse=True) is False
-        assert victim.check_is__(["hellO", ], _reverse=True) is False
-        assert victim.check_is__(["hellO", "hellO999"], _reverse=True) is False
+        assert victim.check("hellO999", _reverse=True) is True
+        assert victim.check("hellO", _reverse=True) is False
+        assert victim.check(["hellO", ], _reverse=True) is False
+        assert victim.check(["hellO", "hellO999"], _reverse=True) is False
 
         # getattr -------
         assert victim.bool_if__HELLO() is True
         assert victim.bool_if__HELLO999() is False
-        assert self.VICTIM.bool_if__HELLO() is True
-        assert self.VICTIM.bool_if__HELLO999() is False
+        assert self.Victim.bool_if__HELLO() is True
+        assert self.Victim.bool_if__HELLO999() is False
 
         assert victim.bool_if_not__HELLO() is False
         assert victim.bool_if_not__HELLO999() is True
-        assert self.VICTIM.bool_if_not__HELLO() is False
-        assert self.VICTIM.bool_if_not__HELLO999() is True
+        assert self.Victim.bool_if_not__HELLO() is False
+        assert self.Victim.bool_if_not__HELLO999() is True
 
         try:
-            self.VICTIM.raise_if__HELLO()
+            self.Victim.raise_if__HELLO()
         except:
             pass
         else:
             assert False
 
-        assert self.VICTIM.raise_if_not__HELLO() is None
+        assert self.Victim.raise_if_not__HELLO() is None
 
-        assert self.VICTIM.raise_if__HELLO999() is None
+        assert self.Victim.raise_if__HELLO999() is None
 
         try:
-            self.VICTIM.raise_if_not__HELLO999()
+            self.Victim.raise_if_not__HELLO999()
         except:
             pass
         else:

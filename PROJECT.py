@@ -51,8 +51,12 @@ designed for check requirements (systemOs) and raise/bool if no match
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!"
     ]
     NEWS: List[str] = [
-        "[__INIT__.py] fix import",
-        "apply last pypi template",
+
+
+
+        ["[STR] big ref",
+            "use only one check() method!"
+         ]
     ]
 
     # FINALIZE -----------------------------------------------

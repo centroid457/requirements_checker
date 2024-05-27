@@ -27,6 +27,8 @@ from .check_string import (
     GetattrClassmethod_Meta,
 
     # TYPES
+    TYPE__RESULT_BOOL,
+    TYPE__RESULT_RAISE,
 
     # EXX
     Exx_RequirementCantGetActualValue,
