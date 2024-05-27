@@ -9,10 +9,12 @@ from requirements_checker import *
 
 
 # =====================================================================================================================
-class Test__ClsMarkers:
+class Test__Cls:
+    Victim: Type[ReqCheckStr_Base]
     @classmethod
     def setup_class(cls):
         pass
+
         class Victim(ReqCheckStr_Base):
             _GETTER = lambda: "true"
             TRUE = True
@@ -92,26 +94,79 @@ class Test__ClsMarkers:
 
 
 # =====================================================================================================================
-class Test__Str:
-    def setup_method(self, method):
-        self.Victim = type("Victim", (ReqCheckStr_Base,), {})
+class Test__Instance:
+    Victim: Type[ReqCheckStr_Base]
+    @classmethod
+    def setup_class(cls):
+        pass
+
+        class Victim(ReqCheckStr_Base):
+            _GETTER = lambda: "true"
+            TRUE = True
+            FALSE = False
+            NONE = None
+            NOT_EXIST: Any
+
+            bool_if__TRUE: TYPE__RESULT_BOOL
+            bool_if_not__TRUE: TYPE__RESULT_BOOL
+            # ...
+            raise_if__TRUE: TYPE__RESULT_RAISE
+            raise_if_not__TRUE: TYPE__RESULT_RAISE
+            # ...
+
+        cls.Victim = Victim
+
+    # @classmethod
+    # def teardown_class(cls):
+    #     if cls.victim:
+    #         cls.victim.disconnect()
+    #
+    # def setup_method(self, method):
+    #     pass
+    #
+    # def teardown_method(self, method):
+    #     pass
 
     # TRIVIAL CASES ---------------------------------------------------------------------------------------------------
     def test__no_getter(self):
+        class Victim(ReqCheckStr_Base):
+            _GETTER = None
+            _RAISE = False
+
         try:
-            victim = self.Victim()
-        except Exx_RequirementCantGetActualValue:
+            victim = Victim()
+        except:
             assert True
         else:
             assert False
 
+        # -----------------------
+        class Victim(ReqCheckStr_Base):
+            _GETTER = lambda: "true"
+            _RAISE = False
+
+        victim = Victim()
+
     def test__no_reqs(self):
-        self.Victim._GETTER = lambda: "Hello"
-        self.Victim._RAISE = False
-        victim = self.Victim()
+        class Victim(ReqCheckStr_Base):
+            _GETTER = lambda: "true"
+            _RAISE = False
+
+        victim = Victim()
 
         assert victim.check() is False
-        assert victim._value_actual == "hello"
+        assert victim._value_actual == "true"
+
+        # -----------------------
+        class Victim(ReqCheckStr_Base):
+            _GETTER = lambda: "true"
+            _RAISE = False
+            FALSE = False
+
+        victim = Victim()
+
+        assert victim.check() is False
+        assert victim._value_actual == "true"
 
     def test__inits(self):
         assert self.Victim(_getter=lambda: "hello", _raise=False, _meet_true=True).check() is False

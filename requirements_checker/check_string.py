@@ -3,7 +3,6 @@ import platform
 
 
 # =====================================================================================================================
-# TODO: use values as DICT with acceptance!!!!?????
 TYPE__VALUES = Union[str, list[str], dict[str, bool | None]]
 
 TYPE__RESULT_BOOL = Callable[..., bool]
@@ -200,23 +199,27 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
         if _reverse:
             for value, acceptance in values.items():
                 if acceptance in (True, False):
-                    values.update({value: not acceptance})
+                    values[value] = not acceptance
 
         # VALUE ACTUAL ---------------------------------------------------
         _value_actual = cls._value_actual__get()
 
         # WORK -----------------------------------------------------------
-        acceptance = True
         match = None
-        for value, acceptance in values.items():
-            value = value.lower()
+        _acceptance = None
+        for value, _acceptance in values.items():
             match = (
-                (cls._CHECK_FULLMATCH and value == _value_actual)
+                (cls._CHECK_FULLMATCH and value.lower() == _value_actual.lower())
                 or
-                (not cls._CHECK_FULLMATCH and value in _value_actual)
+                (not cls._CHECK_FULLMATCH and value.lower() in _value_actual.lower())
             )
             if match:
                 break
+
+        if match:
+            acceptance = _acceptance
+        else:
+            acceptance = not _reverse
 
         # acceptance --------------
         result = None
