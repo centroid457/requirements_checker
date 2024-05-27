@@ -9,9 +9,10 @@ from requirements_checker import *
 
 
 # =====================================================================================================================
-class Test__ClsDirectMarkers:
-    # CLS -------------------------------------------------------------------------------------------------------------
-    def test__1(self):
+class Test__ClsMarkers:
+    @classmethod
+    def setup_class(cls):
+        pass
         class Victim(ReqCheckStr_Base):
             _GETTER = lambda: "true"
             TRUE = True
@@ -26,89 +27,65 @@ class Test__ClsDirectMarkers:
             raise_if_not__TRUE: TYPE__RESULT_RAISE
             # ...
 
-        assert Victim.bool_if__true() is True
-        assert Victim.BOOL_IF__TRUE() is False  # caseinsensitive only for end!
+        cls.Victim = Victim
 
-        assert Victim.bool_if__TRUE() is True
-        assert Victim.bool_if__FALSE() is False
-        assert Victim.bool_if__NONE() is False
-        assert Victim.bool_if__NOT_EXIST() is False
+    # @classmethod
+    # def teardown_class(cls):
+    #     if cls.victim:
+    #         cls.victim.disconnect()
+    #
+    # def setup_method(self, method):
+    #     pass
+    #
+    # def teardown_method(self, method):
+    #     pass
 
-        assert Victim.bool_if_not__TRUE() is False
-        assert Victim.bool_if_not__FALSE() is True
-        assert Victim.bool_if_not__NONE() is True
-        assert Victim.bool_if_not__NOT_EXIST() is True
-
+    # -----------------------------------------------------------------------------------------------------------------
+    def test__marker__not_exist(self):
         try:
-            Victim.raise_if__TRUE()
-            assert False
-        except:
-            assert True
-        Victim.raise_if__FALSE()
-        Victim.raise_if__NONE()
-        Victim.raise_if__NOT_EXIST()
-
-        Victim.raise_if_not__TRUE()
-        try:
-            Victim.raise_if_not__FALSE()
-            assert False
-        except:
-            assert True
-        try:
-            Victim.raise_if_not__NONE()
-            assert False
-        except:
-            assert True
-        try:
-            Victim.raise_if_not__NOT_EXIST()
+            self.Victim.hello__true()
             assert False
         except:
             assert True
 
+    def test__marker__case_sense(self):
+        assert self.Victim.bool_if__true() is True
+        assert self.Victim.BOOL_IF__TRUE() is True
+        assert self.Victim.bool_if__TRUE() is True
 
-# =====================================================================================================================
-class Test__ValuesDict:
-    # CLS -------------------------------------------------------------------------------------------------------------
-    def test__1(self):
-        class Victim(ReqCheckStr_Base):
-            _GETTER = lambda: "true"
-            TRUE = True
-            FALSE = False
-            NONE = None
-            NOT_EXIST: Any
+    def test__marker__all_variants(self):
+        assert self.Victim.bool_if__TRUE() is True
+        assert self.Victim.bool_if__FALSE() is False
+        assert self.Victim.bool_if__NONE() is False
+        assert self.Victim.bool_if__NOT_EXIST() is False
 
-        assert Victim.bool_if__TRUE() is True
-        assert Victim.bool_if__FALSE() is False
-        assert Victim.bool_if__NONE() is False
-        assert Victim.bool_if__NOT_EXIST() is False
-
-        assert Victim.bool_if_not__TRUE() is False
-        assert Victim.bool_if_not__FALSE() is True
-        assert Victim.bool_if_not__NONE() is True
-        assert Victim.bool_if_not__NOT_EXIST() is True
+        assert self.Victim.bool_if_not__TRUE() is False
+        assert self.Victim.bool_if_not__FALSE() is True
+        assert self.Victim.bool_if_not__NONE() is True
+        assert self.Victim.bool_if_not__NOT_EXIST() is True
 
         try:
-            Victim.raise_if__TRUE()
+            self.Victim.raise_if__TRUE()
             assert False
         except:
             assert True
-        Victim.raise_if__FALSE()
-        Victim.raise_if__NONE()
-        Victim.raise_if__NOT_EXIST()
+        self.Victim.raise_if__FALSE()
+        self.Victim.raise_if__NONE()
+        self.Victim.raise_if__NOT_EXIST()
 
-        Victim.raise_if_not__TRUE()
+        self.Victim.raise_if_not__TRUE()
         try:
-            Victim.raise_if_not__FALSE()
+            self.Victim.raise_if_not__FALSE()
             assert False
         except:
             assert True
         try:
-            Victim.raise_if_not__NONE()
+            self.Victim.raise_if_not__NONE()
             assert False
         except:
             assert True
         try:
-            Victim.raise_if_not__NOT_EXIST()
+            self.Victim.raise_if_not__NOT_EXIST()
             assert False
         except:
             assert True

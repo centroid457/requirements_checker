@@ -46,9 +46,9 @@ class GetattrClassmethod_Meta(type):
     1. ability to use methods without creating instances - its a quick/simple
         from requirements_checker import ReqCheckStr_Os
         ReqCheckStr_Os.raise_if_not__LINUX
-
-
     """
+
+    # dont change markers! use exists!
     _MARKER__BOOL_IF: str = "bool_if__"
     _MARKER__BOOL_IF_NOT: str = "bool_if_not__"
     _MARKER__RAISE_IF: str = "raise_if__"
@@ -58,17 +58,17 @@ class GetattrClassmethod_Meta(type):
         """if no exists attr/meth
         """
         if item.lower().startswith(cls._MARKER__BOOL_IF.lower()):
-            attr_name = item.replace(cls._MARKER__BOOL_IF, "")
+            attr_name = item.lower().replace(cls._MARKER__BOOL_IF.lower(), "")
             return lambda: cls.check(values=attr_name, _raise=False, _reverse=False, _meet_true=False)
         elif item.lower().startswith(cls._MARKER__BOOL_IF_NOT.lower()):
-            attr_name = item.replace(cls._MARKER__BOOL_IF_NOT, "")
+            attr_name = item.lower().replace(cls._MARKER__BOOL_IF_NOT.lower(), "")
             return lambda: cls.check(values=attr_name, _raise=False, _reverse=True, _meet_true=False)
 
         elif item.lower().startswith(cls._MARKER__RAISE_IF.lower()):
-            attr_name = item.replace(cls._MARKER__RAISE_IF, "")
+            attr_name = item.lower().replace(cls._MARKER__RAISE_IF.lower(), "")
             return lambda: not cls.check(values=attr_name, _raise=True, _reverse=True, _meet_true=False) or None
         elif item.lower().startswith(cls._MARKER__RAISE_IF_NOT.lower()):
-            attr_name = item.replace(cls._MARKER__RAISE_IF_NOT, "")
+            attr_name = item.lower().replace(cls._MARKER__RAISE_IF_NOT.lower(), "")
             return lambda: not cls.check(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
 
         else:
