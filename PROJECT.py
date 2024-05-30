@@ -41,7 +41,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 14)
+    VERSION: Tuple[int, int, int] = (0, 1, 15)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
@@ -52,12 +52,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-        ["[STR] big ref (just start)",
-            "use only one check() method!",
-            "renames",
-            "apply variants as DICT",
-            "try apply None value in params",
-         ]
+        "[PKGSET__CENTROID_457]zero add pytest-aux",
     ]
 
     # FINALIZE -----------------------------------------------

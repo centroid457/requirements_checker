@@ -17,6 +17,7 @@ class Packages:
         "singleton-meta",
         "funcs-aux",
         "logger-aux",
+        "pytest-aux",
 
         # =============================
         # CENTROID457 other projects
