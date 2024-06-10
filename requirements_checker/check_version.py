@@ -143,9 +143,6 @@ class Version:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self})"
 
-    def __iter__(self):
-        yield from self.VERSION__TUPLE
-
     def __len__(self) -> int:
         return len(self.VERSION__TUPLE)
 
@@ -154,6 +151,9 @@ class Version:
             return self.VERSION__TUPLE[item]
         except:
             return
+
+    def __iter__(self):
+        yield from self.VERSION__TUPLE
 
     # -----------------------------------------------------------------------------------------------------------------
     @property

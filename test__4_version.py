@@ -48,9 +48,19 @@ def test__version_block__ensure_elements(func_link, args, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="args, _EXPECTED",
     argvalues=[
+        # INTS --------
+        (12, (12,)),
+
+        # CONTAINERS --------
+        (((1,2,3,), ), (1,2,3)),
+        (([1,2,3,], ), (1,2,3)),
+        (([1,"2",3,], ), (1,2,3)),
+        (([1,"02",3,], ), (1,2,3)),
+        (([1,"21rc22",3,], ), (1, (21, "rc", 22), 3)),
+        (([0,"21rc22",3, 0], ), (0, (21, "rc", 22), 3, 0)),
+
         # STRINGS SIMPLE --------
         ("", Exx_VersionIncompatible),
-        (12, (12, )),
         ("12", (12, )),
         ("1.2", (1, 2)),
         ("1.2.3", (1, 2, 3)),
@@ -93,11 +103,73 @@ def test__version_block__ensure_elements(func_link, args, _EXPECTED):
         ("1.2a.3", (1, (2, "a", ), 3)),
         ("1.2a.3rc2", (1, (2, "a", ), (3, "rc", 2))),
         ("1.2a.3rc2get", Exx_VersionBlockIncompatible),
+
     ]
 )
 @pytest.mark.parametrize(argnames="func_link", argvalues=[Version.version__ensure_tuple, ])
 def test__version__ensure_tuple(func_link, args, _EXPECTED):
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+
+
+# =====================================================================================================================
+class Test__Version:
+    Victim: Type[Version]
+    @classmethod
+    def setup_class(cls):
+        pass
+        cls.Victim = Version
+
+    # @classmethod
+    # def teardown_class(cls):
+    #     if cls.victim:
+    #         cls.victim.disconnect()
+    #
+    # def setup_method(self, method):
+    #     pass
+    #
+    # def teardown_method(self, method):
+    #     pass
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def test__123_str(self):
+        source = "1.2.3"
+        victim = self.Victim(source)
+        assert victim.SOURCE == source
+        assert victim.VERSION__TUPLE == (1,2,3)
+        assert str(victim) == "1.2.3"
+        assert repr(victim) == "Version(1.2.3)"
+        assert len(victim) == 3
+
+        assert victim[0] == 1
+        assert victim[1] == 2
+        assert victim[2] == 3
+        assert victim[3] is None
+
+        assert list(victim) == [1,2,3]
+
+        assert victim.major == 1
+        assert victim.minor == 2
+        assert victim.micro == 3
+
+    def test__123_list(self):
+        source = [1, 2, 3]
+        victim = self.Victim(source)
+        assert victim.SOURCE == source
+        assert victim.VERSION__TUPLE == (1,2,3)
+        assert str(victim) == "1.2.3"
+        assert repr(victim) == "Version(1.2.3)"
+        assert len(victim) == 3
+
+        assert victim[0] == 1
+        assert victim[1] == 2
+        assert victim[2] == 3
+        assert victim[3] is None
+
+        assert list(victim) == [1,2,3]
+
+        assert victim.major == 1
+        assert victim.minor == 2
+        assert victim.micro == 3
 
 
 # =====================================================================================================================
