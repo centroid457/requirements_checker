@@ -52,6 +52,7 @@ from .check_version import (
     # AUX
     PATTERN__VERSION_TUPLE,
     PATTERN__VERSION_LIST,
+    PATTERN__VERSION_BLOCK,
 
     # TYPES
     TYPE__VERSION,

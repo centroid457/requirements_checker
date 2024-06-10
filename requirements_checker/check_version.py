@@ -51,7 +51,7 @@ PATTERN__VERSION_BLOCK = r"(\d*)([a-zA-Z]*)(\d*)"
 # =====================================================================================================================
 class Version:
     SOURCE: Any
-    RESULT: TYPE__VERSION
+    VERSION__TUPLE: TYPE__VERSION
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -115,22 +115,43 @@ class Version:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, source: Any):
         self.SOURCE = source
-        self.RESULT = self.version__ensure_tuple(source)
+        self.VERSION__TUPLE = self.version__ensure_tuple(source)
 
-    def __cmp__(self, other) -> bool:
+    def __cmp__(self, other) -> bool | NoReturn:
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
         # if elements in same length is equel - longest is higher!
         pass
 
     # -------------------
+    def __str__(self):
+        result = ""
+        for block in self.VERSION__TUPLE:
+            if isinstance(block, tuple):
+                elements = "".join(block)
+                result += f"{elements}."
+            else:
+                result += f"{block}."
+
+        result = result[:-1]
+        return result
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self})"
+
     def __iter__(self):
-        yield from self.RESULT
+        yield from self.VERSION__TUPLE
 
     def __len__(self) -> int:
-        return len(self.RESULT)
+        return len(self.VERSION__TUPLE)
 
     def __getitem__(self, item: int) -> TYPE__VERSION_BLOCK | None:
         try:
-            return self.RESULT[item]
+            return self.VERSION__TUPLE[item]
         except:
             return
 
