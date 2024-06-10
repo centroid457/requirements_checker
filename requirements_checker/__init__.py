@@ -45,15 +45,23 @@ from .check_pkg import (
 
     # EXX
 )
-# from .check_version import (      # TODO: create it!
-#     # BASE
-#     Packages,
-#
-#     # AUX
-#
-#     # TYPES
-#
-#     # EXX
-# )
+from .check_version import (
+    # BASE
+    Version,
+
+    # AUX
+    PATTERN__VERSION_TUPLE,
+    PATTERN__VERSION_LIST,
+
+    # TYPES
+    TYPE__VERSION,
+    TYPE__VERSION_BLOCK,
+    TYPE__VERSION_ELEMENT,
+
+    # EXX
+    Exx_VersionIncompatible,
+    Exx_VersionBlockIncompatible,
+)
+
 
 # =====================================================================================================================
