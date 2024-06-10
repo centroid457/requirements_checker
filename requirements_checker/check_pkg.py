@@ -8,7 +8,7 @@ from cli_user import CliUser
 
 # =====================================================================================================================
 class Packages:
-    PKGSET__CENTROID_457: List[str] = [
+    PKGSET__CENTROID_457: list[str] = [
         # =============================
         # CENTROID457 common projects
         # -----------------------------
