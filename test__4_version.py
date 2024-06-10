@@ -21,7 +21,7 @@ from requirements_checker import *
     argnames="args, _EXPECTED",
     argvalues=[
         # STRINGS --------
-        ("12", (12, )),
+        ("12", 12),
         ("1a", (1, "a")),
         ("1a", (1, "a")),
         ("1a2", (1, "a", 2)),
@@ -33,6 +33,15 @@ from requirements_checker import *
 
         # INTS --------
         (12, 12),
+
+        # ITEREBLES --------
+        (((1, ), ), 1),
+        (((1,"rc",3), ), (1,"rc",3)),
+        (((1, None, 3), ), Exx_VersionBlockIncompatible),
+        (((1,2), ), Exx_VersionBlockIncompatible),
+        (((1,2, "rc"), ), Exx_VersionBlockIncompatible),
+        ((("r","c"), ), Exx_VersionBlockIncompatible),
+        (((),), Exx_VersionBlockIncompatible),
 
         # ANY --------
         (None, Exx_VersionBlockIncompatible),

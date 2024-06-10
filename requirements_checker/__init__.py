@@ -55,9 +55,9 @@ from .check_version import (
     PATTERN__VERSION_BLOCK,
 
     # TYPES
-    TYPE__VERSION,
-    TYPE__VERSION_BLOCK,
-    TYPE__VERSION_ELEMENT,
+    TYPE__VERSION_PARSED,
+    TYPE__VERSION_PARSED__BLOCK,
+    TYPE__VERSION_PARSED__ELEMENT,
 
     # EXX
     Exx_VersionIncompatible,
