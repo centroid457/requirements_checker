@@ -57,7 +57,7 @@ PATTERN__VERSION_BLOCK = r"(\d*)([a-zA-Z]*)(\d*)"
 # =====================================================================================================================
 class Version:
     SOURCE: Any
-    VERSION__TUPLE: TYPE__VERSION_PARSED
+    PARCED: TYPE__VERSION_PARSED
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -170,7 +170,7 @@ class Version:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, source: Any):
         self.SOURCE = source
-        self.VERSION__TUPLE = self.version__ensure_tuple(source)
+        self.PARCED = self.version__ensure_tuple(source)
 
     def __cmp__(self, other: Union[Any, Self]) -> bool | NoReturn:
         # TODO: FINISH!!!
@@ -185,7 +185,7 @@ class Version:
     # -------------------
     def __str__(self):
         result = ""
-        for block in self.VERSION__TUPLE:
+        for block in self.PARCED:
             if isinstance(block, tuple):
                 elements = "".join(block)
                 result += f"{elements}."
@@ -199,16 +199,16 @@ class Version:
         return f"{self.__class__.__name__}({self})"
 
     def __len__(self) -> int:
-        return len(self.VERSION__TUPLE)
+        return len(self.PARCED)
 
     def __getitem__(self, item: int) -> TYPE__VERSION_PARSED__BLOCK | None:
         try:
-            return self.VERSION__TUPLE[item]
+            return self.PARCED[item]
         except:
             return
 
     def __iter__(self):
-        yield from self.VERSION__TUPLE
+        yield from self.PARCED
 
     # -----------------------------------------------------------------------------------------------------------------
     @property

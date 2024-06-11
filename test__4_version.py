@@ -140,31 +140,11 @@ class Test__Version:
     #     pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def test__123_str(self):
-        source = "1.2.3"
+    @pytest.mark.parametrize(argnames="source", argvalues=["1.2.3", [1, 2, 3], ])
+    def test__123(self, source: Any):
         victim = self.Victim(source)
         assert victim.SOURCE == source
-        assert victim.VERSION__TUPLE == (1,2,3)
-        assert str(victim) == "1.2.3"
-        assert repr(victim) == "Version(1.2.3)"
-        assert len(victim) == 3
-
-        assert victim[0] == 1
-        assert victim[1] == 2
-        assert victim[2] == 3
-        assert victim[3] is None
-
-        assert list(victim) == [1,2,3]
-
-        assert victim.major == 1
-        assert victim.minor == 2
-        assert victim.micro == 3
-
-    def test__123_list(self):
-        source = [1, 2, 3]
-        victim = self.Victim(source)
-        assert victim.SOURCE == source
-        assert victim.VERSION__TUPLE == (1,2,3)
+        assert victim.PARCED == (1, 2, 3)
         assert str(victim) == "1.2.3"
         assert repr(victim) == "Version(1.2.3)"
         assert len(victim) == 3
