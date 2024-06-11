@@ -4,6 +4,12 @@ from object_info import ObjectInfo
 
 
 # =====================================================================================================================
+# TODO: make BIG REF!
+# TODO: add class VersionBlock and compare inside + use Schema + validate
+# TODO: in Version add parceMethod
+
+
+# =====================================================================================================================
 # EXPLORE VARIANTS ----------------------------------------------
 # from packaging import version
 # ObjectInfo(version.parse(str((1,2,3)))).print()
