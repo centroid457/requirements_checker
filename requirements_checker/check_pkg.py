@@ -52,7 +52,6 @@ class Packages:
 
     ]
 
-    _pip_name: str
     _python_path: str
     cli: CliUser
 
@@ -68,13 +67,6 @@ class Packages:
     #     print(f"{self.FILEPATH_457.exists()}")
 
     def __init__(self):
-        # if ReqCheckStr_Os().bool_if__WINDOWS():
-        #     self._pip_name = "pip"
-        #     self._python_path = "python"
-        # else:
-        #     self._pip_name = "pip3"
-        #     self._python_path = "python3"
-
         self._python_path = sys.executable
 
         self.PYTHON_PIP = f"{self._python_path} -m pip"
@@ -217,9 +209,7 @@ self.last_exx_timeout=None
 """
         # LIST -----------------------------------------------
         if isinstance(modules, (list, tuple, set, )):
-            result = True
-            for module in modules:
-                result = result and self.upgrade(module)
+            result = all([self.upgrade(module) for module in modules])
             return result
 
         # ONE -----------------------------------------------
@@ -251,9 +241,17 @@ self.last_exx_timeout=None
         return self.cli.last_finished_success
 
     def upgrade_pip(self) -> bool:
+        """
+        upgrade PIP module
+        """
         return self.upgrade("pip")
 
     def upgrade_prj(self, project: "PROJECT") -> bool:
+        """
+        upgrade PROJECT module to last
+
+        CREATED specially for ensure upgrade to last version in active GIT-repo (you need to start in from git-repo!)
+        """
         prj_name = project.NAME_INSTALL
         ver_prj = project.VERSION
         while True:
@@ -266,11 +264,22 @@ self.last_exx_timeout=None
         return ver_active == ver_prj
 
     def upgrade__centroid457(self) -> bool:
+        """
+        upgrade all author modules by one command
+        """
         return self.upgrade(self.PKGSET__CENTROID_457)
 
     # =================================================================================================================
     def upgrade_file(self, filepath: Union[str, pathlib.Path]) -> bool:
+        """
+        upgrade modules by file requirements.py
+        """
         filepath = pathlib.Path(filepath)
+        if not filepath.exists():
+            msg = f"[ERROR] file not found {filepath}"
+            print(msg)
+            return False
+
         cmd = f"{self.PYTHON_PIP} install --upgrade -r {filepath}"
         print("-" *20)
         print(f"{filepath=}")
@@ -294,6 +303,8 @@ self.last_exx_timeout=None
     # =================================================================================================================
     def version_get(self, name: str) -> Optional[str]:
         """
+        get version for module if it installed.
+
         C:\\Users\\a.starichenko>pip show object-info
         Name: object-info
         Version: 0.1.12
@@ -331,7 +342,7 @@ self.last_exx_timeout=None
         # LIST -----------------------------------------------
         if isinstance(modules, (list, tuple, set, )):
             for module in modules:
-                if not self.upgrade(module):
+                if not self.check_installed(module):
                     return False
             return True
 
