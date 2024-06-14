@@ -7,6 +7,29 @@ from cli_user import CliUser
 
 
 # =====================================================================================================================
+# TYPE__MODULE_NAME = Union[str, list[str]]
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# TODO: FINISH!!!
+# TODO: FINISH!!!
+# TODO: FINISH!!!
+# TODO: FINISH!!!
+# TODO: FINISH!!!
+# TODO: FINISH!!!
+class PyModule:
+    TARGET_NAME: str
+    TARGET_VER: str = None
+
+    def __init__(self, name: str):
+        # if
+        # self.NAME = name
+        pass
+
+
+
+
+# =====================================================================================================================
 class CmdPattern:
     """
     USAGE
@@ -23,6 +46,11 @@ class CmdPattern:
 
 # =====================================================================================================================
 class Packages:
+    """
+    RULE
+    ----
+    for all module names you could use
+    """
     PKGSET__CENTROID_457: list[str] = [
         # =============================
         # CENTROID457 common projects
