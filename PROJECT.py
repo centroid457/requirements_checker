@@ -52,7 +52,9 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-        "[PKGSET__CENTROID_457]zero add pytest-aux",
+
+
+        "[PKGS] add CmdPattern",
     ]
 
     # FINALIZE -----------------------------------------------

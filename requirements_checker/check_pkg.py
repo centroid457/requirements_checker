@@ -7,6 +7,21 @@ from cli_user import CliUser
 
 
 # =====================================================================================================================
+class CmdPattern:
+    """
+    USAGE
+    -----
+    cmd = pattern % (PYTHON_PATH, PARAMETER)
+    cmd = CmdPattern.INSTALL_UPGRADE__MODULE % (self.PYTHON_PATH, modules)
+
+    """
+    INSTALL_UPGRADE__MODULE: str = f"%s -m pip install --upgrade %s"    # (PYTHON_PATH, MODULE)
+    INSTALL_UPGRADE__FILE: str = f"%s -m pip install --upgrade -r %s"   # (PYTHON_PATH, FILE)
+    SHOW_INFO: str = f"%s -m pip show %s"                               # (PYTHON_PATH, MODULE)
+    UNINSTALL: str = f"%s -m pip uninstall -y %s"                       # (PYTHON_PATH, MODULE)
+
+
+# =====================================================================================================================
 class Packages:
     PKGSET__CENTROID_457: list[str] = [
         # =============================
@@ -52,7 +67,7 @@ class Packages:
 
     ]
 
-    _python_path: str
+    PYTHON_PATH: str
     cli: CliUser
 
     # FILENAME_457: str = "requirements__centoid457.txt"      # FILE WILL NOT GO WITHING MODULE AS PART!
@@ -67,9 +82,7 @@ class Packages:
     #     print(f"{self.FILEPATH_457.exists()}")
 
     def __init__(self):
-        self._python_path = sys.executable
-
-        self.PYTHON_PIP = f"{self._python_path} -m pip"
+        self.PYTHON_PATH = sys.executable
         self.cli = CliUser()
 
     # =================================================================================================================
@@ -213,7 +226,7 @@ self.last_exx_timeout=None
             return result
 
         # ONE -----------------------------------------------
-        cmd = f"{self.PYTHON_PIP} install --upgrade {modules}"
+        cmd = CmdPattern.INSTALL_UPGRADE__MODULE % (self.PYTHON_PATH, modules)
         self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
 
         # RESULTS ===================================================
@@ -280,7 +293,7 @@ self.last_exx_timeout=None
             print(msg)
             return False
 
-        cmd = f"{self.PYTHON_PIP} install --upgrade -r {filepath}"
+        cmd = CmdPattern.INSTALL_UPGRADE__FILE % (self.PYTHON_PATH, filepath)
         print("-" *20)
         print(f"{filepath=}")
         print(filepath.read_text(encoding="utf8"))
@@ -331,14 +344,13 @@ self.last_exx_timeout=None
 
         C:\\Users\\a.starichenko>
         """
-        cmd = f"{self.PYTHON_PIP} show {name}"
-
+        cmd = CmdPattern.SHOW_INFO % (self.PYTHON_PATH, name)
         if self.cli.send(cmd, timeout=1, print_all_states=False) and self.cli.last_stdout:
             match = re.search(r'Version: (\d+\.\d+\.\d+)\s*', self.cli.last_stdout)
             if match:
                 return match[1]
 
-    def check_installed(self, modules: Union[str, List[str]]) -> bool:
+    def check_installed(self, modules: Union[str, list[str]]) -> bool:
         # LIST -----------------------------------------------
         if isinstance(modules, (list, tuple, set, )):
             for module in modules:
@@ -349,15 +361,15 @@ self.last_exx_timeout=None
         # ONE -----------------------------------------------
         return self.version_get(modules) is not None
 
-    def uninstall(self, modules: Union[str, List[str]]) -> None:
+    def uninstall(self, modules: Union[str, list[str]]) -> None:
         # LIST -----------------------------------------------
         if isinstance(modules, (list, tuple, set, )):
             for module in modules:
                 self.uninstall(module)
 
         # ONE -----------------------------------------------
-        cmd = f"{self.PYTHON_PIP} uninstall -y {modules}"
-        self.cli.send(cmd, timeout=60)
+        cmd = CmdPattern.UNINSTALL % (self.PYTHON_PATH, modules)
+        self.cli.send(cmd, timeout=120)
 
 
 # =====================================================================================================================

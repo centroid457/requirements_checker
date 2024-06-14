@@ -38,6 +38,7 @@ from .check_string import (
 from .check_pkg import (
     # BASE
     Packages,
+    CmdPattern,
 
     # AUX
 
