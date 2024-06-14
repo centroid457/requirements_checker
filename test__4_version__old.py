@@ -12,7 +12,7 @@ from requirements_checker import *
 
 
 # =====================================================================================================================
-# KEEP FILES IN ROOT! OR IMPORT PRJ_MODULE WOULD FROM SYSTEM! NOT THIS SOURCE!!!
+# KEEP FILES IN ROOT! OR IMPORT PRJ_MODULE WOULD FROM SYSTEM! NOT THIS _SOURCE!!!
 # from PRJ_NEW__ import *
 
 
@@ -143,7 +143,7 @@ class Test__Version:
     @pytest.mark.parametrize(argnames="source", argvalues=["1.2.3", [1, 2, 3], ])
     def test__123(self, source: Any):
         victim = self.Victim(source)
-        assert victim.SOURCE == source
+        assert victim._SOURCE == source
         assert victim.PARSED == (1, 2, 3)
         assert str(victim) == "1.2.3"
         assert repr(victim) == "Version(1.2.3)"

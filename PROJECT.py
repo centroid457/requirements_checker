@@ -54,7 +54,10 @@ designed for check requirements (systemOs) and raise/bool if no match
     NEWS: List[str] = [
 
 
+
+
         "[PKGS] add CmdPattern",
+        "[VER] ref to VersionBlock",
     ]
 
     # FINALIZE -----------------------------------------------

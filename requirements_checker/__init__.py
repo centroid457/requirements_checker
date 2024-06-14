@@ -48,17 +48,13 @@ from .check_pkg import (
 )
 from .check_version import (
     # BASE
-    Version,
 
     # AUX
-    PATTERN__VERSION_TUPLE,
-    PATTERN__VERSION_LIST,
-    PATTERN__VERSION_BLOCK,
 
     # TYPES
-    TYPE__VERSION_PARSED,
-    TYPE__VERSION_PARSED__BLOCK,
-    TYPE__VERSION_PARSED__ELEMENT,
+    TYPE__VERSION_ELEMENT,
+    TYPE__VERSION_ELEMENTS,
+    VersionBlock,
 
     # EXX
     Exx_VersionIncompatible,
