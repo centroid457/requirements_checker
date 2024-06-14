@@ -144,7 +144,7 @@ class Test__Version:
     def test__123(self, source: Any):
         victim = self.Victim(source)
         assert victim.SOURCE == source
-        assert victim.PARCED == (1, 2, 3)
+        assert victim.PARSED == (1, 2, 3)
         assert str(victim) == "1.2.3"
         assert repr(victim) == "Version(1.2.3)"
         assert len(victim) == 3

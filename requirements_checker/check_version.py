@@ -49,15 +49,17 @@ TYPE__VERSION_PARSED__ELEMENT = Union[str, int]
 TYPE__VERSION_PARSED__BLOCK = Union[TYPE__VERSION_PARSED__ELEMENT, tuple[TYPE__VERSION_PARSED__ELEMENT, ...]]
 TYPE__VERSION_PARSED = tuple[TYPE__VERSION_PARSED__BLOCK, ...]
 
-PATTERN__VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
-PATTERN__VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
-PATTERN__VERSION_BLOCK = r"(\d*)([a-zA-Z]*)(\d*)"
+
+class PatternsVer:
+    VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
+    VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
+    VERSION_BLOCK = r"(\d*)([a-zA-Z]*)(\d*)"
 
 
 # =====================================================================================================================
 class Version:
     SOURCE: Any
-    PARCED: TYPE__VERSION_PARSED
+    PARSED: TYPE__VERSION_PARSED
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -71,7 +73,7 @@ class Version:
             return source
 
         if isinstance(source, str):
-            match = re.fullmatch(PATTERN__VERSION_BLOCK, source)
+            match = re.fullmatch(PatternsVer.VERSION_BLOCK, source)
             if match:
                 for match in (match[1], match[2], match[3]):
                     if match:
@@ -140,7 +142,7 @@ class Version:
         source = re.sub(r",+", ".", source)
         source = re.sub(r"\.+", ".", source)
 
-        for pattern in [PATTERN__VERSION_TUPLE, PATTERN__VERSION_LIST]:
+        for pattern in [PatternsVer.VERSION_TUPLE, PatternsVer.VERSION_LIST]:
             match = re.search(pattern, source, flags=re.IGNORECASE)
             if match:
                 source = match[1]
@@ -170,7 +172,7 @@ class Version:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, source: Any):
         self.SOURCE = source
-        self.PARCED = self.version__ensure_tuple(source)
+        self.PARSED = self.version__ensure_tuple(source)
 
     def __cmp__(self, other: Union[Any, Self]) -> bool | NoReturn:
         # TODO: FINISH!!!
@@ -185,7 +187,7 @@ class Version:
     # -------------------
     def __str__(self):
         result = ""
-        for block in self.PARCED:
+        for block in self.PARSED:
             if isinstance(block, tuple):
                 elements = "".join(block)
                 result += f"{elements}."
@@ -199,16 +201,16 @@ class Version:
         return f"{self.__class__.__name__}({self})"
 
     def __len__(self) -> int:
-        return len(self.PARCED)
+        return len(self.PARSED)
 
     def __getitem__(self, item: int) -> TYPE__VERSION_PARSED__BLOCK | None:
         try:
-            return self.PARCED[item]
+            return self.PARSED[item]
         except:
             return
 
     def __iter__(self):
-        yield from self.PARCED
+        yield from self.PARSED
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
