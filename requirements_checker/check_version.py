@@ -327,7 +327,6 @@ class VersionBlock:
 #         # TODO: FINISH!!!
 #         # TODO: FINISH!!!
 #         # TODO: FINISH!!!
-#         # TODO: FINISH!!!
 #         # if elements in same length is equel - longest is higher!
 #         pass
 #
