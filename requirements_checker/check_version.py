@@ -46,7 +46,7 @@ class Exx_VersionIncompatible(Exception):
 # =====================================================================================================================
 TYPE__VERSION_ELEMENT = Union[str, int]
 TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
-TYPE__BLOCK_SOURCE = Union[str, int, list, tuple, Any, 'VersionBlock']
+TYPE__SOURCE_BLOCKS = Union[str, int, list, tuple, Any, 'VersionBlock']
 
 
 class VersionBlock:
@@ -71,29 +71,29 @@ class VersionBlock:
     ELEMENTS: TYPE__VERSION_ELEMENTS
 
     PATTERN_CLEAR = r"[\"' -]*"
-    PATTERN_VALIDATE_SOURCE_NEGATIVE = r"\d+[^a-z]+\d+"
+    PATTERN_VALIDATE_SOURCE_NEGATIVE = r"\d+[^0-9a-z]+\d+"
     PATTERN_VALIDATE_CLEANED = r"(\d|[a-z])+"
     PATTERN_ITERATE = r"\d+|[a-z]+"
 
-    def __init__(self, source: TYPE__BLOCK_SOURCE):
+    def __init__(self, source: TYPE__SOURCE_BLOCKS):
         self._SOURCE = source
-        if not self._validate_source(self._SOURCE):
+        if not self._validate_source(source):
             raise Exx_VersionBlockIncompatible()
 
-        string = self._convert_to_string(self._SOURCE)
+        string = self._prepare_string(source)
         if not self._validate_string(string):
             raise Exx_VersionBlockIncompatible()
 
         self.ELEMENTS = self._parse_elements(string)
 
     @classmethod
-    def _validate_source(cls, source: TYPE__BLOCK_SOURCE) -> bool:
+    def _validate_source(cls, source: TYPE__SOURCE_BLOCKS) -> bool:
         source = str(source).lower()
         match = re.search(cls.PATTERN_VALIDATE_SOURCE_NEGATIVE, source)
         return not bool(match)
 
     @classmethod
-    def _convert_to_string(cls, source: TYPE__BLOCK_SOURCE) -> str:
+    def _prepare_string(cls, source: TYPE__SOURCE_BLOCKS) -> str:
         if isinstance(source, (list, tuple)):
             result = "".join([str(item) for item in source])
         else:
@@ -144,7 +144,7 @@ class VersionBlock:
         return str(self)
 
     # CMP -------------------------------------------------------------------------------------------------------------
-    def __cmp(self, other: TYPE__BLOCK_SOURCE) -> int | NoReturn:
+    def __cmp(self, other: TYPE__SOURCE_BLOCKS) -> int | NoReturn:
         other = VersionBlock(other)
 
         # equel ----------------------
@@ -196,13 +196,13 @@ class VersionBlock:
 # =====================================================================================================================
 # =====================================================================================================================
 # =====================================================================================================================
-TYPE__VERSION_BLOCKS = tuple[TYPE__BLOCK_SOURCE, ...]
+TYPE__VERSION_BLOCKS = tuple[TYPE__SOURCE_BLOCKS, ...]
+TYPE__SOURCE_VERSION = Union[VersionBlock, tuple[VersionBlock], Any]
 
 
 class PatternsVer:
     VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
     VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
-    VERSION_BLOCK = r"(\d*)([a-zA-Z]*)(\d*)"
 
 
 # =====================================================================================================================
@@ -212,54 +212,59 @@ class Version:
 
     def __init__(self, source: Any):
         self._SOURCE = source
-        self.BLOCKS = self.version__get_blocks(source)
+        string = self._prepare_string(source)
+        self.BLOCKS = self._parse_blocks(string)
 
     # -----------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def version__get_blocks(source: Union[str, TYPE__VERSION_BLOCKS, list[str, int], Any]) -> TYPE__VERSION_BLOCKS | NoReturn:
-        if isinstance(source, list):
-            pass
+    @classmethod
+    def _prepare_string(cls, source: Any) -> str | NoReturn:
+        if isinstance(source, (list, tuple)):
+            result = ".".join([str(item) for item in source])
+        else:
+            result = str(source)
 
-        source = str(source)
+        result = result.lower()
 
-        source = re.sub(r"\s+", "", source)
-        source = re.sub(r"\'+", "", source)
-        source = re.sub(r"\"+", "", source)
-        source = re.sub(r",+", ".", source)
-        source = re.sub(r"\.+", ".", source)
-
+        # CUT ---------
         for pattern in [PatternsVer.VERSION_TUPLE, PatternsVer.VERSION_LIST]:
-            match = re.search(pattern, source, flags=re.IGNORECASE)
+            match = re.search(pattern, source)
             if match:
-                source = match[1]
+                result = match[1]
                 break
 
-        source = re.sub(r"\A\D+", "", string=source, flags=re.IGNORECASE)
-        source = re.sub(r"\.+\Z", "", source)
-
-        if not source:
+        if "," in result and "." in result:
             raise Exx_VersionIncompatible()
 
-        source_list = source.split(".")
+        result = re.sub(r"\A\D+", "", result)   # ver/version
+        result = re.sub(r",+", ".", result)
+        result = re.sub(r"\.+", ".", result)
+        result = result.strip(".")
+
+        if not result:
+            raise Exx_VersionIncompatible()
+
+        return result
+
+    @staticmethod
+    def _parse_blocks(source: str) -> TYPE__VERSION_BLOCKS | NoReturn:
+        blocks_list__str = source.split(".")
 
         # RESULT -----------
-        for index, item in enumerate(source_list):
-            try:
-                item = int(item)
-                source_list[index] = item
-            except:
-                pass
+        result = []
+        for item in blocks_list__str:
+            if not item:
+                continue
 
-            item = Version.version_block__ensure_elements(item)
-            source_list[index] = item
+            block = VersionBlock(item)
+            result.append(block)
 
-        return tuple(source_list)
+        return tuple(result)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __len__(self) -> int:
         return len(self.BLOCKS)
 
-    def __getitem__(self, item: int) -> TYPE__BLOCK_SOURCE | None:
+    def __getitem__(self, item: int) -> TYPE__SOURCE_BLOCKS | None:
         try:
             return self.BLOCKS[item]
         except:
@@ -280,15 +285,15 @@ class Version:
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
-    def major(self) -> TYPE__BLOCK_SOURCE | None:
+    def major(self) -> TYPE__SOURCE_BLOCKS | None:
         return self[0]
 
     @property
-    def minor(self) -> TYPE__BLOCK_SOURCE | None:
+    def minor(self) -> TYPE__SOURCE_BLOCKS | None:
         return self[1]
 
     @property
-    def micro(self) -> TYPE__BLOCK_SOURCE | None:
+    def micro(self) -> TYPE__SOURCE_BLOCKS | None:
         return self[2]
 
     # -----------------------------------------------------------------------------------------------------------------

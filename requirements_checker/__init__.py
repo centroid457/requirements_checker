@@ -55,10 +55,11 @@ from .check_version import (
     # TYPES
     TYPE__VERSION_ELEMENT,
     TYPE__VERSION_ELEMENTS,
-    TYPE__BLOCK_SOURCE,
+    TYPE__SOURCE_BLOCKS,
     VersionBlock,
 
     TYPE__VERSION_BLOCKS,
+    TYPE__SOURCE_VERSION,
 
     # EXX
     Exx_VersionIncompatible,

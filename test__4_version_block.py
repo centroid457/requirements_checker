@@ -94,7 +94,7 @@ class Test__VersionBlock:
         ]
     )
     def test__convert_to_string(self, args, _EXPECTED):
-        func_link = self.Victim._convert_to_string
+        func_link = self.Victim._prepare_string
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
