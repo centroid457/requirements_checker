@@ -40,6 +40,33 @@ class Test__VersionBlock:
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[
+            (True, True),
+            (1, True),
+
+            ("1", True),
+            ("hello", True),
+            ("HELLO", True),
+            ("11rc22", True),
+            ("11r c22", True),
+            (" 11 rc-2 2", False),
+
+            # zeros invaluable
+            ("01rc02", True),
+
+            # not clean chars
+            ("[11:rc.22]", True),
+
+            # iterables
+            ([11, "r c---", 22], True),
+        ]
+    )
+    def test__validate_source(self, args, _EXPECTED):
+        func_link = self.Victim._validate_source
+        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="args, _EXPECTED",
+        argvalues=[
             (True, "true"),
             (1, "1"),
 
@@ -47,6 +74,7 @@ class Test__VersionBlock:
             ("hello", "hello"),
             ("HELLO", "hello"),
             ("11rc22", "11rc22"),
+            ("11r c22", "11rc22"),
             (" 11 rc-2 2", "11rc22"),
 
             # zeros invaluable
@@ -57,7 +85,6 @@ class Test__VersionBlock:
 
             # iterables
             ([11, "r c---", 22], "11rc22"),
-
         ]
     )
     def test__convert_to_string(self, args, _EXPECTED):
@@ -74,6 +101,7 @@ class Test__VersionBlock:
             ("hello", True),
             ("HELLO", False),
             ("11rc22", True),
+            ("11r c22", False),
             (" 11 rc-2 2", False),
 
             # zeros invaluable
@@ -100,7 +128,8 @@ class Test__VersionBlock:
             ("hello", ("hello", )),
             ("HELLO", ()),
             ("11rc22", (11, "rc", 22)),
-            (" 11 rc-2 2", (11, "rc", 2, 2)),   # FIXME:!!! think what to do with it!!!!
+            ("11r c22", (11, "r", "c", 22)),    # dont forget that here in instance it will be cleaned!!!
+            (" 11 rc-2 2", (11, "rc", 2, 2)),
 
             # zeros invaluable
             ("01rc02", (1, "rc", 2)),
@@ -127,7 +156,8 @@ class Test__VersionBlock:
             ("hello", "hello"),
             ("HELLO", "hello"),
             ("11rc22", "11rc22"),
-            (" 11 rc-2 2", "11rc22"),
+            ("11r c22", "11rc22"),
+            (" 11 rc-2 2", Exx_VersionBlockIncompatible),
 
             # zeros invaluable
             ("01rc02", "01rc02"),

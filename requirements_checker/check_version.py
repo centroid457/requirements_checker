@@ -47,7 +47,7 @@ class Exx_VersionIncompatible(Exception):
 # =====================================================================================================================
 TYPE__VERSION_ELEMENT = Union[str, int]
 TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
-
+TYPE__SOURCE = Union[str, int, list, tuple, Any, 'VersionBlock']
 
 class VersionBlock:
     """
@@ -67,12 +67,16 @@ class VersionBlock:
     STRING: str
     ELEMENTS: TYPE__VERSION_ELEMENTS
 
-    PATTERN_CLEAR = r"(\s|[\"'-])*"
-    PATTERN_VALIDATE = r"(\d|[a-z])+"
+    PATTERN_CLEAR = r"[\"' -]*"
+    PATTERN_VALIDATE_SOURCE_NEGATIVE = r"\d+[^a-z]+\d+"
+    PATTERN_VALIDATE_CLEANED = r"(\d|[a-z])+"
     PATTERN_ITERATE = r"\d+|[a-z]+"
 
-    def __init__(self, source: Union[str, int, list, tuple, Any, Self]):
+    def __init__(self, source: TYPE__SOURCE):
         self._SOURCE = source
+        if not self._validate_source(self._SOURCE):
+            raise Exx_VersionBlockIncompatible()
+
         self.STRING = self._convert_to_string(self._SOURCE)
         if not self._validate_string(self.STRING):
             raise Exx_VersionBlockIncompatible()
@@ -80,7 +84,13 @@ class VersionBlock:
         self.ELEMENTS = self._parse_elements(self.STRING)
 
     @classmethod
-    def _convert_to_string(cls, source: Union[str, int, list, tuple, Any]) -> str:
+    def _validate_source(cls, source: TYPE__SOURCE) -> bool:
+        source = str(source).lower()
+        match = re.search(cls.PATTERN_VALIDATE_SOURCE_NEGATIVE, source)
+        return not bool(match)
+
+    @classmethod
+    def _convert_to_string(cls, source: TYPE__SOURCE) -> str:
         if isinstance(source, (list, tuple)):
             result = "".join([str(item) for item in source])
         else:
@@ -89,13 +99,14 @@ class VersionBlock:
         # FINISH -------------------------------
         result = re.sub(cls.PATTERN_CLEAR, "", result)
         result = result.lower()
+        result = result.strip()
         return result
 
     @classmethod
     def _validate_string(cls, string: str) -> bool:
         if not isinstance(string, str):
             return False
-        match = re.fullmatch(cls.PATTERN_VALIDATE, string)
+        match = re.fullmatch(cls.PATTERN_VALIDATE_CLEANED, string)
         return bool(match)
 
     @classmethod
