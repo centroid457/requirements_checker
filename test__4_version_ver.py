@@ -171,6 +171,7 @@ class Test__Version:
             (("11rc22", Version("11rc22")), True),
             (("1.1rc2.2", Version("1.1rc2.2")), True),
             (("1.1rc2.2", "01.01rc02.02"), True),
+            (("1.1rc2.2", (1, "1rc2", 2)), True),
         ]
     )
     def test__inst__cmp__eq(self, args, _EXPECTED):
