@@ -67,36 +67,44 @@ class VersionBlock:
     STRING: str
     ELEMENTS: TYPE__VERSION_ELEMENTS
 
-    PATTERN_CLEAR = r"(\s|\-)*"
+    PATTERN_CLEAR = r"(\s|[\"'-])*"
     PATTERN_VALIDATE = r"(\d|[a-z])+"
     PATTERN_ITERATE = r"\d+|[a-z]+"
 
-    def __init__(self, source: Union[str, int, list, tuple, Any]):
+    def __init__(self, source: Union[str, int, list, tuple, Any, Self]):
         self._SOURCE = source
         self.STRING = self._convert_to_string(self._SOURCE)
-        if not self._validate_string():
+        if not self._validate_string(self.STRING):
             raise Exx_VersionBlockIncompatible()
 
-        self.ELEMENTS = self._parce_elements()
+        self.ELEMENTS = self._parse_elements(self.STRING)
 
-    def _convert_to_string(self, source: Union[str, int, list, tuple, Any]) -> str:
+    @classmethod
+    def _convert_to_string(cls, source: Union[str, int, list, tuple, Any]) -> str:
         if isinstance(source, (list, tuple)):
             result = "".join([str(item) for item in source])
         else:
             result = str(source)
 
         # FINISH -------------------------------
-        result = re.sub(self.PATTERN_CLEAR, "", result)
+        result = re.sub(cls.PATTERN_CLEAR, "", result)
         result = result.lower()
         return result
 
-    def _validate_string(self) -> bool:
-        match = re.fullmatch(self.PATTERN_VALIDATE, self.STRING)
+    @classmethod
+    def _validate_string(cls, string: str) -> bool:
+        if not isinstance(string, str):
+            return False
+        match = re.fullmatch(cls.PATTERN_VALIDATE, string)
         return bool(match)
 
-    def _parce_elements(self) -> TYPE__VERSION_ELEMENTS:
+    @classmethod
+    def _parse_elements(cls, string: str) -> TYPE__VERSION_ELEMENTS:
+        if not isinstance(string, str):
+            return ()
+
         result_list = []
-        for element in re.findall(self.PATTERN_ITERATE, self.STRING):
+        for element in re.findall(cls.PATTERN_ITERATE, string):
             try:
                 element = int(element)
             except:
@@ -107,6 +115,9 @@ class VersionBlock:
 
     def __iter__(self):
         yield from self.ELEMENTS
+
+    def __str__(self):
+        return self.STRING
 
 
 # =====================================================================================================================
