@@ -18,12 +18,12 @@ from pytest_aux import *
 
 
 # =====================================================================================================================
-class Test__VersionBlock:
-    Victim: Type[VersionBlock]
+class Test__Version:
+    Victim: Type[Version]
     @classmethod
     def setup_class(cls):
         pass
-        cls.Victim = VersionBlock
+        cls.Victim = Version
 
     # @classmethod
     # def teardown_class(cls):
@@ -40,137 +40,54 @@ class Test__VersionBlock:
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[
-            (True, True),
-            (1, True),
-
-            ("1", True),
-            ("hello", True),
-            ("HELLO", True),
-            ("11rc22", True),
-            ("11r c22", True),
-            (" 11 rc-2 2", False),
-
-            # zeros invaluable
-            ("01rc02", True),
-
-            # not clean chars
-            ("[11:rc.22]", True),
-
-            # iterables
-            ([11, "r c---", 22], True),
-
-            # inst
-            (VersionBlock("11rc22"), True),
-        ]
-    )
-    def test__validate_source(self, args, _EXPECTED):
-        func_link = self.Victim._validate_source
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
-
-    @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
-        argvalues=[
-            (True, "true"),
+            # ONE BLOCK ---------------------
+            (True, Exx_VersionIncompatible),
             (1, "1"),
 
             ("1", "1"),
-            ("hello", "hello"),
-            ("HELLO", "hello"),
+            ("hello", Exx_VersionIncompatible),
+            ("HELLO", Exx_VersionIncompatible),
             ("11rc22", "11rc22"),
-            ("11r c22", "11rc22"),
-            (" 11 rc-2 2", "11rc22"),
+            ("11r c22", "11r c22"),
+            (" 11 rc-2 2", "11 rc-2 2"),
 
             # zeros invaluable
             ("01rc02", "01rc02"),
 
             # not clean chars
-            ("[11:rc.22]", "[11:rc.22]"),
+            ("[11:rc.22]", "11:rc.22"),
 
             # iterables
-            ([11, "r c---", 22], "11rc22"),
+            ([11, "r c---", 22], "11.r c---.22"),
 
             # inst
             (VersionBlock("11rc22"), "11rc22"),
+
+            # BLOCKS ---------------------
+            ("1.1rc2.2", "1.1rc2.2"),
+            ("ver1.1rc2.2", "1.1rc2.2"),
+            ("ver(1.1rc2.2)ver", "1.1rc2.2"),
+
+            # BLOCKS inst ---------------------
+            ([1, VersionBlock("11rc22")], "1.11rc22"),
+            ([1, "hello"], "1.hello"),
         ]
     )
     def test___prepare_string(self, args, _EXPECTED):
         func_link = self.Victim._prepare_string
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
-    @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
-        argvalues=[
-            (True, False),
-            (1, False),
-
-            ("1", True),
-            ("hello", True),
-            ("HELLO", False),
-            ("11rc22", True),
-            ("11r c22", False),
-            (" 11 rc-2 2", False),
-
-            # zeros invaluable
-            ("01rc02", True),
-
-            # not clean chars
-            ("[11:rc.22]", False),
-
-            # iterables
-            ([11, "r c---", 22], False),
-
-            # inst
-            (VersionBlock("11rc22"), False),  # not useful
-        ]
-    )
-    def test__validate_string(self, args, _EXPECTED):
-        func_link = self.Victim._validate_string
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
-
-    @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
-        argvalues=[
-
-            # NOTE: THIS TESTS IS NOT USEFUL!!! many values is not accured in real parced string!!
-
-            (True, ()),
-            (1, ()),
-
-            ("1", (1, )),
-            ("hello", ("hello", )),
-            ("HELLO", ()),
-            ("11rc22", (11, "rc", 22)),
-            ("11r c22", (11, "r", "c", 22)),    # not useful
-            (" 11 rc-2 2", (11, "rc", 2, 2)),
-
-            # zeros invaluable
-            ("01rc02", (1, "rc", 2)),
-            ("01rc020", (1, "rc", 20)),
-
-            # not clean chars
-            ("[11:rc.22]", (11, "rc", 22)),
-
-            # iterables
-            ([11, "r c---", 22], ()),
-
-            # inst
-            (VersionBlock("11rc22"), ()),   # not useful
-        ]
-    )
-    def test__parce_elements(self, args, _EXPECTED):
-        func_link = self.Victim._parse_elements
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
-
     # INST ------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[
-            (True, "true"),
+            # ONE BLOCK ---------------------
+            (True, Exx_VersionIncompatible),
             (1, "1"),
 
             ("1", "1"),
-            ("hello", "hello"),
-            ("HELLO", "hello"),
+            ("hello", Exx_VersionIncompatible),
+            ("HELLO", Exx_VersionIncompatible),
             ("11rc22", "11rc22"),
             ("11r c22", "11rc22"),
             (" 11 rc-2 2", Exx_VersionBlockIncompatible),
@@ -182,10 +99,19 @@ class Test__VersionBlock:
             ("[11:rc.22]", Exx_VersionBlockIncompatible),
 
             # iterables
-            ([11, "r c---", 22], "11rc22"),
+            ([11, "r c---", 22], "11.rc.22"),
 
             # inst
             (VersionBlock("11rc22"), "11rc22"),
+
+            # BLOCKS ---------------------
+            ("1.1rc2.2", "1.1rc2.2"),
+            ("ver1.1rc2.2", "1.1rc2.2"),
+            ("ver(1.1rc2.2)ver", "1.1rc2.2"),
+
+            # BLOCKS inst ---------------------
+            ([1, VersionBlock("11rc22")], "1.11rc22"),
+            ([1, "hello"], "1.hello"),
         ]
     )
     def test__inst__string(self, args, _EXPECTED):
@@ -195,18 +121,18 @@ class Test__VersionBlock:
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[
-            (True, 1),
+            (True, Exx_VersionIncompatible),
             (1, 1),
 
             ("1", 1),
-            ("hello", 1),
-            ("HELLO", 1),
-            ("11rc22", 3),
-            ("11r c22", 3),
+            ("hello", Exx_VersionIncompatible),
+            ("HELLO", Exx_VersionIncompatible),
+            ("11rc22", 1),
+            ("11r c22", 1),
             (" 11 rc-2 2", Exx_VersionBlockIncompatible),
 
             # zeros invaluable
-            ("01rc02", 3),
+            ("01rc02", 1),
 
             # not clean chars
             ("[11:rc.22]", Exx_VersionBlockIncompatible),
@@ -215,7 +141,7 @@ class Test__VersionBlock:
             ([11, "r c---", 22], 3),
 
             # inst
-            (VersionBlock("11rc22"), 3),
+            (VersionBlock("11rc22"), 1),
         ]
     )
     def test__inst__len(self, args, _EXPECTED):
@@ -235,12 +161,16 @@ class Test__VersionBlock:
             (("1rc2", "[11:rc.22]"), Exx_VersionBlockIncompatible),
 
             # iterables
-            (("1rc2", [1, "rc", 2]), True),
-            (("1rc2", [1, "rc2", ]), True),
+            (("1rc2", [1, "rc", 2]), False),
+            (("1rc2", [1, "rc2", ]), False),
             (("1rc2", ["1rc2", ]), True),
 
             # inst
             (("1rc2", VersionBlock("1rc2")), True),
+            (("1rc2", Version("1rc2")), True),
+            (("11rc22", Version("11rc22")), True),
+            (("1.1rc2.2", Version("1.1rc2.2")), True),
+            (("1.1rc2.2", "01.01rc02.02"), True),
         ]
     )
     def test__inst__cmp__eq(self, args, _EXPECTED):

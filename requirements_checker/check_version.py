@@ -201,8 +201,10 @@ TYPE__SOURCE_VERSION = Union[VersionBlock, tuple[VersionBlock], Any]
 
 
 class PatternsVer:
-    VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
-    VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
+    # VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
+    # VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
+    VERSION_IN_BRACKETS: list = [r"\((.*)\)", r"\[(.*)\]"]  # get first bracket!!!
+    VALIDATE_BRACKETS_NEGATIVE: list = [r"[^\[].*\]", r"\[.*[^\]]",   r"[^\(].*\)", r"\(.*[^\)]"]
 
 
 # =====================================================================================================================
@@ -218,6 +220,9 @@ class Version:
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
     def _prepare_string(cls, source: Any) -> str | NoReturn:
+        """
+        ONLY PREPARE STRING FOR CORRECT SPLITTING BLOCKS - parsing blocks would inside VersionBlock
+        """
         if isinstance(source, (list, tuple)):
             result = ".".join([str(item) for item in source])
         else:
@@ -226,14 +231,18 @@ class Version:
         result = result.lower()
 
         # CUT ---------
-        for pattern in [PatternsVer.VERSION_TUPLE, PatternsVer.VERSION_LIST]:
-            match = re.search(pattern, source)
+        for pattern in PatternsVer.VERSION_IN_BRACKETS:
+            match = re.search(pattern, result)
             if match:
                 result = match[1]
                 break
 
         if "," in result and "." in result:
             raise Exx_VersionIncompatible()
+
+        for pattern in PatternsVer.VALIDATE_BRACKETS_NEGATIVE:
+            if re.search(pattern, result):
+                raise Exx_VersionIncompatible()
 
         result = re.sub(r"\A\D+", "", result)   # ver/version
         result = re.sub(r",+", ".", result)
@@ -264,7 +273,7 @@ class Version:
     def __len__(self) -> int:
         return len(self.BLOCKS)
 
-    def __getitem__(self, item: int) -> TYPE__SOURCE_BLOCKS | None:
+    def __getitem__(self, item: int) -> VersionBlock | None:
         try:
             return self.BLOCKS[item]
         except:
@@ -296,15 +305,41 @@ class Version:
     def micro(self) -> TYPE__SOURCE_BLOCKS | None:
         return self[2]
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def __cmp__(self, other: Union[Any, Self]) -> bool | NoReturn:
-        # TODO: FINISH!!!
-        # TODO: FINISH!!!
-        # TODO: FINISH!!!
-        # TODO: FINISH!!!
-        # TODO: FINISH!!!
-        # if elements in same length is equel - longest is higher!
-        pass
+    # CMP -------------------------------------------------------------------------------------------------------------
+    def __cmp(self, other: TYPE__SOURCE_VERSION) -> int | NoReturn:
+        other = Version(other)
+
+        # equel ----------------------
+        if str(self) == str(other):
+            return 0
+
+        # by elements ----------------
+        for block_1, block_2 in zip(self, other):
+            if block_1 == block_2:
+                continue
+            else:
+                return int(block_1 > block_2) or -1
+
+        # final - longest ------------
+        return int(len(self) > len(other)) or -1
+
+    def __eq__(self, other):
+        return self.__cmp(other) == 0
+
+    def __ne__(self, other):
+        return self.__cmp(other) != 0
+
+    def __lt__(self, other):
+        return self.__cmp(other) < 0
+
+    def __gt__(self, other):
+        return self.__cmp(other) > 0
+
+    def __le__(self, other):
+        return self.__cmp(other) <= 0
+
+    def __ge__(self, other):
+        return self.__cmp(other) >= 0
 
 
 # =====================================================================================================================
