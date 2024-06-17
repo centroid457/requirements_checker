@@ -4,9 +4,8 @@ from object_info import ObjectInfo
 
 
 # =====================================================================================================================
-# TODO: make BIG REF!
-# TODO: add class VersionBlock and compare inside + use Schema + validate
-# TODO: in Version add parceMethod
+# TODO:
+
 
 
 # =====================================================================================================================
@@ -47,7 +46,7 @@ class Exx_VersionIncompatible(Exception):
 # =====================================================================================================================
 TYPE__VERSION_ELEMENT = Union[str, int]
 TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
-TYPE__SOURCE = Union[str, int, list, tuple, Any, 'VersionBlock']
+TYPE__BLOCK_SOURCE = Union[str, int, list, tuple, Any, 'VersionBlock']
 
 
 class VersionBlock:
@@ -76,7 +75,7 @@ class VersionBlock:
     PATTERN_VALIDATE_CLEANED = r"(\d|[a-z])+"
     PATTERN_ITERATE = r"\d+|[a-z]+"
 
-    def __init__(self, source: TYPE__SOURCE):
+    def __init__(self, source: TYPE__BLOCK_SOURCE):
         self._SOURCE = source
         if not self._validate_source(self._SOURCE):
             raise Exx_VersionBlockIncompatible()
@@ -88,13 +87,13 @@ class VersionBlock:
         self.ELEMENTS = self._parse_elements(string)
 
     @classmethod
-    def _validate_source(cls, source: TYPE__SOURCE) -> bool:
+    def _validate_source(cls, source: TYPE__BLOCK_SOURCE) -> bool:
         source = str(source).lower()
         match = re.search(cls.PATTERN_VALIDATE_SOURCE_NEGATIVE, source)
         return not bool(match)
 
     @classmethod
-    def _convert_to_string(cls, source: TYPE__SOURCE) -> str:
+    def _convert_to_string(cls, source: TYPE__BLOCK_SOURCE) -> str:
         if isinstance(source, (list, tuple)):
             result = "".join([str(item) for item in source])
         else:
@@ -134,6 +133,9 @@ class VersionBlock:
     def __len__(self) -> int:
         return len(self.ELEMENTS)
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self})"
+
     def __str__(self) -> str:
         return "".join(str(item) for item in self.ELEMENTS)
 
@@ -142,7 +144,7 @@ class VersionBlock:
         return str(self)
 
     # CMP -------------------------------------------------------------------------------------------------------------
-    def __cmp(self, other: TYPE__SOURCE) -> int | NoReturn:
+    def __cmp(self, other: TYPE__BLOCK_SOURCE) -> int | NoReturn:
         other = VersionBlock(other)
 
         # equel ----------------------
@@ -194,190 +196,118 @@ class VersionBlock:
 # =====================================================================================================================
 # =====================================================================================================================
 # =====================================================================================================================
-# TYPE__VERSION_PARSED = tuple[TYPE__VERSION_PARSED__BLOCK, ...]
+TYPE__VERSION_BLOCKS = tuple[TYPE__BLOCK_SOURCE, ...]
+
+
+class PatternsVer:
+    VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
+    VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
+    VERSION_BLOCK = r"(\d*)([a-zA-Z]*)(\d*)"
+
+
+# =====================================================================================================================
+class Version:
+    _SOURCE: Any
+    BLOCKS: TYPE__VERSION_BLOCKS
+
+    def __init__(self, source: Any):
+        self._SOURCE = source
+        self.BLOCKS = self.version__get_blocks(source)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def version__get_blocks(source: Union[str, TYPE__VERSION_BLOCKS, list[str, int], Any]) -> TYPE__VERSION_BLOCKS | NoReturn:
+        if isinstance(source, list):
+            pass
+
+        source = str(source)
+
+        source = re.sub(r"\s+", "", source)
+        source = re.sub(r"\'+", "", source)
+        source = re.sub(r"\"+", "", source)
+        source = re.sub(r",+", ".", source)
+        source = re.sub(r"\.+", ".", source)
+
+        for pattern in [PatternsVer.VERSION_TUPLE, PatternsVer.VERSION_LIST]:
+            match = re.search(pattern, source, flags=re.IGNORECASE)
+            if match:
+                source = match[1]
+                break
+
+        source = re.sub(r"\A\D+", "", string=source, flags=re.IGNORECASE)
+        source = re.sub(r"\.+\Z", "", source)
+
+        if not source:
+            raise Exx_VersionIncompatible()
+
+        source_list = source.split(".")
+
+        # RESULT -----------
+        for index, item in enumerate(source_list):
+            try:
+                item = int(item)
+                source_list[index] = item
+            except:
+                pass
+
+            item = Version.version_block__ensure_elements(item)
+            source_list[index] = item
+
+        return tuple(source_list)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __len__(self) -> int:
+        return len(self.BLOCKS)
+
+    def __getitem__(self, item: int) -> TYPE__BLOCK_SOURCE | None:
+        try:
+            return self.BLOCKS[item]
+        except:
+            return
+
+    def __iter__(self):
+        yield from self.BLOCKS
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self})"
+
+    def __str__(self):
+        return ".".join([str(block) for block in self.BLOCKS])
+
+    @property
+    def STRING(self) -> str:
+        return str(self)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def major(self) -> TYPE__BLOCK_SOURCE | None:
+        return self[0]
+
+    @property
+    def minor(self) -> TYPE__BLOCK_SOURCE | None:
+        return self[1]
+
+    @property
+    def micro(self) -> TYPE__BLOCK_SOURCE | None:
+        return self[2]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __cmp__(self, other: Union[Any, Self]) -> bool | NoReturn:
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # TODO: FINISH!!!
+        # if elements in same length is equel - longest is higher!
+        pass
+
+
+# =====================================================================================================================
+# class ReqCheckVer(metaclass=GetattrClassmethod_Meta):
+#     pass
 #
-#
-# class PatternsVer:
-#     VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
-#     VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
-#     VERSION_BLOCK = r"(\d*)([a-zA-Z]*)(\d*)"
-#
-#
-# # =====================================================================================================================
-# class Version:
-#     _SOURCE: Any
-#     PARSED: TYPE__VERSION_PARSED
-#
-#     # -----------------------------------------------------------------------------------------------------------------
-#     @staticmethod
-#     def version_block__ensure_elements(source: Union[str, int]) -> TYPE__VERSION_PARSED__BLOCK | NoReturn:
-#         """
-#         BLOCK could consists of only pattern like D*S*D* no more else!
-#         """
-#         result = []
-#
-#         if isinstance(source, int):
-#             return source
-#
-#         if isinstance(source, str):
-#             match = re.fullmatch(PatternsVer.VERSION_BLOCK, source)
-#             if match:
-#                 for match in (match[1], match[2], match[3]):
-#                     if match:
-#                         try:
-#                             match = int(match)
-#                         except:
-#                             pass
-#                         result.append(match)
-#                 if len(result) == 1:
-#                     return result[0]
-#                 else:
-#                     return tuple(result)
-#
-#         # ITERABLES ----------------
-#         if isinstance(source, (list, tuple)):
-#             if len(source) > 3:
-#                 msg = f"block is too large {len(source)=}"
-#                 raise Exx_VersionBlockIncompatible(msg)
-#
-#             elif len(source) == 3:
-#                 if not all(
-#                         [
-#                             isinstance(source[0], int),
-#                             isinstance(source[1], str),
-#                             isinstance(source[2], int),
-#                         ]
-#                 ):
-#                     msg = f"incorrect pattern D*S*D* {source=}"
-#                     raise Exx_VersionBlockIncompatible(msg)
-#
-#             elif len(source) == 2:
-#                 if not any(
-#                         [
-#                             isinstance(source[0], int) and isinstance(source[1], str),
-#                             isinstance(source[0], str) and isinstance(source[1], int),
-#                 ]):
-#                     msg = f"incorrect pattern D*S*D* {source=}"
-#                     raise Exx_VersionBlockIncompatible(msg)
-#
-#             elif len(source) == 1:
-#                 if not isinstance(source[0], (int, str)) :
-#                     msg = f"incorrect pattern D*S*D* {source=}"
-#                     raise Exx_VersionBlockIncompatible(msg)
-#                 else:
-#                     return source[0]
-#
-#             elif len(source) == 0:
-#                 msg = f"incorrect pattern D*S*D* {source=}"
-#                 raise Exx_VersionBlockIncompatible(msg)
-#
-#             return tuple(source)
-#
-#         # FINAL RAISE
-#         raise Exx_VersionBlockIncompatible()
-#
-#     @staticmethod
-#     def version__ensure_tuple(source: Union[str, TYPE__VERSION_PARSED, list[str, int], Any]) -> TYPE__VERSION_PARSED | NoReturn:
-#         if isinstance(source, list):
-#             pass
-#
-#         source = str(source)
-#
-#         source = re.sub(r"\s+", "", source)
-#         source = re.sub(r"\'+", "", source)
-#         source = re.sub(r"\"+", "", source)
-#         source = re.sub(r",+", ".", source)
-#         source = re.sub(r"\.+", ".", source)
-#
-#         for pattern in [PatternsVer.VERSION_TUPLE, PatternsVer.VERSION_LIST]:
-#             match = re.search(pattern, source, flags=re.IGNORECASE)
-#             if match:
-#                 source = match[1]
-#                 break
-#
-#         source = re.sub(r"\A\D+", "", string=source, flags=re.IGNORECASE)
-#         source = re.sub(r"\.+\Z", "", source)
-#
-#         if not source:
-#             raise Exx_VersionIncompatible()
-#
-#         source_list = source.split(".")
-#
-#         # RESULT -----------
-#         for index, item in enumerate(source_list):
-#             try:
-#                 item = int(item)
-#                 source_list[index] = item
-#             except:
-#                 pass
-#
-#             item = Version.version_block__ensure_elements(item)
-#             source_list[index] = item
-#
-#         return tuple(source_list)
-#
-#     # -----------------------------------------------------------------------------------------------------------------
-#     def __init__(self, source: Any):
-#         self._SOURCE = source
-#         self.PARSED = self.version__ensure_tuple(source)
-#
-#     def __cmp__(self, other: Union[Any, Self]) -> bool | NoReturn:
-#         # TODO: FINISH!!!
-#         # TODO: FINISH!!!
-#         # TODO: FINISH!!!
-#         # TODO: FINISH!!!
-#         # TODO: FINISH!!!
-#         # if elements in same length is equel - longest is higher!
+#     def _check(self, source: Any, ):
 #         pass
-#
-#     # -------------------
-#     def __str__(self):
-#         result = ""
-#         for block in self.PARSED:
-#             if isinstance(block, tuple):
-#                 elements = "".join(block)
-#                 result += f"{elements}."
-#             else:
-#                 result += f"{block}."
-#
-#         result = result[:-1]
-#         return result
-#
-#     def __repr__(self) -> str:
-#         return f"{self.__class__.__name__}({self})"
-#
-#     def __len__(self) -> int:
-#         return len(self.PARSED)
-#
-#     def __getitem__(self, item: int) -> TYPE__VERSION_PARSED__BLOCK | None:
-#         try:
-#             return self.PARSED[item]
-#         except:
-#             return
-#
-#     def __iter__(self):
-#         yield from self.PARSED
-#
-#     # -----------------------------------------------------------------------------------------------------------------
-#     @property
-#     def major(self) -> TYPE__VERSION_PARSED__BLOCK | None:
-#         return self[0]
-#
-#     @property
-#     def minor(self) -> TYPE__VERSION_PARSED__BLOCK | None:
-#         return self[1]
-#
-#     @property
-#     def micro(self) -> TYPE__VERSION_PARSED__BLOCK | None:
-#         return self[2]
-#
-#
-# # =====================================================================================================================
-# # class ReqCheckVer(metaclass=GetattrClassmethod_Meta):
-# #     pass
-# #
-# #     def _check(self, source: Any, ):
-# #         pass
-#
-#
-# # =====================================================================================================================
+
+
+# =====================================================================================================================
