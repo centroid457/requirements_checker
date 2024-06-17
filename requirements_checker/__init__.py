@@ -54,6 +54,7 @@ from .check_version import (
     # TYPES
     TYPE__VERSION_ELEMENT,
     TYPE__VERSION_ELEMENTS,
+    TYPE__SOURCE,
     VersionBlock,
 
     # EXX

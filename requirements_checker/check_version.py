@@ -49,6 +49,7 @@ TYPE__VERSION_ELEMENT = Union[str, int]
 TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
 TYPE__SOURCE = Union[str, int, list, tuple, Any, 'VersionBlock']
 
+
 class VersionBlock:
     """
     this is exact block in version string separated by dots!!!
@@ -62,9 +63,12 @@ class VersionBlock:
         1rc2
         1-rc2
         1 rc 2
+
+    RULES
+    -----
+    1.
     """
     _SOURCE: Any
-    STRING: str
     ELEMENTS: TYPE__VERSION_ELEMENTS
 
     PATTERN_CLEAR = r"[\"' -]*"
@@ -77,11 +81,11 @@ class VersionBlock:
         if not self._validate_source(self._SOURCE):
             raise Exx_VersionBlockIncompatible()
 
-        self.STRING = self._convert_to_string(self._SOURCE)
-        if not self._validate_string(self.STRING):
+        string = self._convert_to_string(self._SOURCE)
+        if not self._validate_string(string):
             raise Exx_VersionBlockIncompatible()
 
-        self.ELEMENTS = self._parse_elements(self.STRING)
+        self.ELEMENTS = self._parse_elements(string)
 
     @classmethod
     def _validate_source(cls, source: TYPE__SOURCE) -> bool:
@@ -127,8 +131,60 @@ class VersionBlock:
     def __iter__(self):
         yield from self.ELEMENTS
 
-    def __str__(self):
-        return self.STRING
+    def __len__(self) -> int:
+        return len(self.ELEMENTS)
+
+    def __str__(self) -> str:
+        return "".join(str(item) for item in self.ELEMENTS)
+
+    @property
+    def STRING(self) -> str:
+        return str(self)
+
+    # CMP -------------------------------------------------------------------------------------------------------------
+    def __cmp(self, other: TYPE__SOURCE) -> int | NoReturn:
+        other = VersionBlock(other)
+
+        # equel ----------------------
+        if str(self) == str(other):
+            return 0
+
+        # by elements ----------------
+        for elem_1, elem_2 in zip(self, other):
+            if elem_1 == elem_2:
+                continue
+
+            if isinstance(elem_1, int):
+                if isinstance(elem_2, int):
+                    return elem_1 - elem_2
+                else:
+                    return 1
+            else:
+                if isinstance(elem_2, int):
+                    return -1
+                else:
+                    return int(elem_1 > elem_2) or -1
+
+        # final - longest ------------
+        return int(len(self) > len(other)) or -1
+
+    def __eq__(self, other):
+        return self.__cmp(other) == 0
+
+    def __ne__(self, other):
+        return self.__cmp(other) != 0
+
+    def __lt__(self, other):
+        return self.__cmp(other) < 0
+
+    def __gt__(self, other):
+        return self.__cmp(other) > 0
+
+    def __le__(self, other):
+        return self.__cmp(other) <= 0
+
+    def __ge__(self, other):
+        return self.__cmp(other) >= 0
 
 
 # =====================================================================================================================

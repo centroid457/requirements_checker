@@ -58,6 +58,9 @@ class Test__VersionBlock:
 
             # iterables
             ([11, "r c---", 22], True),
+
+            # inst
+            (VersionBlock("11rc22"), True),
         ]
     )
     def test__validate_source(self, args, _EXPECTED):
@@ -85,6 +88,9 @@ class Test__VersionBlock:
 
             # iterables
             ([11, "r c---", 22], "11rc22"),
+
+            # inst
+            (VersionBlock("11rc22"), "11rc22"),
         ]
     )
     def test__convert_to_string(self, args, _EXPECTED):
@@ -112,6 +118,9 @@ class Test__VersionBlock:
 
             # iterables
             ([11, "r c---", 22], False),
+
+            # inst
+            (VersionBlock("11rc22"), False),  # not useful
         ]
     )
     def test__validate_string(self, args, _EXPECTED):
@@ -121,6 +130,9 @@ class Test__VersionBlock:
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[
+
+            # NOTE: THIS TESTS IS NOT USEFUL!!! many values is not accured in real parced string!!
+
             (True, ()),
             (1, ()),
 
@@ -128,17 +140,21 @@ class Test__VersionBlock:
             ("hello", ("hello", )),
             ("HELLO", ()),
             ("11rc22", (11, "rc", 22)),
-            ("11r c22", (11, "r", "c", 22)),    # dont forget that here in instance it will be cleaned!!!
+            ("11r c22", (11, "r", "c", 22)),    # not useful
             (" 11 rc-2 2", (11, "rc", 2, 2)),
 
             # zeros invaluable
             ("01rc02", (1, "rc", 2)),
+            ("01rc020", (1, "rc", 20)),
 
             # not clean chars
             ("[11:rc.22]", (11, "rc", 22)),
 
             # iterables
             ([11, "r c---", 22], ()),
+
+            # inst
+            (VersionBlock("11rc22"), ()),   # not useful
         ]
     )
     def test__parce_elements(self, args, _EXPECTED):
@@ -160,17 +176,75 @@ class Test__VersionBlock:
             (" 11 rc-2 2", Exx_VersionBlockIncompatible),
 
             # zeros invaluable
-            ("01rc02", "01rc02"),
+            ("01rc02", "1rc2"),
 
             # not clean chars
             ("[11:rc.22]", Exx_VersionBlockIncompatible),
 
             # iterables
             ([11, "r c---", 22], "11rc22"),
+
+            # inst
+            (VersionBlock("11rc22"), "11rc22"),
         ]
     )
-    def test__string(self, args, _EXPECTED):
+    def test__inst__string(self, args, _EXPECTED):
         func_link = lambda source: str(self.Victim(source))
+        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="args, _EXPECTED",
+        argvalues=[
+            (True, 1),
+            (1, 1),
+
+            ("1", 1),
+            ("hello", 1),
+            ("HELLO", 1),
+            ("11rc22", 3),
+            ("11r c22", 3),
+            (" 11 rc-2 2", Exx_VersionBlockIncompatible),
+
+            # zeros invaluable
+            ("01rc02", 3),
+
+            # not clean chars
+            ("[11:rc.22]", Exx_VersionBlockIncompatible),
+
+            # iterables
+            ([11, "r c---", 22], 3),
+
+            # inst
+            (VersionBlock("11rc22"), 3),
+        ]
+    )
+    def test__inst__len(self, args, _EXPECTED):
+        func_link = lambda source: len(self.Victim(source))
+        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="args, _EXPECTED",
+        argvalues=[
+            (("1rc2", "1rc2"), True),
+
+            # zeros invaluable
+            (("01rc02", "1rc2"), True),
+            (("01rc02", "1rc20"), False),
+
+            # not clean chars
+            (("1rc2", "[11:rc.22]"), Exx_VersionBlockIncompatible),
+
+            # iterables
+            (("1rc2", [1, "rc", 2]), True),
+            (("1rc2", [1, "rc2", ]), True),
+            (("1rc2", ["1rc2", ]), True),
+
+            # inst
+            (("1rc2", VersionBlock("1rc2")), True),
+        ]
+    )
+    def test__inst__cmp__eq(self, args, _EXPECTED):
+        func_link = lambda source1, source2: self.Victim(source1) == source2
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
