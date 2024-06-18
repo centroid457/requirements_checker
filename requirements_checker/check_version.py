@@ -1,11 +1,11 @@
 from typing import *
 import re
-from object_info import ObjectInfo
+from object_info import *
+from funcs_aux import *
 
 
 # =====================================================================================================================
 # TODO:
-
 
 
 # =====================================================================================================================
@@ -49,7 +49,7 @@ TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
 TYPE__SOURCE_BLOCKS = Union[str, int, list, tuple, Any, 'VersionBlock']
 
 
-class VersionBlock:
+class VersionBlock(Cmp):
     """
     this is exact block in version string separated by dots!!!
 
@@ -144,8 +144,8 @@ class VersionBlock:
         return str(self)
 
     # CMP -------------------------------------------------------------------------------------------------------------
-    def __cmp(self, other: TYPE__SOURCE_BLOCKS) -> int | NoReturn:
-        other = VersionBlock(other)
+    def __cmp__(self, other) -> int | NoReturn:
+        other = self.__class__(other)
 
         # equel ----------------------
         if str(self) == str(other):
@@ -170,24 +170,6 @@ class VersionBlock:
         # final - longest ------------
         return int(len(self) > len(other)) or -1
 
-    def __eq__(self, other):
-        return self.__cmp(other) == 0
-
-    def __ne__(self, other):
-        return self.__cmp(other) != 0
-
-    def __lt__(self, other):
-        return self.__cmp(other) < 0
-
-    def __gt__(self, other):
-        return self.__cmp(other) > 0
-
-    def __le__(self, other):
-        return self.__cmp(other) <= 0
-
-    def __ge__(self, other):
-        return self.__cmp(other) >= 0
-
 
 # =====================================================================================================================
 # =====================================================================================================================
@@ -196,7 +178,7 @@ class VersionBlock:
 # =====================================================================================================================
 # =====================================================================================================================
 # =====================================================================================================================
-TYPE__VERSION_BLOCKS = tuple[TYPE__SOURCE_BLOCKS, ...]
+TYPE__VERSION_BLOCKS = tuple[VersionBlock, ...]
 TYPE__SOURCE_VERSION = Union[VersionBlock, tuple[VersionBlock], Any]
 
 
@@ -208,7 +190,7 @@ class PatternsVer:
 
 
 # =====================================================================================================================
-class Version:
+class Version(Cmp):
     _SOURCE: Any
     BLOCKS: TYPE__VERSION_BLOCKS
 
@@ -294,20 +276,20 @@ class Version:
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
-    def major(self) -> TYPE__SOURCE_BLOCKS | None:
+    def major(self) -> VersionBlock | None:
         return self[0]
 
     @property
-    def minor(self) -> TYPE__SOURCE_BLOCKS | None:
+    def minor(self) -> VersionBlock | None:
         return self[1]
 
     @property
-    def micro(self) -> TYPE__SOURCE_BLOCKS | None:
+    def micro(self) -> VersionBlock | None:
         return self[2]
 
     # CMP -------------------------------------------------------------------------------------------------------------
-    def __cmp(self, other: TYPE__SOURCE_VERSION) -> int | NoReturn:
-        other = Version(other)
+    def __cmp__(self, other: TYPE__SOURCE_VERSION) -> int | NoReturn:
+        other = self.__class__(other)
 
         # equel ----------------------
         if str(self) == str(other):
@@ -322,24 +304,6 @@ class Version:
 
         # final - longest ------------
         return int(len(self) > len(other)) or -1
-
-    def __eq__(self, other):
-        return self.__cmp(other) == 0
-
-    def __ne__(self, other):
-        return self.__cmp(other) != 0
-
-    def __lt__(self, other):
-        return self.__cmp(other) < 0
-
-    def __gt__(self, other):
-        return self.__cmp(other) > 0
-
-    def __le__(self, other):
-        return self.__cmp(other) <= 0
-
-    def __ge__(self, other):
-        return self.__cmp(other) >= 0
 
 
 # =====================================================================================================================

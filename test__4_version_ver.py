@@ -178,5 +178,33 @@ class Test__Version:
         func_link = lambda source1, source2: self.Victim(source1) == source2
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
+    @pytest.mark.parametrize(
+        argnames="expression",
+        argvalues=[
+            Version("1rc2") == "1rc2",
+            Version("1rc2") != "1rc1",
+
+            Version("1.1rc2") > "1.0rc1",
+            Version("1.1rc2") > "1.1rc0",
+            Version("1.1rc2.0") > "1.1rc2",
+
+            Version("01.01rc02") > "1.1rc1",
+            Version("01.01rc02") < "1.1rd1",
+        ]
+    )
+    def test__inst__cmp(self, expression):
+        pytest_func_tester__no_args_kwargs(expression)
+
+    # PARTS -----------------------------------------------------------------------------------------------------------
+    def test__parts(self):
+        assert Version("1.2rc2.3").major == 1
+
+        assert Version("1.2rc2.3").major == 1
+        assert Version("1.2rc2.3").minor == "2rc2"
+        assert Version("1.2rc2.3").micro == 3
+
+        assert Version("1.2rc2.").micro is None
+        assert Version("1.2rc2.").micro == None
+
 
 # =====================================================================================================================

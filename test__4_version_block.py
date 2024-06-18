@@ -225,6 +225,9 @@ class Test__VersionBlock:
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[
+            (("None", None), True),
+            (("1rc2", None), False),
+
             (("1rc2", "1rc2"), True),
 
             # zeros invaluable
