@@ -52,8 +52,10 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-        "[PKGS] add CmdPattern",
-        "[VER] del old +add VersionBlock",
+
+
+
+        "[VER] add ReqCheckVersion_Base",
     ]
 
     # FINALIZE -----------------------------------------------

@@ -1,4 +1,5 @@
 from typing import *
+from object_info import *
 import platform
 
 
@@ -103,7 +104,7 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
     :ivar _sample_actual:
     """
     # SETTINGS -------------------------------------
-    _GETTER: Callable[..., str] = None
+    _GETTER: Union[Callable[..., Union[str, Any]], Any] = None
 
     # AUX ---------------------------------------
     _RAISE: bool = True
@@ -158,10 +159,13 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
             msg = f"[ERROR] incomplete settings [{cls._GETTER=}]"
             raise Exx_RequirementCantGetActualValue(msg)
 
-        try:
-            cls._value_actual = cls._GETTER().lower()
-        except Exception as exx:
-            raise Exx_RequirementCantGetActualValue(repr(exx))
+        if TypeChecker.check__func_or_meth(cls._GETTER):
+            try:
+                cls._value_actual = str(cls._GETTER()).lower()
+            except Exception as exx:
+                raise Exx_RequirementCantGetActualValue(repr(exx))
+        else:
+            cls._value_actual = str(cls._GETTER).lower()
 
         return cls._value_actual
 

@@ -1,3 +1,4 @@
+import sys
 from typing import *
 import re
 from object_info import *
@@ -182,7 +183,7 @@ pass    # ----------------------------------------------------------------------
 pass    # -------------------------------------------------------------------------------------------------------------
 
 TYPE__VERSION_BLOCKS = tuple[VersionBlock, ...]
-TYPE__SOURCE_VERSION = Union[VersionBlock, tuple[VersionBlock], Any]
+TYPE__SOURCE_VERSION = Union[VersionBlock, tuple[VersionBlock], 'Version', Any]
 
 
 class PatternsVer:
@@ -310,11 +311,47 @@ class Version(Cmp):
 
 
 # =====================================================================================================================
-# class ReqCheckVer(metaclass=GetattrClassmethod_Meta):
-#     pass
-#
-#     def _check(self, source: Any, ):
-#         pass
+class ReqCheckVersion_Base:
+    GETTER: Union[Callable[..., Any], Any] = sys.version
+
+    def __init__(self, getter: Any | Callable | None = None):
+        if getter is not None:
+            self.GETTER = getter
+
+    @property
+    def ACTUAL(self) -> Version:
+        if TypeChecker.check__func_or_meth(self.GETTER):
+            value = self.GETTER()
+        else:
+            value = self.GETTER
+
+        return Version(value)
+
+    # ---------------------------------------
+    def check_eq(self, target: Any):
+        return self.ACTUAL == target
+
+    def check_ne(self, target: Any):
+        return self.ACTUAL != target
+
+    # ---------------------------------------
+    def check_le(self, target: Any):
+        return self.ACTUAL <= target
+
+    def check_lt(self, target: Any):
+        return self.ACTUAL < target
+
+    # ---------------------------------------
+    def check_ge(self, target: Any):
+        return self.ACTUAL >= target
+
+    def check_gt(self, target: Any):
+        return self.ACTUAL > target
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class ReqCheckVersion_Python(ReqCheckVersion_Base):
+    GETTER = sys.version
 
 
 # =====================================================================================================================
