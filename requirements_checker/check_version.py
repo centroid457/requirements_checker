@@ -317,33 +317,40 @@ class Version(Cmp):
 
 # =====================================================================================================================
 class ReqCheckVersion_Base:
-    GETTER: Union[Callable[..., Any], Any] = sys.version
+    GETTER: Union[Callable[..., Any], Any] = sys.version.split()[0]
 
-    _MARKER__RAISE_IF: str = "raise_if__"
-    _MARKER__RAISE_IF_NOT: str = "raise_if_not__"
+    # -----------------------------------------------------------------------------------------------------------------
+    _GETATTR_MARKERS_INST: list[str] = ["raise_if__", "raise_if_not__"]     # CaseInsensitive!
 
     def __getattr__(self, item: str):
-        item_short = ""
-        if item.startswith(self._MARKER__RAISE_IF):
-            item_short = item.removeprefix(self._MARKER__RAISE_IF)
-            raise_if = True
-        elif item.startswith(self._MARKER__RAISE_IF_NOT):
-            item_short = item.removeprefix(self._MARKER__RAISE_IF_NOT)
-            raise_if = False
+        meth_name = None
+        for marker in self._GETATTR_MARKERS_INST:
+            if item.lower().startswith(marker.lower()):
+                meth_name = item[len(marker):]
+                break
 
-        if not item_short or item_short not in dir(self):
+        if not meth_name or meth_name not in dir(self):
             raise AttributeError(item)
 
-        meth = getattr(self, item_short)
-        return lambda _self, *args: self.raise_if__(meth=meth, *args)
-
-    def raise_if__(self, meth, reverse: bool | None = None, *args) -> bool | NoReturn:
-        pass
-        result = meth(*args)
-        if result != reverse:
-            raise Exx_VersionIncompatibleCheck(args)
+        return lambda *args, **kwargs: getattr(self, marker)(meth_name=meth_name, args=args, kwargs=kwargs)
 
     # ---------------------------------------
+    def raise_if__(self, meth_name: str, args: tuple | None = None, kwargs: dict | None = None, _reverse: bool | None = None) -> None | NoReturn:
+        args = args or ()
+        kwargs = kwargs or {}
+        _reverse = _reverse or False
+        meth = getattr(self, meth_name)
+        if TypeChecker.check__func_or_meth(meth):
+            result = meth(*args, **kwargs)
+        else:
+            result = meth
+        if bool(result) != bool(_reverse):
+            raise Exx_VersionIncompatibleCheck(args, kwargs)
+
+    def raise_if_not__(self, meth_name: str, args: tuple | None = None, kwargs: dict | None = None) -> None | NoReturn:
+        return self.raise_if__(meth_name=meth_name, args=args, kwargs=kwargs, _reverse=True)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, getter: Any | Callable | None = None):
         if getter is not None:
             self.GETTER = getter
@@ -382,6 +389,24 @@ class ReqCheckVersion_Base:
 # ---------------------------------------------------------------------------------------------------------------------
 class ReqCheckVersion_Python(ReqCheckVersion_Base):
     GETTER = sys.version.split()[0]
+
+    raise_if__check_eq: Callable[..., NoReturn | None]
+    raise_if_not__check_eq: Callable[..., NoReturn | None]
+
+    raise_if__check_ne: Callable[..., NoReturn | None]
+    raise_if_not__check_ne: Callable[..., NoReturn | None]
+
+    raise_if__check_le: Callable[..., NoReturn | None]
+    raise_if_not__check_le: Callable[..., NoReturn | None]
+
+    raise_if__check_lt: Callable[..., NoReturn | None]
+    raise_if_not__check_lt: Callable[..., NoReturn | None]
+
+    raise_if__check_ge: Callable[..., NoReturn | None]
+    raise_if_not__check_ge: Callable[..., NoReturn | None]
+
+    raise_if__check_gt: Callable[..., NoReturn | None]
+    raise_if_not__check_gt: Callable[..., NoReturn | None]
 
 
 # =====================================================================================================================
