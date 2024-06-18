@@ -41,7 +41,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 1, 16)
+    VERSION: Tuple[int, int, int] = (0, 2, 0)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_version (py interpreter for example!)",
@@ -52,10 +52,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-
-
-
-        "[VER] add ReqCheckVersion_Base",
+        "[VER] add ReqCheckVersion_Base/Python",
     ]
 
     # FINALIZE -----------------------------------------------
