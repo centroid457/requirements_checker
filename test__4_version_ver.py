@@ -90,13 +90,13 @@ class Test__Version:
             ("HELLO", Exx_VersionIncompatible),
             ("11rc22", "11rc22"),
             ("11r c22", "11rc22"),
-            (" 11 rc-2 2", Exx_VersionBlockIncompatible),
+            (" 11 rc-2 2", Exx_VersionIncompatibleBlock),
 
             # zeros invaluable
             ("01rc02", "1rc2"),
 
             # not clean chars
-            ("[11:rc.22]", Exx_VersionBlockIncompatible),
+            ("[11:rc.22]", Exx_VersionIncompatibleBlock),
 
             # iterables
             ([11, "r c---", 22], "11.rc.22"),
@@ -129,13 +129,13 @@ class Test__Version:
             ("HELLO", Exx_VersionIncompatible),
             ("11rc22", 1),
             ("11r c22", 1),
-            (" 11 rc-2 2", Exx_VersionBlockIncompatible),
+            (" 11 rc-2 2", Exx_VersionIncompatibleBlock),
 
             # zeros invaluable
             ("01rc02", 1),
 
             # not clean chars
-            ("[11:rc.22]", Exx_VersionBlockIncompatible),
+            ("[11:rc.22]", Exx_VersionIncompatibleBlock),
 
             # iterables
             ([11, "r c---", 22], 3),
@@ -158,7 +158,7 @@ class Test__Version:
             (("01rc02", "1rc20"), False),
 
             # not clean chars
-            (("1rc2", "[11:rc.22]"), Exx_VersionBlockIncompatible),
+            (("1rc2", "[11:rc.22]"), Exx_VersionIncompatibleBlock),
 
             # iterables
             (("1rc2", [1, "rc", 2]), False),

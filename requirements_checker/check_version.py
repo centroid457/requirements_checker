@@ -34,12 +34,17 @@ from funcs_aux import *
 
 
 # =====================================================================================================================
-class Exx_VersionBlockIncompatible(Exception):
+class Exx_VersionIncompatibleBlock(Exception):
     """
     """
 
 
 class Exx_VersionIncompatible(Exception):
+    """
+    """
+
+
+class Exx_VersionIncompatibleCheck(Exception):
     """
     """
 
@@ -79,11 +84,11 @@ class VersionBlock(Cmp):
     def __init__(self, source: TYPE__SOURCE_BLOCKS):
         self._SOURCE = source
         if not self._validate_source(source):
-            raise Exx_VersionBlockIncompatible()
+            raise Exx_VersionIncompatibleBlock()
 
         string = self._prepare_string(source)
         if not self._validate_string(string):
-            raise Exx_VersionBlockIncompatible()
+            raise Exx_VersionIncompatibleBlock()
 
         self.ELEMENTS = self._parse_elements(string)
 
@@ -314,6 +319,31 @@ class Version(Cmp):
 class ReqCheckVersion_Base:
     GETTER: Union[Callable[..., Any], Any] = sys.version
 
+    _MARKER__RAISE_IF: str = "raise_if__"
+    _MARKER__RAISE_IF_NOT: str = "raise_if_not__"
+
+    def __getattr__(self, item: str):
+        item_short = ""
+        if item.startswith(self._MARKER__RAISE_IF):
+            item_short = item.removeprefix(self._MARKER__RAISE_IF)
+            raise_if = True
+        elif item.startswith(self._MARKER__RAISE_IF_NOT):
+            item_short = item.removeprefix(self._MARKER__RAISE_IF_NOT)
+            raise_if = False
+
+        if not item_short or item_short not in dir(self):
+            raise AttributeError(item)
+
+        meth = getattr(self, item_short)
+        return lambda _self, *args: self.raise_if__(meth=meth, *args)
+
+    def raise_if__(self, meth, reverse: bool | None = None, *args) -> bool | NoReturn:
+        pass
+        result = meth(*args)
+        if result != reverse:
+            raise Exx_VersionIncompatibleCheck(args)
+
+    # ---------------------------------------
     def __init__(self, getter: Any | Callable | None = None):
         if getter is not None:
             self.GETTER = getter
@@ -351,7 +381,7 @@ class ReqCheckVersion_Base:
 
 # ---------------------------------------------------------------------------------------------------------------------
 class ReqCheckVersion_Python(ReqCheckVersion_Base):
-    GETTER = sys.version
+    GETTER = sys.version.split()[0]
 
 
 # =====================================================================================================================

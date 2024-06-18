@@ -26,10 +26,10 @@ from requirements_checker import *
         ("1a", (1, "a")),
         ("1a2", (1, "a", 2)),
         ("a2", ("a", 2)),
-        ("1a2hello", Exx_VersionBlockIncompatible),
-        ("a2hello", Exx_VersionBlockIncompatible),
-        ("1.2", Exx_VersionBlockIncompatible),
-        ("1/2", Exx_VersionBlockIncompatible),
+        ("1a2hello", Exx_VersionIncompatibleBlock),
+        ("a2hello", Exx_VersionIncompatibleBlock),
+        ("1.2", Exx_VersionIncompatibleBlock),
+        ("1/2", Exx_VersionIncompatibleBlock),
 
         # INTS --------
         (12, 12),
@@ -37,15 +37,15 @@ from requirements_checker import *
         # ITEREBLES --------
         (((1, ), ), 1),
         (((1,"rc",3), ), (1,"rc",3)),
-        (((1, None, 3), ), Exx_VersionBlockIncompatible),
-        (((1,2), ), Exx_VersionBlockIncompatible),
-        (((1,2, "rc"), ), Exx_VersionBlockIncompatible),
-        ((("r","c"), ), Exx_VersionBlockIncompatible),
-        (((),), Exx_VersionBlockIncompatible),
+        (((1, None, 3), ), Exx_VersionIncompatibleBlock),
+        (((1,2), ), Exx_VersionIncompatibleBlock),
+        (((1,2, "rc"), ), Exx_VersionIncompatibleBlock),
+        ((("r","c"), ), Exx_VersionIncompatibleBlock),
+        (((),), Exx_VersionIncompatibleBlock),
 
         # ANY --------
-        (None, Exx_VersionBlockIncompatible),
-        (1.123, Exx_VersionBlockIncompatible),
+        (None, Exx_VersionIncompatibleBlock),
+        (1.123, Exx_VersionIncompatibleBlock),
     ]
 )
 @pytest.mark.parametrize(argnames="func_link", argvalues=[Version.version_block__ensure_elements, ])
@@ -111,7 +111,7 @@ def test__version_block__ensure_elements(func_link, args, _EXPECTED):
         # BLOCKS --------
         ("1.2a.3", (1, (2, "a", ), 3)),
         ("1.2a.3rc2", (1, (2, "a", ), (3, "rc", 2))),
-        ("1.2a.3rc2get", Exx_VersionBlockIncompatible),
+        ("1.2a.3rc2get", Exx_VersionIncompatibleBlock),
 
     ]
 )

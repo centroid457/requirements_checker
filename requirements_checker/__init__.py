@@ -49,6 +49,8 @@ from .check_pkg import (
 from .check_version import (
     # BASE
     Version,
+    ReqCheckVersion_Base,
+    ReqCheckVersion_Python,
 
     # AUX
 
@@ -63,7 +65,8 @@ from .check_version import (
 
     # EXX
     Exx_VersionIncompatible,
-    Exx_VersionBlockIncompatible,
+    Exx_VersionIncompatibleBlock,
+    Exx_VersionIncompatibleCheck,
 )
 
 
