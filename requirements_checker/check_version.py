@@ -56,7 +56,7 @@ TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
 TYPE__SOURCE_BLOCKS = Union[str, int, list, tuple, Any, 'VersionBlock']
 
 
-class VersionBlock(Cmp):
+class VersionBlock(CmpInst):
     """
     this is exact block in version string separated by dots!!!
 
