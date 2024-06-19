@@ -49,7 +49,7 @@ from .check_pkg import (
 from .check_version import (
     # BASE
     Version,
-    ReqCheckVersion_Base,
+    ReqCheckVersion,
     ReqCheckVersion_Python,
 
     # AUX

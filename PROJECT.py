@@ -52,7 +52,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-        "[VER] add ReqCheckVersion_Base/Python",
+        "[VER] apply classes_aux",
     ]
 
     # FINALIZE -----------------------------------------------

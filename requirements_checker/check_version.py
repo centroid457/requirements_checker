@@ -3,6 +3,7 @@ from typing import *
 import re
 from object_info import *
 from funcs_aux import *
+from classes_aux import *
 
 
 # =====================================================================================================================
@@ -199,7 +200,7 @@ class PatternsVer:
 
 
 # =====================================================================================================================
-class Version(Cmp):
+class Version(CmpInst):
     _SOURCE: Any
     BLOCKS: TYPE__VERSION_BLOCKS
 
@@ -316,39 +317,8 @@ class Version(Cmp):
 
 
 # =====================================================================================================================
-class ReqCheckVersion_Base:
+class ReqCheckVersion(GetattrPrefixInst_RaiseIf):
     GETTER: Union[Callable[..., Any], Any] = sys.version.split()[0]
-
-    # -----------------------------------------------------------------------------------------------------------------
-    _GETATTR_MARKERS_INST: list[str] = ["raise_if__", "raise_if_not__"]     # CaseInsensitive!
-
-    def __getattr__(self, item: str):
-        meth_name = None
-        for marker in self._GETATTR_MARKERS_INST:
-            if item.lower().startswith(marker.lower()):
-                meth_name = item[len(marker):]
-                break
-
-        if not meth_name or meth_name not in dir(self):
-            raise AttributeError(item)
-
-        return lambda *args, **kwargs: getattr(self, marker)(meth_name=meth_name, args=args, kwargs=kwargs)
-
-    # ---------------------------------------
-    def raise_if__(self, meth_name: str, args: tuple | None = None, kwargs: dict | None = None, _reverse: bool | None = None) -> None | NoReturn:
-        args = args or ()
-        kwargs = kwargs or {}
-        _reverse = _reverse or False
-        meth = getattr(self, meth_name)
-        if TypeChecker.check__func_or_meth(meth):
-            result = meth(*args, **kwargs)
-        else:
-            result = meth
-        if bool(result) != bool(_reverse):
-            raise Exx_VersionIncompatibleCheck(args, kwargs)
-
-    def raise_if_not__(self, meth_name: str, args: tuple | None = None, kwargs: dict | None = None) -> None | NoReturn:
-        return self.raise_if__(meth_name=meth_name, args=args, kwargs=kwargs, _reverse=True)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, getter: Any | Callable | None = None):
@@ -387,7 +357,7 @@ class ReqCheckVersion_Base:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class ReqCheckVersion_Python(ReqCheckVersion_Base):
+class ReqCheckVersion_Python(ReqCheckVersion):
     GETTER = sys.version.split()[0]
 
     raise_if__check_eq: Callable[..., NoReturn | None]
