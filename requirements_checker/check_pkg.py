@@ -61,6 +61,7 @@ class Packages:
         "funcs-aux",
         "logger-aux",
         "pytest-aux",
+        "classes-aux",
 
         # =============================
         # CENTROID457 other projects
