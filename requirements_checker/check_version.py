@@ -366,9 +366,9 @@ class ReqCheckVersion_Python(ReqCheckVersion):
 
     USAGE
     -----
-    ReqCheckVersion_Python().raise_if__check_ge("2")
-    ReqCheckVersion_Python().raise_if__check_ge("3.11")
-    ReqCheckVersion_Python().raise_if__check_ge("3.11rc1")
+    ReqCheckVersion_Python().raise_if_not__check_ge("2")
+    ReqCheckVersion_Python().raise_if_not__check_ge("3.11")
+    ReqCheckVersion_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
     """
     GETTER = sys.version.split()[0]
 
