@@ -201,6 +201,9 @@ class PatternsVer:
 
 # =====================================================================================================================
 class Version(CmpInst):
+    """
+    :ivar _SOURCE: try to pass parsed value! it will try to self-parse in _prepare_string, but make it ensured on your own!
+    """
     _SOURCE: Any
     BLOCKS: TYPE__VERSION_BLOCKS
 
@@ -358,6 +361,15 @@ class ReqCheckVersion(GetattrPrefixInst_RaiseIf):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class ReqCheckVersion_Python(ReqCheckVersion):
+    """
+    check version of python interpreter.
+
+    USAGE
+    -----
+    ReqCheckVersion_Python().raise_if__check_ge("2")
+    ReqCheckVersion_Python().raise_if__check_ge("3.11")
+    ReqCheckVersion_Python().raise_if__check_ge("3.11rc1")
+    """
     GETTER = sys.version.split()[0]
 
     raise_if__check_eq: Callable[..., NoReturn | None]
