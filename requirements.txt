@@ -5,12 +5,14 @@
 # VERSION = (0, 0, 4)   # add logger-aux
 # VERSION = (0, 0, 5)   # add pytest-aux
 # VERSION = (0, 0, 6)   # add nested in COMMON
+# VERSION = (0, 0, 7)   # add new block TESTS +add classes_aux into COMMON
 
 # COMMON ===================
 pytest
 requirements-checker
 object-info
 funcs-aux
+classes-aux
 logger-aux
 pytest-aux
 
@@ -18,10 +20,11 @@ pytest-aux
 annot_attrs
 numpy
 
+# TESTS ----------------------------------
+
 # ========================================
 # SPECIAL FOR THIS PROJECT - ROOT --------
 cli_user
-classes_aux
 
 # NESTED ---------------------------------
 

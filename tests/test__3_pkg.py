@@ -47,7 +47,7 @@ class Test_File:
         victim.uninstall(DUMMY_MODULE_NAME)
         assert victim.check_installed(DUMMY_MODULE_NAME) is False
 
-        filepath = pathlib.Path(tmpdir.strpath).joinpath("requirements.txt")
+        filepath = pathlib.Path(tmpdir.strpath).joinpath("../requirements.txt")
         filepath.write_text(DUMMY_MODULE_NAME)
         assert victim.upgrade_file(filepath) is True
 
@@ -57,7 +57,7 @@ class Test_File:
         """just see printed file content"""
         victim = self.VICTIM()
 
-        filepath = pathlib.Path(tmpdir.strpath).joinpath("requirements.txt")
+        filepath = pathlib.Path(tmpdir.strpath).joinpath("../requirements.txt")
         filepath.write_text(DUMMY_MODULE_NAME)
         victim.upgrade_file(filepath)
 
