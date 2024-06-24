@@ -72,7 +72,7 @@ class GetattrClassmethod_Meta(type):
             return lambda: not cls.check(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
 
         else:
-            msg = f"META: '{cls.__name__}' CLASS has no attribute '{item}'"
+            msg = f"[ERROR] META:'{cls.__name__}' CLASS has no attribute '{item}'"
             raise AttributeError(msg)
 
 

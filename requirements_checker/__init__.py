@@ -53,12 +53,12 @@ from .check_version import (
     ReqCheckVersion_Python,
 
     # AUX
+    VersionBlock,
 
     # TYPES
     TYPE__VERSION_ELEMENT,
     TYPE__VERSION_ELEMENTS,
     TYPE__SOURCE_BLOCKS,
-    VersionBlock,
 
     TYPE__VERSION_BLOCKS,
     TYPE__SOURCE_VERSION,
