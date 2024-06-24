@@ -18,8 +18,10 @@ class PROJECT:
     # PROJECT ----------------------------------------------
     NAME_IMPORT: str = "requirements_checker"
     KEYWORDS: List[str] = [
-        "check requirements", "check system requirements", "raise/bool if no requirements",
-        "python packages work (upgrade/delete/version get)"
+        "check requirements", "raise/bool if no requirements",
+        "check system requirements",
+        "python packages/modules aux (upgrade/delete/version get)",
+        "version parse", "version check", "version compare",
     ]
     CLASSIFIERS_TOPICS_ADD: List[str] = [
         # "Topic :: Communications",
@@ -38,15 +40,18 @@ designed for check requirements (systemOs) and raise/bool if no match
 
         "check requirements (systemOs), raise/bool if no match",
         "create fuck(?)/getter and is it for check for settings",
-        ["python packages work", "upgrade", "delete", "version_get", "check_installed)", "upgrade pip"],
-        "...see tests for this!"
+        ["[python PACKAGES/MODULES]", "upgrade", "delete", "version_get", "check_installed)", "upgrade pip"],
+        ["[VERSION]",
+            "parse",
+            "check",
+            "compare",
+        ],
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 2, 3)
+    VERSION: Tuple[int, int, int] = (0, 2, 4)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
-        "add check_version (py interpreter for example!)",
         "add check_file"
     ]
     FIXME: List[str] = [
@@ -54,7 +59,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-        "[CICD+BADGES] apply new ver",
+        "[TESTS] move into separated folder",
     ]
 
     # FINALIZE -----------------------------------------------

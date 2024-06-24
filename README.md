@@ -9,7 +9,7 @@
 ![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/requirements_checker)
 ![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/requirements_checker)
 
-# requirements_checker (current v0.2.3/![Ver/Pypi Latest](https://img.shields.io/pypi/v/requirements_checker?label=pypi%20latest))
+# requirements_checker (current v0.2.4/![Ver/Pypi Latest](https://img.shields.io/pypi/v/requirements_checker?label=pypi%20latest))
 
 ## DESCRIPTION_SHORT
 check if requirements met
@@ -21,13 +21,16 @@ designed for check requirements (systemOs) and raise/bool if no match
 ## Features
 1. check requirements (systemOs), raise/bool if no match  
 2. create fuck(?)/getter and is it for check for settings  
-3. python packages work:  
+3. [python PACKAGES/MODULES]:  
 	- upgrade  
 	- delete  
 	- version_get  
 	- check_installed)  
 	- upgrade pip  
-4. ...see tests for this!  
+4. [VERSION]:  
+	- parse  
+	- check  
+	- compare  
 
 
 ********************************************************************************
