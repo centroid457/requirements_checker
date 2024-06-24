@@ -22,7 +22,7 @@ class Exx_Requirement(Exception):
 
 
 # =====================================================================================================================
-class GetattrClassmethod_Meta(type):
+class _GetattrClassmethod_Meta(type):
     """ability to apply classmethod for __getattr__
 
     WHY USE IT
@@ -77,7 +77,7 @@ class GetattrClassmethod_Meta(type):
 
 
 # =====================================================================================================================
-class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
+class ReqCheckStr_Base(metaclass=_GetattrClassmethod_Meta):
     """Base class for check exact requirement by string value
 
     NOTE
@@ -141,7 +141,7 @@ class ReqCheckStr_Base(metaclass=GetattrClassmethod_Meta):
         apply access to not exists methods from instance! in metaclass we have only access as classmethods!
         """
         # return super().__getattr__(item)    # AttributeError: 'super' object has no attribute '__getattr__'. Did you mean: '__setattr__'?
-        return GetattrClassmethod_Meta.__getattr__(self.__class__, item)
+        return _GetattrClassmethod_Meta.__getattr__(self.__class__, item)
 
     @classmethod
     def values_acceptance__get(cls) -> dict[str, bool | None]:

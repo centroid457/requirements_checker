@@ -24,7 +24,7 @@ from .check_string import (
     ReqCheckStr_Arch,
 
     # AUX
-    GetattrClassmethod_Meta,
+    _GetattrClassmethod_Meta,
 
     # TYPES
     TYPE__VALUES,
