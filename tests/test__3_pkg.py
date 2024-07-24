@@ -1,7 +1,5 @@
-import os
 import pytest
 import pathlib
-import platform
 from typing import *
 from object_info import ObjectInfo
 

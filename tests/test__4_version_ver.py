@@ -1,20 +1,9 @@
 from typing import *
 import pytest
-
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
-from configparser import ConfigParser
 from pytest import mark
 from pytest_aux import *
 
 from requirements_checker import *
-from pytest_aux import *
-
-
-# =====================================================================================================================
-# KEEP FILES IN ROOT! OR IMPORT PRJ_MODULE WOULD FROM SYSTEM! NOT THIS _SOURCE!!!
-# from PRJ_NEW__ import *
 
 
 # =====================================================================================================================
