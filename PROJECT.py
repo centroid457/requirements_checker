@@ -4,17 +4,41 @@ from _aux__release_files import release_files_update
 
 # =====================================================================================================================
 # VERSION = (0, 0, 3)   # 1/deprecate _VERSION_TEMPLATE from PRJ object +2/place update_prj here in __main__ +3/separate finalize attrs
-VERSION = (0, 0, 4)     # add AUTHOR_NICKNAME_GITHUB for badges
+# VERSION = (0, 0, 4)   # add AUTHOR_NICKNAME_GITHUB for badges
+VERSION = (0, 0, 5)     # separate PROJECT_BASE #TODO: need to separate into module!
 
 
 # =====================================================================================================================
-class PROJECT:
-    # AUTHOR -----------------------------------------------
+class PROJECT_BASE:
+    NAME_IMPORT: str
+    VERSION: tuple[int, int, int]
+
+    # AUTHOR ------------------------------------------------
     AUTHOR_NAME: str = "Andrei Starichenko"
     AUTHOR_EMAIL: str = "centroid@mail.ru"
     AUTHOR_HOMEPAGE: str = "https://github.com/centroid457/"
     AUTHOR_NICKNAME_GITHUB: str = "centroid457"
 
+    # AUX ----------------------------------------------------
+    CLASSIFIERS_TOPICS_ADD: list[str] = [
+        # "Topic :: Communications",
+        # "Topic :: Communications :: Email",
+    ]
+
+    # FINALIZE -----------------------------------------------
+    @classmethod
+    @property
+    def VERSION_STR(cls) -> str:
+        return ".".join(map(str, cls.VERSION))
+
+    @classmethod
+    @property
+    def NAME_INSTALL(cls) -> str:
+        return cls.NAME_IMPORT.replace("_", "-")
+
+
+# =====================================================================================================================
+class PROJECT(PROJECT_BASE):
     # PROJECT ----------------------------------------------
     NAME_IMPORT: str = "requirements_checker"
     KEYWORDS: List[str] = [
@@ -22,10 +46,6 @@ class PROJECT:
         "check system requirements",
         "python packages/modules aux (upgrade/delete/version get)",
         "version parse", "version check", "version compare",
-    ]
-    CLASSIFIERS_TOPICS_ADD: List[str] = [
-        # "Topic :: Communications",
-        # "Topic :: Communications :: Email",
     ]
 
     # README -----------------------------------------------
@@ -49,7 +69,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 2, 4)
+    VERSION: Tuple[int, int, int] = (0, 2, 5)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_file"
@@ -59,12 +79,8 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-        "[TESTS] move into separated folder",
+        "[Pkgs] add parse_text/*files",
     ]
-
-    # FINALIZE -----------------------------------------------
-    VERSION_STR: str = ".".join(map(str, VERSION))
-    NAME_INSTALL: str = NAME_IMPORT.replace("_", "-")
 
 
 # =====================================================================================================================
