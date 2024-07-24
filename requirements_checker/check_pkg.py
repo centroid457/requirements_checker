@@ -29,6 +29,17 @@ class PyModule:
 
 
 
+
+
+
+# =====================================================================================================================
+PATTERN_IMPORT__MULTY_COMMA = r"(?:^|\n) *import +(\w+(?:\.\w+)* *(?:, *\w+(?:\.\w+)* *)*) *"
+PATTERN_IMPORT__MULTY_COMMA_BRACKETS = r"(?:^|\n) *import +\( *(\w+(?:\.\w+)* *(?:,\s*\w+(?:\.\w+)* *)*) *\) *"
+PATTERN_IMPORT__FROM = r"(?:^|\n) *from +(\w+(?:\.\w+)*) +import +"
+
+PATTERNS_IMPORT = [PATTERN_IMPORT__MULTY_COMMA, PATTERN_IMPORT__MULTY_COMMA_BRACKETS, PATTERN_IMPORT__FROM]
+
+
 # =====================================================================================================================
 class CmdPattern:
     """
@@ -399,6 +410,75 @@ self.last_exx_timeout=None
         # ONE -----------------------------------------------
         cmd = CmdPattern.UNINSTALL % (self.PYTHON_PATH, modules)
         self.cli.send(cmd, timeout=120)
+
+    # =================================================================================================================
+    @classmethod
+    def parse_text(cls, text: str) -> list[str]:
+        """
+        GOAL
+        ----
+        get imported modules from text (python sourcecode)
+        get only root names (no parts like pkg.module)
+        """
+        result = []
+        for pattern in PATTERNS_IMPORT:
+            items = re.findall(pattern, text)
+            for modules_txt in items:
+                modules_txt = re.sub(r"\s*", "", modules_txt)
+                modules_list = modules_txt.split(",")
+                for module_new in modules_list:
+                    module_path = module_new.split(".")
+                    module_root = module_path[0]
+                    if module_root not in result:
+                        result.append(module_root)
+        return result
+
+    @classmethod
+    def parse_files(cls, path: Union[str, pathlib.Path] | None = None) -> list[str]:
+        """
+        GOAL
+        ----
+        get imported modules from file/filesInDirectory (python sourcecode)
+        get only root names (no parts like pkg.module)
+
+        return one cumulated list
+        """
+        # NONE -------------------
+        if path is None:
+            path = pathlib.Path.cwd()
+        else:
+            path = pathlib.Path(path)
+
+        # DIRECTORY -------------------
+        if path.is_dir():
+            result_dir = []
+            for file in path.glob('**/*.py'):
+                result_file = cls.parse_files(file)
+                for pkg in result_file:
+                    if pkg not in result_dir:
+                        result_dir.append(pkg)
+            print(f"[PKGS_CUM] {result_dir}")
+            return result_dir
+
+        # WORK =======================
+        # EXISTS----------------------
+        if not path.exists():
+            print(f"[not exists]{path=}")
+
+        # FILE -------------------
+        print(f"{path}".rjust(80, "-"))
+
+        filetext = path.read_text()
+        result_file = cls.parse_text(filetext)
+        print(result_file)
+
+        print("-"*80)
+        return result_file
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    Packages.parse_files()
 
 
 # =====================================================================================================================
