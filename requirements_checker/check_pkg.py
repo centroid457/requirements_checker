@@ -446,6 +446,9 @@ self.last_exx_timeout=None
         ----
 
         """
+        if not TypeChecker.check__iterable_not_str(patterns):
+            patterns = [patterns, ]
+
         # NONE -------------------
         if path is None:
             path = pathlib.Path.cwd()
@@ -463,7 +466,7 @@ self.last_exx_timeout=None
             print("-" * 80)
             result_dir = []
             for file in path.glob('**/*.py'):
-                result_file = cls.parse_files__import(file)
+                result_file = cls.parse_files(patterns=patterns, path=file)
                 for pkg in result_file:
                     if pkg not in result_dir:
                         result_dir.append(pkg)
@@ -513,7 +516,8 @@ self.last_exx_timeout=None
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    Packages.parse_files__import()
+    # Packages.parse_files__import()
+    Packages.parse_files("requirements_checker")
 
 
 # =====================================================================================================================

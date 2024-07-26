@@ -80,7 +80,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
     NEWS: List[str] = [
 
-        
+
         "[Packages] ref parse_files__import",
     ]
 
