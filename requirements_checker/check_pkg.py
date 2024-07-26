@@ -4,6 +4,7 @@ import re
 import sys
 
 from cli_user import CliUser
+from object_info import *
 
 
 # =====================================================================================================================
@@ -413,15 +414,20 @@ self.last_exx_timeout=None
 
     # =================================================================================================================
     @classmethod
-    def parse_text(cls, text: str) -> list[str]:
+    def parse_text(cls, text: AnyStr, patterns: list[AnyStr] | AnyStr) -> list[str]:
         """
         GOAL
         ----
         get imported modules from text (python sourcecode)
         get only root names (no parts like pkg.module)
         """
+        # SINGLE -------------
+        if not TypeChecker.check__iterable_not_str(patterns):
+            patterns = [patterns, ]
+
+        # ITERABLE -------------
         result = []
-        for pattern in PATTERNS_IMPORT:
+        for pattern in patterns:
             items = re.findall(pattern, text)
             for modules_txt in items:
                 modules_txt = re.sub(r"\s*", "", modules_txt)
@@ -434,14 +440,11 @@ self.last_exx_timeout=None
         return result
 
     @classmethod
-    def parse_files(cls, path: Union[str, pathlib.Path] | None = None) -> list[str]:
+    def parse_files(cls, patterns: list[AnyStr] | AnyStr, path: Union[str, pathlib.Path] | None = None) -> list[str]:
         """
         GOAL
         ----
-        get imported modules from file/filesInDirectory (python sourcecode)
-        get only root names (no parts like pkg.module)
 
-        return one cumulated list
         """
         # NONE -------------------
         if path is None:
@@ -451,13 +454,24 @@ self.last_exx_timeout=None
 
         # DIRECTORY -------------------
         if path.is_dir():
+            print("=" * 80)
+            print(f"[PARCE FILES]")
+            print(f"{path=}")
+            print(f"patterns=")
+            for pat in  patterns:
+                print(f"\t{pat}")
+            print("-" * 80)
             result_dir = []
             for file in path.glob('**/*.py'):
-                result_file = cls.parse_files(file)
+                result_file = cls.parse_files__import(file)
                 for pkg in result_file:
                     if pkg not in result_dir:
                         result_dir.append(pkg)
-            print(f"[PKGS_CUM] {result_dir}")
+            print("-" * 80)
+            print(f"[SUMMARY]:")
+            for pkg in  result_dir:
+                print(f"\t{pkg}")
+            print("=" * 80)
             return result_dir
 
         # WORK =======================
@@ -469,16 +483,37 @@ self.last_exx_timeout=None
         print(f"{path}".rjust(80, "-"))
 
         filetext = path.read_text()
-        result_file = cls.parse_text(filetext)
+        result_file = cls.parse_text(text=filetext, patterns=patterns)
         print(result_file)
-
-        print("-"*80)
         return result_file
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def parse_text__import(cls, text: AnyStr) -> list[str]:
+        """
+        GOAL
+        ----
+        get imported modules from text (python sourcecode)
+        get only root names (no parts like pkg.module)
+        """
+        return cls.parse_text(text, PATTERNS_IMPORT)
+
+    @classmethod
+    def parse_files__import(cls, path: Union[str, pathlib.Path] | None = None) -> list[str]:
+        """
+        GOAL
+        ----
+        get imported modules from file/filesInDirectory (python sourcecode)
+        get only root names (no parts like pkg.module)
+
+        return one cumulated list
+        """
+        return cls.parse_files(patterns=PATTERNS_IMPORT, path=path)
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    Packages.parse_files()
+    Packages.parse_files__import()
 
 
 # =====================================================================================================================

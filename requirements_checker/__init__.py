@@ -41,9 +41,11 @@ from .check_pkg import (
     CmdPattern,
 
     # AUX
-
+    PATTERNS_IMPORT,
+    PATTERN_IMPORT__MULTY_COMMA,
+    PATTERN_IMPORT__MULTY_COMMA_BRACKETS,
+    PATTERN_IMPORT__FROM,
     # TYPES
-
     # EXX
 )
 from .check_version import (

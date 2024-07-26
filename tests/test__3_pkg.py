@@ -87,7 +87,7 @@ class Test__Parse:
         ]
     )
     def test__same(self, args, _EXPECTED):
-        func_link = Packages.parse_text
+        func_link = Packages.parse_text__import
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ class Test__Parse:
         ]
     )
     def test__single(self, args, _EXPECTED):
-        func_link = Packages.parse_text
+        func_link = Packages.parse_text__import
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ class Test__Parse:
         ]
     )
     def test__multy_comma(self, args, _EXPECTED):
-        func_link = Packages.parse_text
+        func_link = Packages.parse_text__import
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ class Test__Parse:
         ]
     )
     def test__multy_comma_brackets(self, args, _EXPECTED):
-        func_link = Packages.parse_text
+        func_link = Packages.parse_text__import
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ class Test__Parse:
         ]
     )
     def test__from(self, args, _EXPECTED):
-        func_link = Packages.parse_text
+        func_link = Packages.parse_text__import
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -168,7 +168,7 @@ class Test__Parse:
         ]
     )
     def test__combo(self, args, _EXPECTED):
-        func_link = Packages.parse_text
+        func_link = Packages.parse_text__import
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 

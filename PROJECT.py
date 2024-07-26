@@ -79,7 +79,9 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-        "[Pkgs] add parse_text/*files",
+
+        
+        "[Packages] ref parse_files__import",
     ]
 
 
