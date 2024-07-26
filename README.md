@@ -9,7 +9,7 @@
 ![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/requirements_checker)
 ![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/requirements_checker)
 
-# requirements_checker (current v0.2.5/![Ver/Pypi Latest](https://img.shields.io/pypi/v/requirements_checker?label=pypi%20latest))
+# requirements_checker (current v0.2.6/![Ver/Pypi Latest](https://img.shields.io/pypi/v/requirements_checker?label=pypi%20latest))
 
 ## DESCRIPTION_SHORT
 check if requirements met

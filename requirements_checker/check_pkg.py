@@ -440,7 +440,7 @@ self.last_exx_timeout=None
         return result
 
     @classmethod
-    def parse_files(cls, patterns: list[AnyStr] | AnyStr, path: Union[str, pathlib.Path] | None = None) -> list[str]:
+    def parse_files(cls, patterns: list[AnyStr] | AnyStr, path: Union[str, pathlib.Path] | None = None, print_empty: bool | None = None) -> list[str]:
         """
         GOAL
         ----
@@ -461,19 +461,21 @@ self.last_exx_timeout=None
             print(f"[PARCE FILES]")
             print(f"{path=}")
             print(f"patterns=")
-            for pat in  patterns:
-                print(f"\t{pat}")
+            for pat in patterns:
+                print(f"\t[{pat}]")
             print("-" * 80)
+
             result_dir = []
             for file in path.glob('**/*.py'):
                 result_file = cls.parse_files(patterns=patterns, path=file)
-                for pkg in result_file:
-                    if pkg not in result_dir:
-                        result_dir.append(pkg)
+                for item in result_file:
+                    if item not in result_dir:
+                        result_dir.append(item)
+
             print("-" * 80)
-            print(f"[SUMMARY]:")
-            for pkg in  result_dir:
-                print(f"\t{pkg}")
+            print(f"[SUMMARY MATCHES]:")
+            for item in  result_dir:
+                print(f"\t{item}")
             print("=" * 80)
             return result_dir
 
@@ -483,11 +485,12 @@ self.last_exx_timeout=None
             print(f"[not exists]{path=}")
 
         # FILE -------------------
-        print(f"{path}".rjust(80, "-"))
-
         filetext = path.read_text()
         result_file = cls.parse_text(text=filetext, patterns=patterns)
-        print(result_file)
+
+        if result_file or print_empty:
+            print(f"{path}".rjust(80, "-"))
+            print(f"\t{result_file}")
         return result_file
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -502,7 +505,7 @@ self.last_exx_timeout=None
         return cls.parse_text(text, PATTERNS_IMPORT)
 
     @classmethod
-    def parse_files__import(cls, path: Union[str, pathlib.Path] | None = None) -> list[str]:
+    def parse_files__import(cls, path: Union[str, pathlib.Path] | None = None, print_empty: bool | None = None) -> list[str]:
         """
         GOAL
         ----
@@ -511,13 +514,13 @@ self.last_exx_timeout=None
 
         return one cumulated list
         """
-        return cls.parse_files(patterns=PATTERNS_IMPORT, path=path)
+        return cls.parse_files(patterns=PATTERNS_IMPORT, path=path, print_empty=print_empty)
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    # Packages.parse_files__import()
-    Packages.parse_files("requirements_checker")
+    Packages.parse_files__import()
+    # Packages.parse_files(r"result ")
 
 
 # =====================================================================================================================

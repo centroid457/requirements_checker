@@ -69,7 +69,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 2, 5)
+    VERSION: Tuple[int, int, int] = (0, 2, 6)
     TODO: List[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_file"
@@ -79,8 +79,6 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: List[str] = [
-
-
         "[Packages] ref parse_files__import",
     ]
 
