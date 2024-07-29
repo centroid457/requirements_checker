@@ -503,16 +503,20 @@ self.last_exx_timeout=None
             print(f"[not exists]{path=}")
 
         # FILE -------------------
+        file_exx = None
+        result_file = []
         try:
             filetext = path.read_text(encoding="utf8")
             result_file = cls.parse_text(text=filetext, patterns=patterns)
         except Exception as exx:
-            result_file = exx
+            file_exx = exx
 
-        if (result_file or print_empty) or TypeChecker.check__exception(result_file):
+        if (result_file or print_empty) or file_exx:
             print(f"{path}".rjust(80, "-"))
-            print(f"\t{result_file}")
-            result_file = []
+            if not file_exx:
+                print(f"\t{result_file}")
+            else:
+                print(f"\t{file_exx}")
         return result_file
 
     # -----------------------------------------------------------------------------------------------------------------
