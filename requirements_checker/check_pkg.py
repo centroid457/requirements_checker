@@ -3,6 +3,7 @@ import pathlib
 import re
 import sys
 
+from funcs_aux import *
 from cli_user import CliUser
 from object_info import *
 
@@ -440,7 +441,13 @@ self.last_exx_timeout=None
         return result
 
     @classmethod
-    def parse_files(cls, patterns: list[AnyStr] | AnyStr, path: Union[str, pathlib.Path] | None = None, print_empty: bool | None = None) -> list[str]:
+    def parse_files(
+            cls,
+            patterns: list[AnyStr] | AnyStr,
+            path: Union[str, pathlib.Path] | None = None,
+            print_empty: bool | None = None,
+            skip_paths: Union[str, list[str]] | None = None
+    ) -> list[str]:
         """
         GOAL
         ----
@@ -449,11 +456,22 @@ self.last_exx_timeout=None
         if not TypeChecker.check__iterable_not_str(patterns):
             patterns = [patterns, ]
 
-        # NONE -------------------
+        # PATH -------------------
         if path is None:
             path = pathlib.Path.cwd()
         else:
             path = pathlib.Path(path)
+
+        # skip_paths -------------------
+        if skip_paths is None:
+            skip_paths = []
+        if not TypeChecker.check__iterable_not_str(skip_paths):
+            skip_paths = [skip_paths, ]
+
+        for skip_path in skip_paths:
+            skip_found = re.search(skip_path, str(path))
+            if skip_found:
+                return []
 
         # DIRECTORY -------------------
         if path.is_dir():
@@ -467,7 +485,7 @@ self.last_exx_timeout=None
 
             result_dir = []
             for file in path.glob('**/*.py'):
-                result_file = cls.parse_files(patterns=patterns, path=file)
+                result_file = cls.parse_files(patterns=patterns, path=file, skip_paths=skip_paths)
                 for item in result_file:
                     if item not in result_dir:
                         result_dir.append(item)
@@ -485,12 +503,16 @@ self.last_exx_timeout=None
             print(f"[not exists]{path=}")
 
         # FILE -------------------
-        filetext = path.read_text()
-        result_file = cls.parse_text(text=filetext, patterns=patterns)
+        try:
+            filetext = path.read_text()
+            result_file = cls.parse_text(text=filetext, patterns=patterns)
+        except Exception as exx:
+            result_file = exx
 
-        if result_file or print_empty:
+        if (result_file or print_empty) or TypeChecker.check__exception(result_file):
             print(f"{path}".rjust(80, "-"))
             print(f"\t{result_file}")
+            result_file = []
         return result_file
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -505,7 +527,12 @@ self.last_exx_timeout=None
         return cls.parse_text(text, PATTERNS_IMPORT)
 
     @classmethod
-    def parse_files__import(cls, path: Union[str, pathlib.Path] | None = None, print_empty: bool | None = None) -> list[str]:
+    def parse_files__import(
+            cls,
+            path: Union[str, pathlib.Path] | None = None,
+            print_empty: bool | None = None,
+            skip_paths: Union[str, list[str]] | None = None
+    ) -> list[str]:
         """
         GOAL
         ----
@@ -514,13 +541,13 @@ self.last_exx_timeout=None
 
         return one cumulated list
         """
-        return cls.parse_files(patterns=PATTERNS_IMPORT, path=path, print_empty=print_empty)
+        return cls.parse_files(patterns=PATTERNS_IMPORT, path=path, print_empty=print_empty, skip_paths=skip_paths)
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    Packages.parse_files__import()
-    # Packages.parse_files(r"result ")
+    # Packages.parse_files__import()
+    Packages.parse_files(r"ResultExpect_Step", pathlib.Path.cwd().parent.parent, skip_paths=["venv", "t8"])
 
 
 # =====================================================================================================================
