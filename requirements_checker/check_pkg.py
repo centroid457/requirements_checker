@@ -512,7 +512,7 @@ self.last_exx_timeout=None
             file_exx = exx
 
         if (result_file or print_empty) or file_exx:
-            print(f"{path}".rjust(80, "-"))
+            print(f"{path}".ljust(80, "-"))
             if not file_exx:
                 print(f"\t{result_file}")
             else:
@@ -551,7 +551,7 @@ self.last_exx_timeout=None
 # =====================================================================================================================
 if __name__ == "__main__":
     # Packages.parse_files__import()
-    Packages.parse_files(r"ResultExpect_Base", pathlib.Path.cwd().parent.parent, skip_paths=["venv", "t8", "build", ])
+    Packages.parse_files(r"Value_WithUnit", pathlib.Path.cwd().parent.parent, skip_paths=["venv", "t8", "build", ])
 
 
 # =====================================================================================================================
