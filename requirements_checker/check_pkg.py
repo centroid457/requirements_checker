@@ -504,7 +504,7 @@ self.last_exx_timeout=None
 
         # FILE -------------------
         try:
-            filetext = path.read_text()
+            filetext = path.read_text(encoding="utf8")
             result_file = cls.parse_text(text=filetext, patterns=patterns)
         except Exception as exx:
             result_file = exx
