@@ -67,6 +67,20 @@ class Packages:
     ----
     for all module names you could use
     """
+    PKGSET__PyPI_DISTRIBUTION: list[str] = [
+        # =============================
+        # DISTRIBUTION PyPI
+        # -----------------------------
+        # new setup
+        "build",
+        "twine",    # necessary! share project on pypi!
+
+        # old setup (maybe not all)
+        "sdist",
+        "setuptools",
+        "bdist-wheel-name",
+
+    ]
     PKGSET__CENTROID_457: list[str] = [
         # =============================
         # CENTROID457 common projects
@@ -99,17 +113,7 @@ class Packages:
         "server-templates",
 
         # =============================
-        # DISTRIBUTION PyPI
-        # -----------------------------
-        # new setup
-        "build",
-        "twine",    # necessary! share project on pypi!
-
-        # old setup (maybe not all)
-        "sdist",
-        "setuptools",
-        "bdist-wheel-name",
-
+        *PKGSET__PyPI_DISTRIBUTION
     ]
 
     PYTHON_PATH: str
@@ -142,6 +146,19 @@ class Packages:
         self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
 
         return self.cli.last_finished_success
+
+    def reinstall(self, module: str) -> None:
+        """
+        # FIXME: NOT TESTES!
+
+        GOAL
+        ----
+        its not just an idea for the sake of just an idea!
+        sometimes (and quite often in my experience) i got error when just updating the module!
+        """
+
+        self.uninstall(module)
+        self.install(module)
 
     def upgrade(self, modules: Union[str, list[str]]) -> bool:
         """
@@ -295,8 +312,102 @@ self.last_exx_timeout=None
             match = re.search(r'Found existing installation: \S+ (\d+\.\d+\.\d+)\s', self.cli.last_stdout)
             if match:
                 text_cum += f"(existed old){match[1]}"
-                self.uninstall(modules)     # need uninstall! for sure!
-                self.install(modules)
+                # -----THIS IDEA IS NOT WORK!!!
+                # FIXME: TODO: need check version before send UpdateCmd! then compare and decide to reinstall!!!!
+                # self.uninstall(modules)     # need uninstall! for sure!
+                # self.install(modules)
+
+                """
+[CLI_SEND] [('python -m build --sdist -n', 60)]
+.........
+==================================================
+[#####################ERROR#####################]
+self.counter=3
+self.counter_in_list=1
+self.last_cmd='python -m build --sdist -n'
+self.last_duration=0.593
+self.last_finished=True
+self.last_finished_success=False
+self.last_retcode=1
+--------------------------------------------------
+self.last_stdout=
+        |'* Getting build dependencies for sdist...'
+        |'running egg_info'
+        |'writing bus_user.egg-info\\PKG-INFO'
+        |'writing dependency_links to bus_user.egg-info\\dependency_links.txt'
+        |'writing top-level names to bus_user.egg-info\\top_level.txt'
+        |"reading manifest file 'bus_user.egg-info\\SOURCES.txt'"
+        |"adding license file 'LICENSE'"
+        |''
+        |'ERROR Backend subprocess exited when trying to invoke get_requires_for_build_sdist'
+        |''
+--------------------------------------------------
+self.last_stderr=
+        |'Traceback (most recent call last):'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\pyproject_hooks\\_in_process\\_in_process.py", line 353, in <module>'
+        |'    main()'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\pyproject_hooks\\_in_process\\_in_process.py", line 335, in main'
+        |"    json_out['return_val'] = hook(**hook_input['kwargs'])"
+        |'                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\pyproject_hooks\\_in_process\\_in_process.py", line 287, in get_requires_for_build_sdist'
+        |'    return hook(config_settings)'
+        |'           ^^^^^^^^^^^^^^^^^^^^^'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\build_meta.py", line 330, in get_requires_for_build_sdist'
+        |'    return self._get_build_requires(config_settings, requirements=[])'
+        |'           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\build_meta.py", line 297, in _get_build_requires'
+        |'    self.run_setup()'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\build_meta.py", line 497, in run_setup'
+        |'    super().run_setup(setup_script=setup_script)'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\build_meta.py", line 313, in run_setup'
+        |'    exec(code, locals())'
+        |'  File "<string>", line 22, in <module>'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\__init__.py", line 108, in setup'
+        |'    return distutils.core.setup(**attrs)'
+        |'           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\_distutils\\core.py", line 184, in setup'
+        |'    return run_commands(dist)'
+        |'           ^^^^^^^^^^^^^^^^^^'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\_distutils\\core.py", line 200, in run_commands'
+        |'    dist.run_commands()'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\_distutils\\dist.py", line 970, in run_commands'
+        |'    self.run_command(cmd)'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\dist.py", line 945, in run_command'
+        |'    super().run_command(command)'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\_distutils\\dist.py", line 989, in run_command'
+        |'    cmd_obj.run()'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\command\\egg_info.py", line 310, in run'
+        |'    self.find_sources()'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\command\\egg_info.py", line 318, in find_sources'
+        |'    mm.run()'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\command\\egg_info.py", line 544, in run'
+        |'    self.prune_file_list()'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\command\\egg_info.py", line 610, in prune_file_list'
+        |'    base_dir = self.distribution.get_fullname()'
+        |'               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\_core_metadata.py", line 266, in get_fullname'
+        |'    return _distribution_fullname(self.get_name(), self.get_version())'
+        |'           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\_core_metadata.py", line 284, in _distribution_fullname'
+        |'    canonicalize_version(version, strip_trailing_zero=False),'
+        |'    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        |"TypeError: canonicalize_version() got an unexpected keyword argument 'strip_trailing_zero'"
+        |''
+--------------------------------------------------
+self.last_exx_timeout=None
+==================================================
+[ERROR] cmd_item=('python -m build --sdist -n', 60) in full sequence cmd=[('python -m build --sdist -n', 60), ('python -m build --wheel -n', 60), ('twine upload dist/*', 90)]
+
+
+
+[FINISHED] (result=False) - press Enter to close
+[FINISHED] (result=False) - press Enter to close
+[FINISHED] (result=False) - press Enter to close
+[FINISHED] (result=False) - press Enter to close
+[FINISHED] (result=False) - press Enter to close
+[FINISHED] (result=False) - press Enter to close
+                """
+                # -----THIS IDEA IS NOT WORK!!!
                 break
 
             # 'Requirement already satisfied: requirements-checker in c:\\!=starichenko=element\\!=projects\\abc=requirements_checker (0.0.7)'
@@ -367,6 +478,9 @@ self.last_exx_timeout=None
         return self.cli.send(cmd, timeout=60 * 5)
 
     def check_file(self, file) -> bool:
+        """
+        # TODO: CREATE
+        """
         # TODO: FINISH
         # TODO: FINISH
         # TODO: FINISH
@@ -380,6 +494,20 @@ self.last_exx_timeout=None
         pass
 
     # =================================================================================================================
+    def version_get_latest(self, name: str) -> Optional[str]:
+        """
+        # TODO: CREATE
+        """
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        pass
+
     def version_get(self, name: str) -> Optional[str]:
         """
         get version for module if it installed.
@@ -434,6 +562,9 @@ self.last_exx_timeout=None
                 self.uninstall(module)
 
         # ONE -----------------------------------------------
+        if modules in self.PKGSET__PyPI_DISTRIBUTION:
+            return
+
         cmd = CmdPattern.UNINSTALL % (self.PYTHON_PATH, modules)
         self.cli.send(cmd, timeout=120)
 
