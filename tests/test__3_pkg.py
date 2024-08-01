@@ -12,7 +12,7 @@ DUMMY_MODULE_NAME = "dummy-module"
 
 
 # =====================================================================================================================
-@pytest.mark.skip   # TOO LONG
+@pytest.mark.skipif(condition=False, reason="too long")
 class Test_Pkg:
     def setup_method(self, method):
         self.Victim = type("Victim", (Packages,), {})
@@ -32,7 +32,7 @@ class Test_Pkg:
 
 
 # =====================================================================================================================
-@pytest.mark.skip   # TOO LONG
+@pytest.mark.skipif(condition=False, reason="too long")
 class Test_File:
     def setup_method(self, method):
         self.VICTIM = type("Victim", (Packages,), {})

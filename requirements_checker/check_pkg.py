@@ -49,10 +49,13 @@ class CmdPattern:
     -----
     cmd = pattern % (PYTHON_PATH, PARAMETER)
     cmd = CmdPattern.INSTALL_UPGRADE__MODULE % (self.PYTHON_PATH, modules)
-
     """
+    INSTALL__MODULE: str = f"%s -m pip install %s"    # (PYTHON_PATH, MODULE)
+    INSTALL__FILE: str = f"%s -m pip install -r %s"   # (PYTHON_PATH, FILE)
+
     INSTALL_UPGRADE__MODULE: str = f"%s -m pip install --upgrade %s"    # (PYTHON_PATH, MODULE)
     INSTALL_UPGRADE__FILE: str = f"%s -m pip install --upgrade -r %s"   # (PYTHON_PATH, FILE)
+
     SHOW_INFO: str = f"%s -m pip show %s"                               # (PYTHON_PATH, MODULE)
     UNINSTALL: str = f"%s -m pip uninstall -y %s"                       # (PYTHON_PATH, MODULE)
 
@@ -128,7 +131,19 @@ class Packages:
         self.cli = CliUser()
 
     # =================================================================================================================
-    def upgrade(self, modules: Union[str, List[str]]) -> bool:
+    def install(self, modules: Union[str, list[str]]) -> bool:
+        # LIST -----------------------------------------------
+        if isinstance(modules, (list, tuple, set, )):
+            result = all([self.install(module) for module in modules])
+            return result
+
+        # SINGLE -----------------------------------------------
+        cmd = CmdPattern.INSTALL__MODULE % (self.PYTHON_PATH, modules)
+        self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
+
+        return self.cli.last_finished_success
+
+    def upgrade(self, modules: Union[str, list[str]]) -> bool:
         """
         you can use explicit version definitions!
             name==0.0.1
@@ -267,32 +282,41 @@ self.last_exx_timeout=None
             result = all([self.upgrade(module) for module in modules])
             return result
 
-        # ONE -----------------------------------------------
+        # SINGLE -----------------------------------------------
         cmd = CmdPattern.INSTALL_UPGRADE__MODULE % (self.PYTHON_PATH, modules)
         self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
 
-        # RESULTS ===================================================
-        result = f"[{modules}]"
+        # TEXT_CUM ===================================================
+        text_cum = f"[{modules}]"
         # RESULT EXISTS ---------------------------------------------
-        # 'Requirement already satisfied: requirements-checker in c:\\!=starichenko=element\\!=projects\\abc=requirements_checker (0.0.7)'
-        match = re.search(r'Requirement already satisfied: .+ \((\d+\.\d+\.\d+)\)', self.cli.last_stdout)
-        if len(self.cli.last_stdout.split("\n")) == 2 and match:
-            result += f"(already new){match[1]}"
+        while True:
+            # result EXISTS OLD ---------------------------------------------   # KEEP IT FIRST!!!
+            # 'Found existing installation: requirements-checker 0.0.7'
+            match = re.search(r'Found existing installation: \S+ (\d+\.\d+\.\d+)\s', self.cli.last_stdout)
+            if match:
+                text_cum += f"(existed old){match[1]}"
+                self.uninstall(modules)     # need uninstall! for sure!
+                self.install(modules)
+                break
 
-        # result EXISTS OLD ---------------------------------------------
-        # 'Found existing installation: requirements-checker 0.0.7'
-        match = re.search(r'Found existing installation: \S+ (\d+\.\d+\.\d+)\s', self.cli.last_stdout)
-        if match:
-            result += f"(existed old){match[1]}"
+            # 'Requirement already satisfied: requirements-checker in c:\\!=starichenko=element\\!=projects\\abc=requirements_checker (0.0.7)'
+            match = re.search(r'Requirement already satisfied: .+ \((\d+\.\d+\.\d+)\)', self.cli.last_stdout)
+            if len(self.cli.last_stdout.split("\n")) == 2 and match:
+                text_cum += f"(already new){match[1]}"
+                break
 
-        # result NEW VERSION! ---------------------------------------------
-        # 'Successfully installed singleton-meta-0.1.1'
-        match = re.search(r'Successfully installed \S+-(\d+\.\d+\.\d+)\s', self.cli.last_stdout)
-        if match:
-            result += f"->{match[1]}(upgraded new)"
+            # result NEW VERSION! ---------------------------------------------
+            # 'Successfully installed singleton-meta-0.1.1'
+            match = re.search(r'Successfully installed \S+-(\d+\.\d+\.\d+)\s', self.cli.last_stdout)
+            if match:
+                text_cum += f"->{match[1]}(upgraded new)"
+                break
+
+            # FINAL STOP
+            break
 
         # FINISH ===================================================
-        print(result)
+        print(text_cum)
         return self.cli.last_finished_success
 
     def upgrade_pip(self) -> bool:
