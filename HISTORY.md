@@ -13,6 +13,13 @@
 ********************************************************************************
 ## NEWS
 
+0.2.10 (2024/08/01 18:20:45)
+------------------------------
+- [Pkgs]:  
+	- fix BROKEN logic Upgrade  
+	- separate PKGSET__PyPI_DISTRIBUTION  
+	- add reinstall  
+
 0.2.9 (2024/08/01 14:45:04)
 ------------------------------
 - [Packages] try fix ensure upgrade over uninstall +add install  
