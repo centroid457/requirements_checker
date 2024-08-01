@@ -41,7 +41,7 @@ class PROJECT_BASE:
 class PROJECT(PROJECT_BASE):
     # PROJECT ----------------------------------------------
     NAME_IMPORT: str = "requirements_checker"
-    KEYWORDS: List[str] = [
+    KEYWORDS: list[str] = [
         "check requirements", "raise/bool if no requirements",
         "check system requirements",
         "python packages/modules aux (upgrade/delete/version get)",
@@ -54,7 +54,7 @@ class PROJECT(PROJECT_BASE):
     DESCRIPTION_LONG: str = """
 designed for check requirements (systemOs) and raise/bool if no match
     """
-    FEATURES: List[str] = [
+    FEATURES: list[str] = [
         # "feat1",
         # ["feat2", "block1", "block2"],
 
@@ -69,17 +69,17 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: Tuple[int, int, int] = (0, 2, 8)
-    TODO: List[str] = [
+    VERSION: tuple[int, int, int] = (0, 2, 9)
+    TODO: list[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_file"
     ]
-    FIXME: List[str] = [
+    FIXME: list[str] = [
         "sometimes modules have incorrect SHARE!!! maybe need check upgrade after installation!!! and show ERROR!",
         "FIX TESTS!"
     ]
-    NEWS: List[str] = [
-        "[Packages.parse_files] fix prints=ljust",
+    NEWS: list[str] = [
+        "[Packages] try fix ensure upgrade over uninstall +add install",
     ]
 
 
