@@ -69,7 +69,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 10)
+    VERSION: tuple[int, int, int] = (0, 2, 11)
     TODO: list[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_file"
@@ -79,11 +79,8 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: list[str] = [
-        ["[Pkgs]",
-            "fix BROKEN logic Upgrade",
-            "separate PKGSET__PyPI_DISTRIBUTION",
-            "add reinstall",
-         ]
+        "[Pkgs] ergroup PKGSET__PyPI_DISTRIBUTION",
+        "[requirements] apply last ver",
     ]
 
 
