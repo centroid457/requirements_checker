@@ -73,12 +73,12 @@ class Packages:
         # -----------------------------
         # new setup
         "build",
-        "twine",    # necessary! share project on pypi!
+        "twine",        # necessary! share project on pypi!
+        "setuptools",   # necessary! if not
 
         # old setup (maybe not all)
-        "sdist",
-        "setuptools",
-        "bdist-wheel-name",
+        "sdist",                # not necessary! works without it on new!
+        "bdist-wheel-name",     # not necessary! works without it on new!
 
     ]
     PKGSET__CENTROID_457: list[str] = [
