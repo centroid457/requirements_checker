@@ -6,25 +6,31 @@
 # VERSION = (0, 0, 5)   # add pytest-aux
 # VERSION = (0, 0, 6)   # add nested in COMMON
 # VERSION = (0, 0, 7)   # add new block TESTS +add classes_aux into COMMON
+# VERSION = (0, 0, 8)   # add cli-user in common/rename common to BASE/regroup subsets
 
-# COMMON ===================
+# BASE =====================
+# deploy -------------------
+cli-user
+
+# debug/test ---------------
 pytest
-requirements-checker
-object-info
-funcs-aux
-classes-aux
-logger-aux
 pytest-aux
+logger-aux
+object-info
 
-# NESTED ---------------------------------
+# common -------------------
+requirements-checker
+classes-aux
+funcs-aux
+
+# nested -------------------
 annot_attrs
 numpy
 
-# TESTS ----------------------------------
-
 # ========================================
-# SPECIAL FOR THIS PROJECT - ROOT --------
-cli_user
+# SPECIAL (FOR THIS PROJECT - ROOT) ------
+
+# TESTS ----------------------------------
 
 # NESTED ---------------------------------
 
