@@ -6,10 +6,12 @@
 # VERSION = (0, 0, 5)   # add pytest-aux
 # VERSION = (0, 0, 6)   # add nested in COMMON
 # VERSION = (0, 0, 7)   # add new block TESTS +add classes_aux into COMMON
-# VERSION = (0, 0, 8)   # add cli-user in common/rename common to BASE/regroup subsets
+# VERSION = (0, 0, 8)   # add [deploy]build+twine+cli_user in common/rename common to BASE/regroup subsets
 
 # BASE =====================
 # deploy -------------------
+build
+twine
 cli-user
 
 # debug/test ---------------
