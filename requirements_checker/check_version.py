@@ -330,7 +330,7 @@ class ReqCheckVersion(GetattrPrefixInst_RaiseIf):
 
     @property
     def ACTUAL(self) -> Version:
-        if TypeChecker.check__func_or_meth(self.GETTER):
+        if TypeChecker.check__callable_func_meth_inst(self.GETTER):
             value = self.GETTER()
         else:
             value = self.GETTER

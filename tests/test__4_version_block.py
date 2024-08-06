@@ -47,7 +47,7 @@ class Test__VersionBlock:
             ("[11:rc.22]", True),
 
             # iterables
-            ([11, "r c---", 22], True),
+            (([11, "r c---", 22], ), True),
 
             # inst
             (VersionBlock("11rc22"), True),
@@ -77,7 +77,7 @@ class Test__VersionBlock:
             ("[11:rc.22]", "[11:rc.22]"),
 
             # iterables
-            ([11, "r c---", 22], "11rc22"),
+            (([11, "r c---", 22], ), "11rc22"),
 
             # inst
             (VersionBlock("11rc22"), "11rc22"),
@@ -107,7 +107,7 @@ class Test__VersionBlock:
             ("[11:rc.22]", False),
 
             # iterables
-            ([11, "r c---", 22], False),
+            (([11, "r c---", 22], ), False),
 
             # inst
             (VersionBlock("11rc22"), False),  # not useful
@@ -141,7 +141,7 @@ class Test__VersionBlock:
             ("[11:rc.22]", (11, "rc", 22)),
 
             # iterables
-            ([11, "r c---", 22], ()),
+            (([11, "r c---", 22], ), ()),
 
             # inst
             (VersionBlock("11rc22"), ()),   # not useful
@@ -172,7 +172,7 @@ class Test__VersionBlock:
             ("[11:rc.22]", Exx_VersionIncompatibleBlock),
 
             # iterables
-            ([11, "r c---", 22], "11rc22"),
+            (([11, "r c---", 22], ), "11rc22"),
 
             # inst
             (VersionBlock("11rc22"), "11rc22"),
@@ -202,7 +202,7 @@ class Test__VersionBlock:
             ("[11:rc.22]", Exx_VersionIncompatibleBlock),
 
             # iterables
-            ([11, "r c---", 22], 3),
+            (([11, "r c---", 22], ), 3),
 
             # inst
             (VersionBlock("11rc22"), 3),

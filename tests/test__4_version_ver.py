@@ -47,7 +47,7 @@ class Test__Version:
             ("[11:rc.22]", "11:rc.22"),
 
             # iterables
-            ([11, "r c---", 22], "11.r c---.22"),
+            (([11, "r c---", 22], ), "11.r c---.22"),
 
             # inst
             (VersionBlock("11rc22"), "11rc22"),
@@ -58,8 +58,8 @@ class Test__Version:
             ("ver(1.1rc2.2)ver", "1.1rc2.2"),
 
             # BLOCKS inst ---------------------
-            ([1, VersionBlock("11rc22")], "1.11rc22"),
-            ([1, "hello"], "1.hello"),
+            (([1, VersionBlock("11rc22")],), "1.11rc22"),
+            (([1, "hello"], ), "1.hello"),
         ]
     )
     def test___prepare_string(self, args, _EXPECTED):
@@ -88,7 +88,7 @@ class Test__Version:
             ("[11:rc.22]", Exx_VersionIncompatibleBlock),
 
             # iterables
-            ([11, "r c---", 22], "11.rc.22"),
+            (([11, "r c---", 22], ), "11.rc.22"),
 
             # inst
             (VersionBlock("11rc22"), "11rc22"),
@@ -99,8 +99,8 @@ class Test__Version:
             ("ver(1.1rc2.2)ver", "1.1rc2.2"),
 
             # BLOCKS inst ---------------------
-            ([1, VersionBlock("11rc22")], "1.11rc22"),
-            ([1, "hello"], "1.hello"),
+            (([1, VersionBlock("11rc22")],), "1.11rc22"),
+            (([1, "hello"],), "1.hello"),
         ]
     )
     def test__inst__string(self, args, _EXPECTED):
@@ -127,7 +127,7 @@ class Test__Version:
             ("[11:rc.22]", Exx_VersionIncompatibleBlock),
 
             # iterables
-            ([11, "r c---", 22], 3),
+            (([11, "r c---", 22],), 3),
 
             # inst
             (VersionBlock("11rc22"), 1),
@@ -193,7 +193,7 @@ class Test__Version:
         assert Version("1.2rc2.3").micro == 3
 
         assert Version("1.2rc2.").micro is None
-        assert Version("1.2rc2.").micro == None
+        assert Version("1.2rc2.").micro is None
 
 
 # =====================================================================================================================
