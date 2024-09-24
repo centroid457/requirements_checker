@@ -205,16 +205,26 @@ class Version(CmpInst):
     :ivar _SOURCE: try to pass parsed value! it will try to self-parse in _prepare_string, but make it ensured on your own!
     """
     _SOURCE: Any
-    BLOCKS: TYPE__VERSION_BLOCKS
+    BLOCKS: TYPE__VERSION_BLOCKS = ()
+
+    REQ_BLOCKS_COUNT: int = 1
+    RAISE: bool = True
 
     def __init__(self, source: Any):
         self._SOURCE = source
         string = self._prepare_string(source)
         self.BLOCKS = self._parse_blocks(string)
+        if not self.check_blocks_enough() and self.RAISE:
+            raise Exx_VersionIncompatible()
+
+    def check_blocks_enough(self, count: int = None) -> bool:
+        if count is None:
+            count = self.REQ_BLOCKS_COUNT
+        return len(self.BLOCKS) >= count
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _prepare_string(cls, source: Any) -> str | NoReturn:
+    def _prepare_string(cls, source: Any) -> str:
         """
         ONLY PREPARE STRING FOR CORRECT SPLITTING BLOCKS - parsing blocks would inside VersionBlock
         """
@@ -244,13 +254,10 @@ class Version(CmpInst):
         result = re.sub(r"\.+", ".", result)
         result = result.strip(".")
 
-        if not result:
-            raise Exx_VersionIncompatible()
-
         return result
 
     @staticmethod
-    def _parse_blocks(source: str) -> TYPE__VERSION_BLOCKS | NoReturn:
+    def _parse_blocks(source: str) -> TYPE__VERSION_BLOCKS:
         blocks_list__str = source.split(".")
 
         # RESULT -----------

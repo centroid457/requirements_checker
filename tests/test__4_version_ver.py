@@ -30,12 +30,12 @@ class Test__Version:
         argnames="args, _EXPECTED",
         argvalues=[
             # ONE BLOCK ---------------------
-            (True, Exx_VersionIncompatible),
+            (True, ""),     # Exx_VersionIncompatible
             (1, "1"),
 
             ("1", "1"),
-            ("hello", Exx_VersionIncompatible),
-            ("HELLO", Exx_VersionIncompatible),
+            ("hello", ""),  # Exx_VersionIncompatible
+            ("HELLO", ""),     # Exx_VersionIncompatible
             ("11rc22", "11rc22"),
             ("11r c22", "11r c22"),
             (" 11 rc-2 2", "11 rc-2 2"),
