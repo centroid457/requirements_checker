@@ -69,7 +69,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 12)
+    VERSION: tuple[int, int, int] = (0, 2, 13)
     TODO: list[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_file"
@@ -79,7 +79,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: list[str] = [
-        "apply last ver2",
+        "[Version] add REQ_BLOCKS_COUNT+RAISE",
     ]
 
 
