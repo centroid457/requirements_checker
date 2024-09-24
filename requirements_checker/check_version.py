@@ -207,10 +207,13 @@ class Version(CmpInst):
     _SOURCE: Any
     BLOCKS: TYPE__VERSION_BLOCKS = ()
 
-    REQ_BLOCKS_COUNT: int = 1
+    MIN_BLOCKS_COUNT: int = 1
     RAISE: bool = True
 
-    def __init__(self, source: Any):
+    def __init__(self, source: Any, min_blocks_count: int = None):
+        if min_blocks_count is not None:
+            self.MIN_BLOCKS_COUNT = min_blocks_count
+
         self._SOURCE = source
         string = self._prepare_string(source)
         self.BLOCKS = self._parse_blocks(string)
@@ -219,7 +222,7 @@ class Version(CmpInst):
 
     def check_blocks_enough(self, count: int = None) -> bool:
         if count is None:
-            count = self.REQ_BLOCKS_COUNT
+            count = self.MIN_BLOCKS_COUNT
         return len(self.BLOCKS) >= count
 
     # -----------------------------------------------------------------------------------------------------------------

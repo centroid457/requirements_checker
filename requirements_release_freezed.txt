@@ -91,7 +91,7 @@ readme_renderer==44.0
 requests==2.32.3
 requests-cache==1.2.1
 requests-toolbelt==1.0.0
-requirements_checker==0.2.12
+requirements_checker==0.2.13
 rfc3986==2.0.0
 rich==13.7.1
 server_templates==0.3.3
