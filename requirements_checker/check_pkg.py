@@ -460,9 +460,11 @@ self.last_exx_timeout=None
         return self.upgrade(self.PKGSET__CENTROID_457)
 
     # =================================================================================================================
-    def upgrade_file(self, filepath: Union[str, pathlib.Path]) -> bool:
+    def upgrade_file(self, filepath: Union[str, pathlib.Path], bylines: bool = None) -> bool:
         """
         upgrade modules by file requirements.py
+
+        :param bylines: not applied yet! # TODO: supposed to install over direct lines
         """
         filepath = pathlib.Path(filepath)
         if not filepath.exists():
