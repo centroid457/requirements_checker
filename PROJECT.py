@@ -59,7 +59,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         # ["feat2", "block1", "block2"],
 
         "check requirements (systemOs), raise/bool if no match",
-        "create fuck(?)/getter and is it for check for settings",
+        "create fuck(?)/source and is it for check for settings",
         ["[python PACKAGES/MODULES]", "upgrade", "delete", "version_get", "check_installed)", "upgrade pip"],
         ["[VERSION]",
             "parse",
@@ -69,7 +69,7 @@ designed for check requirements (systemOs) and raise/bool if no match
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 14)
+    VERSION: tuple[int, int, int] = (0, 2, 15)
     TODO: list[str] = [
         "add WARN_if__*/if_not__* (and use message in stderr)",
         "add check_file"
@@ -79,7 +79,7 @@ designed for check requirements (systemOs) and raise/bool if no match
         "FIX TESTS!"
     ]
     NEWS: list[str] = [
-        "[Version]add MIN_BLOCKS_COUNT in init",
+        "[ReqCheckVersion] zero ref",
     ]
 
 

@@ -331,19 +331,19 @@ class Version(CmpInst):
 
 # =====================================================================================================================
 class ReqCheckVersion(GetattrPrefixInst_RaiseIf):
-    GETTER: Union[Callable[..., Any], Any] = sys.version.split()[0]
+    SOURCE: Union[Any, Callable[..., Any]] = sys.version.split()[0]
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, getter: Any | Callable | None = None):
-        if getter is not None:
-            self.GETTER = getter
+    def __init__(self, source: Any | Callable | None = None):
+        if source is not None:
+            self.SOURCE = source
 
     @property
     def ACTUAL(self) -> Version:
-        if TypeChecker.check__callable_func_meth_inst(self.GETTER):
-            value = self.GETTER()
+        if TypeChecker.check__callable_func_meth_inst(self.SOURCE):
+            value = self.SOURCE()
         else:
-            value = self.GETTER
+            value = self.SOURCE
 
         return Version(value)
 
@@ -380,7 +380,7 @@ class ReqCheckVersion_Python(ReqCheckVersion):
     ReqCheckVersion_Python().raise_if_not__check_ge("3.11")
     ReqCheckVersion_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
     """
-    GETTER = sys.version.split()[0]
+    SOURCE = sys.version.split()[0]
 
     raise_if__check_eq: Callable[..., NoReturn | None]
     raise_if_not__check_eq: Callable[..., NoReturn | None]
