@@ -1,4 +1,7 @@
 # ==========================
+# RULES
+# 1=DONT USE MINUS in moduleNames!!! all next moduls will not applyed!!!
+
 # VERSION = (0, 0, 1)   # just add version
 # VERSION = (0, 0, 2)   # add funcs-aux
 # VERSION = (0, 0, 3)   # add block NESTED REQUIREMENTS
@@ -7,6 +10,7 @@
 # VERSION = (0, 0, 6)   # add nested in COMMON
 # VERSION = (0, 0, 7)   # add new block TESTS +add classes_aux into COMMON
 # VERSION = (0, 0, 8)   # add [deploy]build+twine+setuptools+cli_user +add singleton-meta in common/rename common to BASE/regroup subsets
+# VERSION = (0, 0, 9)   # fix names without Minus!
 
 # BASE =====================
 # deploy -------------------
@@ -14,19 +18,19 @@ build
 twine
 setuptools
 
-cli-user
+cli_user
 
 # debug/test ---------------
 pytest
-pytest-aux
-logger-aux
-object-info
+pytest_aux
+logger_aux
+object_info
 
 # common -------------------
-requirements-checker
-classes-aux
-funcs-aux
-singleton-meta
+requirements_checker
+classes_aux
+funcs_aux
+singleton_meta
 
 # nested -------------------
 annot_attrs

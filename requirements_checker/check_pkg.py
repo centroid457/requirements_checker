@@ -444,14 +444,19 @@ self.last_exx_timeout=None
         """
         prj_name = project.NAME_INSTALL
         ver_prj = project.VERSION
-        while True:
-            ver_active = tuple(map(int, self.version_get(prj_name).split(".")))
-            print(f"{ver_prj=}/{ver_active=}")
-            if ver_active == ver_prj:
-                break
-            self.upgrade(prj_name)
 
-        return ver_active == ver_prj
+        while True:
+            ver_active_str = self.version_get(prj_name)
+            if not ver_active_str:
+                self.install(prj_name)
+            else:
+                ver_active_tuple = tuple(map(int, self.version_get(prj_name).split(".")))
+                print(f"{ver_prj=}/{ver_active_tuple=}")
+                if ver_active_tuple == ver_prj:
+                    break
+                self.upgrade(prj_name)
+
+        return ver_active_tuple == ver_prj
 
     def upgrade__centroid457(self) -> bool:
         """
