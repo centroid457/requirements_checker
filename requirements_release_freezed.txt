@@ -69,7 +69,7 @@ PyYAML==6.0.2
 readme-renderer==42.0
 requests==2.32.3
 requests-toolbelt==1.0.0
-requirements_checker==0.1.0
+requirements_checker==0.2.17
 rfc3986==2.0.0
 rich==13.7.0
 sdist==0.0.0
