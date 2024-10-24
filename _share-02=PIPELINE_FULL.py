@@ -16,7 +16,8 @@ from cli_user import *
 # VERSION = (0, 0, 1)   # first attempt
 # VERSION = (0, 0, 2)   # add commented testPypi
 # VERSION = (0, 0, 3)   # fix --Verbose!
-VERSION = (0, 0, 4)   # fix param Noisolation! used to be able build with any modules in root PyFiles
+# VERSION = (0, 0, 4)   # fix param Noisolation! used to be able build with any modules in root PyFiles
+VERSION = (0, 0, 5)   # check latest before build
 
 
 # =====================================================================================================================
