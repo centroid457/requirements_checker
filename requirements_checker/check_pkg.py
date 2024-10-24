@@ -546,7 +546,7 @@ self.last_exx_timeout=None
         C:\\Users\\a.starichenko>
         """
         cmd = CmdPattern.SHOW_INFO % (self.PYTHON_PATH, name)
-        if self.cli.send(cmd, timeout=1, print_all_states=False) and self.cli.last_stdout:
+        if self.cli.send(cmd, timeout=2, print_all_states=False) and self.cli.last_stdout:
             match = re.search(r'Version: (\d+\.\d+\.\d+)\s*', self.cli.last_stdout)
             if match:
                 return match[1]
