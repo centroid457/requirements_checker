@@ -24,7 +24,7 @@ designed for check requirements (systemOs) and raise/bool if no match
 3. [python PACKAGES/MODULES]:  
 	- upgrade  
 	- delete  
-	- version_get  
+	- version_get_installed  
 	- check_installed)  
 	- upgrade pip  
 4. [VERSION]:  

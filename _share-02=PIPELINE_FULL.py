@@ -21,25 +21,34 @@ VERSION = (0, 0, 4)   # fix param Noisolation! used to be able build with any mo
 
 # =====================================================================================================================
 cli = CliUser()
-# del old --------------
-cli.send("rd dist\ /q /s", 10)
-cli.send("rd build\ /q /s", 10)
 
-cmds_timeout = [
-    # build new ------------
-    ("python -m build --sdist -n", 60),
-    ("python -m build --wheel -n", 60),
+if not Packages().check_prj_installed_latest(PROJECT):
+    # 1=old del --------------
+    cli.send("rd dist\ /q /s", 10)
+    cli.send("rd build\ /q /s", 10)
 
-    # share ------------
-    # ("twine upload dist/* -r testpypi", 90),  # TESTPYPI
-    # ("twine upload dist/* --verbose", 90),    # DONT USE --VERBOSE!!!!
-    ("twine upload dist/*", 90),
-]
-result = cli.send(cmds_timeout) and Packages().upgrade_prj(PROJECT)
+    # 2=new build+publish --------------
+    cmds_timeout = [
+        # build new ------------
+        ("python -m build --sdist -n", 60),
+        ("python -m build --wheel -n", 60),
 
+        # share ------------
+        # ("twine upload dist/* -r testpypi", 90),  # TESTPYPI
+        # ("twine upload dist/* --verbose", 90),    # DONT USE --VERBOSE!!!!
+        ("twine upload dist/*", 90),
+    ]
+    result_publish = cli.send(cmds_timeout)
+
+    # 3=upgrade --------------
+    result_upgrade = Packages().upgrade_prj(PROJECT)
+
+    msg = f"[FINISHED] ({result_publish=}/{result_upgrade=}) - press Enter to close"
+
+else:
+    msg = f"[FINISHED] ALREADY LATEST - press Enter to close"
 
 # =====================================================================================================================
-msg = f"[FINISHED] ({result=}) - press Enter to close"
 print()
 print()
 print()

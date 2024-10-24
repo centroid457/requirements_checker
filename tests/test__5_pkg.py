@@ -23,11 +23,11 @@ class Test_Pkg:
 
         for version in ["0.0.1", "0.0.2", ]:
             assert victim.upgrade(f"{DUMMY_MODULE_NAME}=={version}")
-            assert victim.version_get(DUMMY_MODULE_NAME) == version
+            assert victim.version_get_installed(DUMMY_MODULE_NAME) == version
             assert victim.check_installed(DUMMY_MODULE_NAME) is True
 
         victim.uninstall(DUMMY_MODULE_NAME)
-        assert victim.version_get(DUMMY_MODULE_NAME) is None
+        assert victim.version_get_installed(DUMMY_MODULE_NAME) is None
         assert victim.check_installed(DUMMY_MODULE_NAME) is False
 
 

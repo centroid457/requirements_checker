@@ -6,6 +6,7 @@ import sys
 from funcs_aux import *
 from cli_user import CliUser
 from object_info import *
+from .check_version import Version
 
 
 # =====================================================================================================================
@@ -442,27 +443,36 @@ self.last_exx_timeout=None
 
         CREATED specially for ensure upgrade to last version in active GIT-repo (you need to start in from git-repo!)
         """
-        prj_name = project.NAME_INSTALL
-        ver_prj = project.VERSION
+        while not self.check_prj_installed_latest(project):
+            self.upgrade(project.NAME_INSTALL)
 
-        while True:
-            ver_active_str = self.version_get(prj_name)
-            if not ver_active_str:
-                self.install(prj_name)
-            else:
-                ver_active_tuple = tuple(map(int, self.version_get(prj_name).split(".")))
-                print(f"{ver_prj=}/{ver_active_tuple=}")
-                if ver_active_tuple == ver_prj:
-                    break
-                self.upgrade(prj_name)
-
-        return ver_active_tuple == ver_prj
+        return True
 
     def upgrade__centroid457(self) -> bool:
         """
         upgrade all author modules by one command
         """
         return self.upgrade(self.PKGSET__CENTROID_457)
+
+    # =================================================================================================================
+    def check_prj_installed_latest(self, project: "PROJECT") -> bool:
+        """
+        check version is actual latest!
+        if prj ver is not same as installed - return False
+
+        CREATED SPECIALLY FOR
+        ---------------------
+        check prj version before publish in pypi
+        """
+        prj_name = project.NAME_INSTALL
+        ver_prj = project.VERSION
+
+        ver_active = self.version_get_installed(prj_name)
+        if not ver_active:
+            return False
+
+        print(f"{ver_prj=}/{ver_active=}")
+        return Version(ver_active) == ver_prj
 
     # =================================================================================================================
     def upgrade_file(self, filepath: Union[str, pathlib.Path], bylines: bool = None) -> bool:
@@ -501,7 +511,7 @@ self.last_exx_timeout=None
         pass
 
     # =================================================================================================================
-    def version_get_latest(self, name: str) -> Optional[str]:
+    def version_get_pypi(self, name: str) -> Optional[str]:
         """
         # TODO: CREATE
         """
@@ -515,7 +525,7 @@ self.last_exx_timeout=None
         # TODO: FINISH
         pass
 
-    def version_get(self, name: str) -> Optional[str]:
+    def version_get_installed(self, name: str) -> Optional[str]:
         """
         get version for module if it installed.
 
@@ -560,7 +570,7 @@ self.last_exx_timeout=None
             return True
 
         # ONE -----------------------------------------------
-        return self.version_get(modules) is not None
+        return self.version_get_installed(modules) is not None
 
     def uninstall(self, modules: Union[str, list[str]]) -> None:
         # LIST -----------------------------------------------

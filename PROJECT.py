@@ -60,7 +60,7 @@ designed for check requirements (systemOs) and raise/bool if no match
 
         "check requirements (systemOs), raise/bool if no match",
         "create fuck(?)/source and is it for check for settings",
-        ["[python PACKAGES/MODULES]", "upgrade", "delete", "version_get", "check_installed)", "upgrade pip"],
+        ["[python PACKAGES/MODULES]", "upgrade", "delete", "version_get_installed", "check_installed)", "upgrade pip"],
         ["[VERSION]",
             "parse",
             "check",

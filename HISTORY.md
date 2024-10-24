@@ -154,7 +154,7 @@
 0.1.2 (2024/01/19 16:34:41)
 ------------------------------
 - add with tests:  
-	- version_get  
+	- version_get_installed  
 	- check_installed  
 	- uninstall  
 
